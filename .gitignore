@@ -1,0 +1,38 @@
+# Environment & secrets
+.env
+.env.local
+.env.*.local
+*.env
+!.env.example
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Build output
+dist/
+build/
+.next/
+out/
+
+# Database
+*.db
+*.db-journal
+
+# Prisma generated
+src/generated/
+
+# Uploaded/local files (resumes, temp storage)
+uploads/
+tmp/
+*.log
+npm-debug.log*
+
+# OS/editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

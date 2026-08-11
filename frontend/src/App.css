@@ -1,0 +1,7 @@
+/* App.css */
+/* Specific App-wide overrides can go here */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}

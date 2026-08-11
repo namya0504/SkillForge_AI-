@@ -1,0 +1,34 @@
+/* Register specific overrides extending Login.css */
+
+.pwd-strength-container {
+  height: 4px;
+  background-color: var(--color-border);
+  border-radius: var(--radius-full);
+  margin-top: var(--space-xs);
+  overflow: hidden;
+}
+
+.pwd-strength-bar {
+  height: 100%;
+  transition: width var(--transition-base), background-color var(--transition-base);
+}
+
+.pwd-requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: var(--space-xs);
+}
+
+.req-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  transition: color var(--transition-fast);
+}
+
+.req-item.met {
+  color: var(--color-success);
+}
