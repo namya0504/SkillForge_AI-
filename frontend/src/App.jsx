@@ -6,6 +6,8 @@ import Landing from './pages/Landing/Landing';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import Dashboard from './pages/Dashboard/Dashboard';
+import Upload from './pages/Upload/Upload';
+import SkillsConfirm from './pages/SkillsConfirm/SkillsConfirm';
 import './App.css';
 
 function App() {
@@ -17,6 +19,22 @@ function App() {
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route 
+              path="/upload" 
+              element={
+                <ProtectedRoute>
+                  <Upload />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/skills" 
+              element={
+                <ProtectedRoute>
+                  <SkillsConfirm />
+                </ProtectedRoute>
+              } 
+            />
             <Route 
               path="/dashboard" 
               element={

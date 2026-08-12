@@ -37,3 +37,37 @@ export const authAPI = {
 export const healthAPI = {
   check: () => request('/health'),
 };
+
+export const resumeAPI = {
+  upload: (file) => {
+    const formData = new FormData();
+    formData.append('resume', file);
+    return fetch(`${API_BASE}/resume/upload`, {
+      method: 'POST',
+      credentials: 'include',
+      body: formData,
+    }).then(async (res) => {
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || data.message || 'Upload failed');
+      return data;
+    });
+  },
+  getCurrent: () => request('/resume/current'),
+};
+
+export const jobAPI = {
+  getStatus: (jobId) => request(`/jobs/${jobId}`),
+};
+
+export const skillAPI = {
+  getSkills: () => request('/skills'),
+  addSkill: (skillName, proficiency) => request('/skills', {
+    method: 'POST',
+    body: JSON.stringify({ skillName, proficiency }),
+  }),
+  updateSkill: (id, proficiency) => request(`/skills/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify({ proficiency }),
+  }),
+  deleteSkill: (id) => request(`/skills/${id}`, { method: 'DELETE' }),
+};

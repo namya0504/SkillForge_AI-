@@ -1,10 +1,10 @@
 import { PrismaClient } from '../generated/prisma/client.js';
-import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
+import pg from 'pg';
+import { PrismaPg } from '@prisma/adapter-pg';
 
-// Create the SQLite adapter - Prisma 7 requires driver adapters
-const adapter = new PrismaBetterSqlite3({
-  url: process.env.DATABASE_URL || 'file:./dev.db',
-});
+// Create the Postgres adapter
+const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
 
 // Pass the adapter to PrismaClient
 const prisma = new PrismaClient({ adapter });

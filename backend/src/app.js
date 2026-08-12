@@ -3,6 +3,10 @@ import cookieParser from 'cookie-parser';
 import { securityMiddleware } from './middleware/security.js';
 import { generalLimiter } from './middleware/rateLimiter.js';
 import authRoutes from './routes/auth.routes.js';
+import resumeRoutes from './routes/resume.routes.js';
+import jobRoutes from './routes/job.routes.js';
+import skillRoutes from './routes/skills.js';
+import { authenticate } from './middleware/auth.js';
 import { config } from './config/env.js';
 
 const app = express();
@@ -24,6 +28,9 @@ app.use(generalLimiter);
 
 // Routes
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/resume', resumeRoutes);
+app.use('/api/v1/jobs', jobRoutes);
+app.use('/api/v1/skills', authenticate, skillRoutes);
 
 // Health check endpoint
 app.get('/api/v1/health', (req, res) => {

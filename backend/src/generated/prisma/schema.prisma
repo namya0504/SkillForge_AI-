@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 model User {
@@ -13,6 +13,53 @@ model User {
   passwordHash String   @map("password_hash")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
+  resumes      Resume[]
+  skills       Skill[]
+  jobs         Job[]
 
   @@map("users")
+}
+
+model Resume {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  storageKey   String   @map("storage_key")
+  originalName String   @map("original_name")
+  mimeType     String   @map("mime_type")
+  fileSize     Int      @map("file_size")
+  parsedStatus String   @default("pending") @map("parsed_status")
+  parsedData   String?  @map("parsed_data")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("resumes")
+}
+
+model Skill {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  skillName   String   @map("skill_name")
+  proficiency String   @default("Beginner")
+  source      String   @default("manual")
+  createdAt   DateTime @default(now()) @map("created_at")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, skillName])
+  @@map("skills")
+}
+
+model Job {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  type        String
+  status      String    @default("pending")
+  payload     String?
+  result      String?
+  errorMsg    String?   @map("error_msg")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  completedAt DateTime? @map("completed_at")
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("jobs")
 }

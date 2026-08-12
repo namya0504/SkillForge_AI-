@@ -1,10 +1,12 @@
 import React from 'react';
-import { Map, BookOpen, Activity } from 'lucide-react';
+import { Map, BookOpen, Activity, Upload as UploadIcon } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <div className="dashboard-container">
@@ -25,15 +27,17 @@ const Dashboard = () => {
           <p>Your personalized AI-generated learning path will appear here.</p>
         </div>
 
-        <div className="dash-card">
+        <div className="dash-card dash-card-actionable" onClick={() => navigate('/upload')}>
           <div className="dash-card-header">
             <div className="icon-wrapper skills-icon">
-              <BookOpen size={24} />
+              <UploadIcon size={24} />
             </div>
-            <span className="badge-soon">Coming Soon</span>
           </div>
-          <h3>Skill Inventory</h3>
-          <p>Track the skills you've mastered and identify areas to focus on next.</p>
+          <h3>Upload Your Resume</h3>
+          <p>Start by uploading your resume to get personalized recommendations.</p>
+          <button className="dash-upload-btn">
+            Upload Resume
+          </button>
         </div>
 
         <div className="dash-card">

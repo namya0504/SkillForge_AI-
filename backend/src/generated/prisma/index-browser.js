@@ -114,6 +114,9 @@ Prisma.NullTypes = NullTypes
  */
 
 exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 });
 
@@ -125,14 +128,61 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ResumeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  storageKey: 'storageKey',
+  originalName: 'originalName',
+  mimeType: 'mimeType',
+  fileSize: 'fileSize',
+  parsedStatus: 'parsedStatus',
+  parsedData: 'parsedData',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SkillScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  skillName: 'skillName',
+  proficiency: 'proficiency',
+  source: 'source',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.JobScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  status: 'status',
+  payload: 'payload',
+  result: 'result',
+  errorMsg: 'errorMsg',
+  createdAt: 'createdAt',
+  completedAt: 'completedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
 };
 
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
 
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  Resume: 'Resume',
+  Skill: 'Skill',
+  Job: 'Job'
 };
 
 /**

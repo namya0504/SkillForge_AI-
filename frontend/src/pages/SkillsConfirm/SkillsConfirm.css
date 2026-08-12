@@ -1,0 +1,154 @@
+.skills-page {
+  min-height: 100vh;
+  background-color: var(--color-background);
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.skills-container {
+  background-color: #ffffff;
+  max-width: 800px;
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.skills-header {
+  text-align: center;
+}
+
+.skills-header h1 {
+  color: var(--color-text);
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.skills-header p {
+  color: #666;
+  font-size: 16px;
+}
+
+.add-skill-form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.add-skill-form input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.add-skill-form select {
+  padding: 12px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: white;
+}
+
+.skills-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skill-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  background-color: #fafafa;
+  transition: all 0.2s;
+}
+
+.skill-card:hover {
+  border-color: #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.skill-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.skill-info h3 {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.badge {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.badge.extracted {
+  background-color: rgba(76, 149, 108, 0.1);
+  color: var(--color-success);
+}
+
+.skill-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.proficiency-select {
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.btn-icon-danger {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.btn-icon-danger:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.skills-footer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cta-button {
+  padding: 14px 32px;
+  font-size: 16px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 1px dashed #ddd;
+}

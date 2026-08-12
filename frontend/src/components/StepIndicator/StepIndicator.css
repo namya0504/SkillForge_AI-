@@ -1,0 +1,87 @@
+.step-indicator-container {
+  width: 100%;
+  margin-bottom: var(--space-3xl);
+  padding: 0 var(--space-xl);
+}
+
+.step-indicator-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.step-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  background-color: var(--color-bg-card);
+  color: var(--color-text-muted);
+  border: 2px solid var(--color-border);
+  transition: all var(--transition-base);
+}
+
+.step-label {
+  position: absolute;
+  top: 44px;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background-color: var(--color-border);
+  margin: 0 var(--space-sm);
+  margin-bottom: 24px; /* offset to align with circle center assuming 36px circle */
+  transition: background-color var(--transition-base);
+}
+
+/* States */
+.step-item.active .step-circle {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.step-item.active .step-label {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.step-item.completed .step-circle {
+  background-color: var(--color-success);
+  border-color: var(--color-success);
+  color: white;
+}
+
+.step-item.completed .step-label {
+  color: var(--color-success);
+}
+
+.step-line.completed {
+  background-color: var(--color-success);
+}
+
+/* Mobile Responsive */
+@media (max-width: 576px) {
+  .step-label {
+    display: none;
+  }
+}

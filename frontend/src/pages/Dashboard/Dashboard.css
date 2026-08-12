@@ -40,6 +40,31 @@
   box-shadow: var(--shadow-md);
 }
 
+.dash-card-actionable {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-card-actionable:hover {
+  border-color: var(--color-primary);
+}
+
+.dash-upload-btn {
+  margin-top: auto;
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  transition: background-color var(--transition-fast);
+}
+
+.dash-upload-btn:hover {
+  background-color: var(--color-primary-light);
+}
+
 .dash-card-header {
   display: flex;
   justify-content: space-between;

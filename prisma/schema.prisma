@@ -1,0 +1,149 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Proficiency {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum SkillSource {
+  EXTRACTED
+  MANUAL
+}
+
+enum JobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum ProgressStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  targetRole   String?
+  createdAt    DateTime @default(now())
+
+  skills    Skill[]
+  resumes   Resume[]
+  roadmaps  Roadmap[]
+  progress  Progress[]
+  jobs      Job[]
+
+  @@map("users")
+}
+
+model Skill {
+  id         String      @id @default(uuid())
+  userId     String
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skillName  String
+  proficiency Proficiency
+  source     SkillSource
+  createdAt  DateTime    @default(now())
+
+  @@unique([userId, skillName])
+  @@index([userId])
+  @@map("skills")
+}
+
+model Resume {
+  id           String    @id @default(uuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  storageKey   String
+  parsedStatus JobStatus @default(PENDING)
+  createdAt    DateTime  @default(now())
+
+  @@index([userId])
+  @@map("resumes")
+}
+
+model Roadmap {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  version     Int      @default(1)
+  role        String
+  generatedAt DateTime @default(now())
+  data        Json
+
+  items    RoadmapItem[]
+
+  @@index([userId])
+  @@map("roadmaps")
+}
+
+model RoadmapItem {
+  id         String   @id @default(uuid())
+  roadmapId  String
+  roadmap    Roadmap  @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  title      String
+  subtopics  Json
+  resources  Json
+  orderIndex Int
+
+  progress Progress[]
+
+  @@index([roadmapId])
+  @@map("roadmap_items")
+}
+
+model Progress {
+  id            String         @id @default(uuid())
+  userId        String
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roadmapItemId String
+  roadmapItem   RoadmapItem    @relation(fields: [roadmapItemId], references: [id], onDelete: Cascade)
+  status        ProgressStatus @default(NOT_STARTED)
+  updatedAt     DateTime       @updatedAt
+
+  @@unique([userId, roadmapItemId])
+  @@index([userId])
+  @@map("progress")
+}
+
+model RoleReference {
+  id             String @id @default(uuid())
+  roleName       String @unique
+  requiredSkills Json
+
+  @@map("roles_reference")
+}
+
+model Job {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String
+  status      JobStatus @default(PENDING)
+  payload     Json
+  result      Json?
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  @@index([userId])
+  @@index([status])
+  @@map("jobs")
+}
