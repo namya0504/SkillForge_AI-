@@ -24,20 +24,24 @@ async function extractWithLLM(text) {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 20000);
 
-      // This is a placeholder URL. In reality, it would point to OpenAI/Anthropic/etc.
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      const isGroq = config.llmApiKey.startsWith('gsk_');
+      const apiUrl = isGroq 
+        ? 'https://api.groq.com/openai/v1/chat/completions' 
+        : 'https://api.openai.com/v1/chat/completions';
+      const model = isGroq ? 'qwen/qwen3.6-27b' : 'gpt-3.5-turbo';
+
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${config.llmApiKey}`
         },
         body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
+          model,
           messages: [
             { role: 'system', content: 'You are a resume parser. Extract structured data from the following resume text. Return ONLY valid JSON.' },
             { role: 'user', content: `DATA:\n${text}` }
-          ],
-          response_format: { type: 'json_object' }
+          ]
         }),
         signal: controller.signal
       });
@@ -49,7 +53,14 @@ async function extractWithLLM(text) {
       }
 
       const data = await response.json();
-      const resultText = data.choices[0].message.content;
+      let resultText = data.choices[0].message.content || '';
+      
+      // Clean thinking tags or markdown code blocks
+      resultText = resultText.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+      const match = resultText.match(/\{[\s\S]*\}/);
+      if (match) {
+        resultText = match[0];
+      }
       
       const parsed = JSON.parse(resultText);
       // Validate schema basic fields

@@ -17,7 +17,7 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    // Use DIRECT_URL (port 5432) for migrations/schema push, fallback to DATABASE_URL
-    url: process.env["DIRECT_URL"] || process.env["DATABASE_URL"],
+    // Use DIRECT_URL (port 5432) for migrations/schema push, fallback to DATABASE_URL or dummy fallback for prisma generate
+    url: process.env["DIRECT_URL"] || process.env["DATABASE_URL"] || "postgresql://postgres:postgres@localhost:5432/postgres",
   },
 });

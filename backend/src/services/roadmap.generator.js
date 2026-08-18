@@ -328,16 +328,21 @@ Return ONLY valid JSON matching this exact structure:
   }
 }`;
 
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+  const isGroq = config.llmApiKey.startsWith('gsk_');
+  const apiUrl = isGroq 
+    ? 'https://api.groq.com/openai/v1/chat/completions' 
+    : 'https://api.openai.com/v1/chat/completions';
+  const model = isGroq ? 'qwen/qwen3.6-27b' : 'gpt-3.5-turbo';
+
+  const response = await fetch(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${config.llmApiKey}`
     },
     body: JSON.stringify({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }],
-      response_format: { type: 'json_object' }
+      model,
+      messages: [{ role: 'user', content: prompt }]
     }),
     signal: controller.signal
   });
@@ -349,6 +354,14 @@ Return ONLY valid JSON matching this exact structure:
   }
 
   const data = await response.json();
-  const parsed = JSON.parse(data.choices[0].message.content);
+  let resultText = data.choices[0].message.content || '';
+  
+  resultText = resultText.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+  const match = resultText.match(/\{[\s\S]*\}/);
+  if (match) {
+    resultText = match[0];
+  }
+  
+  const parsed = JSON.parse(resultText);
   return parsed;
 }
