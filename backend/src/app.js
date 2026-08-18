@@ -6,6 +6,8 @@ import authRoutes from './routes/auth.routes.js';
 import resumeRoutes from './routes/resume.routes.js';
 import jobRoutes from './routes/job.routes.js';
 import skillRoutes from './routes/skills.js';
+import roleRoutes from './routes/roles.routes.js';
+import roadmapRoutes from './routes/roadmap.routes.js';
 import { authenticate } from './middleware/auth.js';
 import { config } from './config/env.js';
 
@@ -31,6 +33,8 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/resume', resumeRoutes);
 app.use('/api/v1/jobs', jobRoutes);
 app.use('/api/v1/skills', authenticate, skillRoutes);
+app.use('/api/v1/roles', roleRoutes);
+app.use('/api/v1/roadmap', roadmapRoutes);
 
 // Health check endpoint
 app.get('/api/v1/health', (req, res) => {

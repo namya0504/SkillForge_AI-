@@ -124,8 +124,20 @@ exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   passwordHash: 'passwordHash',
+  targetRoleId: 'targetRoleId',
+  customTargetRole: 'customTargetRole',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.RoleReferenceScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  category: 'category',
+  isPopular: 'isPopular',
+  description: 'description',
+  requiredSkills: 'requiredSkills',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.ResumeScalarFieldEnum = {
@@ -162,6 +174,17 @@ exports.Prisma.JobScalarFieldEnum = {
   completedAt: 'completedAt'
 };
 
+exports.Prisma.RoadmapScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  targetRoleTitle: 'targetRoleTitle',
+  gapAnalysis: 'gapAnalysis',
+  milestones: 'milestones',
+  recommendations: 'recommendations',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -180,9 +203,11 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  RoleReference: 'RoleReference',
   Resume: 'Resume',
   Skill: 'Skill',
-  Job: 'Job'
+  Job: 'Job',
+  Roadmap: 'Roadmap'
 };
 
 /**

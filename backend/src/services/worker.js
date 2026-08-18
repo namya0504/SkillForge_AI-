@@ -52,6 +52,20 @@ class JobWorker {
         where: { id: job.id },
         data: { status: 'failed', errorMsg: err.message, completedAt: new Date() }
       });
+
+      if (job.type === 'resume_parse' && job.payload) {
+        try {
+          const payload = JSON.parse(job.payload);
+          if (payload.resumeId) {
+            await prisma.resume.update({
+              where: { id: payload.resumeId },
+              data: { parsedStatus: 'failed' }
+            });
+          }
+        } catch (e) {
+          console.error('Failed to update resume status on job error:', e.message);
+        }
+      }
     } finally {
       this.activeJobs--;
     }
@@ -64,11 +78,8 @@ class JobWorker {
     // Step 1: Read file from storage
     const buffer = await readFile(storageKey);
 
-    // Step 2: Extract raw text
+    // Step 2: Extract raw text (throws if scanned/empty/unreadable)
     const rawText = await extractText(buffer, mimeType);
-    if (!rawText || rawText.trim().length < 20) {
-      throw new Error('Could not extract meaningful text from the file. The file may be scanned/image-only.');
-    }
 
     // Step 3: Extract structured data
     const structured = await extractStructuredData(rawText);
@@ -82,6 +93,7 @@ class JobWorker {
     // Step 5: Save extracted skills to skills table (upsert to avoid duplicates)
     if (structured.skills && structured.skills.length > 0) {
       for (const skill of structured.skills) {
+        if (!skill || !skill.name) continue;
         await prisma.skill.upsert({
           where: {
             userId_skillName: { userId: job.userId, skillName: skill.name.toLowerCase() }

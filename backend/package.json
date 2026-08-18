@@ -5,8 +5,10 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
+    "build": "npx prisma generate",
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
+    "worker": "node src/runWorker.js",
     "db:migrate": "npx prisma migrate dev",
     "db:generate": "npx prisma generate",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest"

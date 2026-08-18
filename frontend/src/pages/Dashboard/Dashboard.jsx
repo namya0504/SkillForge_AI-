@@ -1,56 +1,319 @@
-import React from 'react';
-import { Map, BookOpen, Activity, Upload as UploadIcon } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { roadmapAPI } from '../../services/api';
+import { 
+  Target, Sparkles, CheckCircle2, AlertCircle, RefreshCw, 
+  Map, Award, FolderGit2, ExternalLink, Clock, ChevronRight, Edit3, ShieldCheck
+} from 'lucide-react';
 import './Dashboard.css';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <h1>Welcome back, {user?.email}!</h1>
-        <p>Ready to level up your career today?</p>
-      </header>
+  const [roadmap, setRoadmap] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [generating, setGenerating] = useState(false);
+  const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState('projects'); // 'projects' or 'certifications'
 
-      <div className="dashboard-grid">
-        <div className="dash-card">
-          <div className="dash-card-header">
-            <div className="icon-wrapper map-icon">
-              <Map size={24} />
-            </div>
-            <span className="badge-soon">Coming Soon</span>
-          </div>
-          <h3>Your Roadmap</h3>
-          <p>Your personalized AI-generated learning path will appear here.</p>
-        </div>
+  useEffect(() => {
+    fetchRoadmap();
+  }, []);
 
-        <div className="dash-card dash-card-actionable" onClick={() => navigate('/upload')}>
-          <div className="dash-card-header">
-            <div className="icon-wrapper skills-icon">
-              <UploadIcon size={24} />
-            </div>
-          </div>
-          <h3>Upload Your Resume</h3>
-          <p>Start by uploading your resume to get personalized recommendations.</p>
-          <button className="dash-upload-btn">
-            Upload Resume
-          </button>
-        </div>
+  const fetchRoadmap = async () => {
+    try {
+      setLoading(true);
+      const res = await roadmapAPI.getRoadmap();
+      if (res.roadmap) {
+        setRoadmap(res.roadmap);
+      } else {
+        // Auto-generate if not yet generated
+        await handleGenerate();
+      }
+    } catch (err) {
+      setError('Failed to load roadmap.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        <div className="dash-card">
-          <div className="dash-card-header">
-            <div className="icon-wrapper progress-icon">
-              <Activity size={24} />
-            </div>
-            <span className="badge-soon">Coming Soon</span>
-          </div>
-          <h3>Growth Analytics</h3>
-          <p>Visualize your progress and see how close you are to your career goals.</p>
+  const handleGenerate = async () => {
+    try {
+      setGenerating(true);
+      setError(null);
+      const res = await roadmapAPI.generateRoadmap();
+      setRoadmap(res.roadmap);
+    } catch (err) {
+      setError(err.message || 'Failed to generate roadmap.');
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="dashboard-container center-content">
+        <div className="loader-box">
+          <RefreshCw size={36} className="spin-icon text-teal" />
+          <h2>Generating Your Personal Career Roadmap...</h2>
+          <p>Analyzing skill gaps, structuring milestone phases, and matching project recommendations.</p>
         </div>
       </div>
+    );
+  }
+
+  const gapAnalysis = roadmap?.gapAnalysis || { matchedSkills: [], levelGaps: [], missingSkills: [] };
+  const milestones = roadmap?.milestones || [];
+  const recommendations = roadmap?.recommendations || { projects: [], certifications: [] };
+
+  const matchedCount = gapAnalysis.matchedSkills?.length || 0;
+  const gapCount = (gapAnalysis.levelGaps?.length || 0) + (gapAnalysis.missingSkills?.length || 0);
+  const totalSkillsCount = matchedCount + gapCount;
+  const matchPercentage = totalSkillsCount > 0 ? Math.round((matchedCount / totalSkillsCount) * 100) : 0;
+
+  return (
+    <div className="dashboard-container">
+      
+      {/* Top Banner: User Greeting & Target Role */}
+      <header className="dashboard-banner">
+        <div className="banner-left">
+          <div className="role-icon-badge">
+            <Target size={28} />
+          </div>
+          <div>
+            <div className="user-greeting">Welcome back, {user?.email}!</div>
+            <h1 className="target-role-heading">
+              Target Goal: <span>{roadmap?.targetRoleTitle || 'Target Role'}</span>
+            </h1>
+          </div>
+        </div>
+        <div className="banner-actions">
+          <button className="btn-secondary flex-center" onClick={() => navigate('/role-selection')}>
+            <Edit3 size={16} /> Change Goal Role
+          </button>
+          <button className="btn-primary flex-center" onClick={handleGenerate} disabled={generating}>
+            <RefreshCw size={16} className={generating ? 'spin-icon' : ''} />
+            {generating ? 'Regenerating...' : 'Regenerate Roadmap'}
+          </button>
+        </div>
+      </header>
+
+      {error && (
+        <div className="error-message">
+          <AlertCircle size={18} />
+          <span>{error}</span>
+        </div>
+      )}
+
+      {/* Main Grid Layout */}
+      <div className="dashboard-main-grid">
+
+        {/* Left Column: Skill Gap Analysis & Milestone Timeline (Feature 5) */}
+        <div className="roadmap-column">
+
+          {/* Skill Gap Summary Card */}
+          <div className="gap-analysis-card">
+            <div className="gap-card-header">
+              <h2><Sparkles size={20} className="text-amber" /> Skill Gap Benchmark Analysis</h2>
+              <span className="match-score-badge">{matchPercentage}% Match</span>
+            </div>
+
+            <div className="gap-progress-bar-container">
+              <div className="gap-progress-bar" style={{ width: `${matchPercentage}%` }}></div>
+            </div>
+
+            <div className="gap-stats-grid">
+              <div className="gap-stat matched">
+                <span className="stat-num">{matchedCount}</span>
+                <span className="stat-label"><CheckCircle2 size={14} /> Matched Skills</span>
+              </div>
+              <div className="gap-stat level-gap">
+                <span className="stat-num">{gapAnalysis.levelGaps?.length || 0}</span>
+                <span className="stat-label"><RefreshCw size={14} /> Level Gaps</span>
+              </div>
+              <div className="gap-stat missing">
+                <span className="stat-num">{gapAnalysis.missingSkills?.length || 0}</span>
+                <span className="stat-label"><AlertCircle size={14} /> Missing Skills</span>
+              </div>
+            </div>
+
+            {/* Gap Skills Pills */}
+            <div className="gap-skills-tags">
+              {gapAnalysis.missingSkills?.map((s, i) => (
+                <span key={`miss-${i}`} className="tag missing-tag">
+                  + {s.name} ({s.targetProficiency})
+                </span>
+              ))}
+              {gapAnalysis.levelGaps?.map((s, i) => (
+                <span key={`gap-${i}`} className="tag levelgap-tag">
+                  ↑ {s.name} ({s.currentProficiency} → {s.targetProficiency})
+                </span>
+              ))}
+              {gapAnalysis.matchedSkills?.map((s, i) => (
+                <span key={`match-${i}`} className="tag matched-tag">
+                  ✓ {s.name}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Milestone Learning Timeline (Feature 5) */}
+          <div className="milestones-section">
+            <div className="section-title">
+              <Map size={22} className="text-teal" />
+              <h2>Personalized Learning Path</h2>
+            </div>
+
+            <div className="milestones-timeline">
+              {milestones.map((m, idx) => (
+                <div key={idx} className="milestone-card">
+                  <div className="milestone-badge">
+                    <span className="phase-num">Phase {m.phase || idx + 1}</span>
+                    <span className="phase-duration"><Clock size={13} /> {m.duration}</span>
+                  </div>
+
+                  <h3>{m.title}</h3>
+                  <p className="milestone-desc">{m.description}</p>
+
+                  <div className="milestone-topics">
+                    <h4>Key Focus Topics:</h4>
+                    <ul>
+                      {m.topics?.map((topic, tIdx) => (
+                        <li key={tIdx}>{topic}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {m.targetSkills && (
+                    <div className="milestone-skills">
+                      {m.targetSkills.map((sk, skIdx) => (
+                        <span key={skIdx} className="milestone-skill-chip">{sk}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+
+        {/* Right Column: Project & Certification Recommendations Panel (Feature 6) */}
+        <div className="recommendations-column">
+          
+          <div className="recommendations-card">
+            
+            <div className="recs-header">
+              <h2><Award size={22} className="text-amber" /> Recommendations</h2>
+              <div className="recs-tabs">
+                <button 
+                  className={`tab-btn ${activeTab === 'projects' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('projects')}
+                >
+                  <FolderGit2 size={16} /> Projects ({recommendations.projects?.length || 0})
+                </button>
+                <button 
+                  className={`tab-btn ${activeTab === 'certifications' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('certifications')}
+                >
+                  <ShieldCheck size={16} /> Certifications ({recommendations.certifications?.length || 0})
+                </button>
+              </div>
+            </div>
+
+            {/* Projects Tab Panel (Feature 6) */}
+            {activeTab === 'projects' && (
+              <div className="recs-list">
+                {recommendations.projects?.length === 0 ? (
+                  <p className="no-recs">No project recommendations available.</p>
+                ) : (
+                  recommendations.projects?.map((proj) => (
+                    <div key={proj.id} className="rec-item project-item">
+                      <div className="rec-item-top">
+                        <h3>{proj.title}</h3>
+                        <div className="rec-badges">
+                          <span className={`badge diff-${proj.difficulty?.toLowerCase()}`}>
+                            {proj.difficulty}
+                          </span>
+                          {proj.estimatedHours && (
+                            <span className="badge hours-badge"><Clock size={12} /> {proj.estimatedHours}</span>
+                          )}
+                        </div>
+                      </div>
+
+                      <p className="rec-desc">{proj.description}</p>
+
+                      {/* Traceable Rationale Requirement (FR-6) */}
+                      <div className="rationale-box">
+                        <strong>Why this project?</strong> {proj.rationale}
+                      </div>
+
+                      <div className="rec-skills">
+                        {proj.targetSkills?.map((sk, i) => (
+                          <span key={i} className="rec-skill-tag">{sk}</span>
+                        ))}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+
+            {/* Certifications Tab Panel (Feature 6) */}
+            {activeTab === 'certifications' && (
+              <div className="recs-list">
+                {recommendations.certifications?.length === 0 ? (
+                  <p className="no-recs">No certification recommendations available.</p>
+                ) : (
+                  recommendations.certifications?.map((cert) => (
+                    <div key={cert.id} className="rec-item cert-item">
+                      <div className="rec-item-top">
+                        <div>
+                          <h3>{cert.title}</h3>
+                          <span className="cert-issuer">Issued by {cert.issuer}</span>
+                        </div>
+                        <div className="rec-badges">
+                          <span className={`badge cost-${cert.costType?.toLowerCase() || 'paid'}`}>
+                            {cert.costType || 'Paid'}
+                          </span>
+                          <span className={`badge diff-${cert.difficulty?.toLowerCase()}`}>
+                            {cert.difficulty}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Traceable Rationale Requirement (FR-6) */}
+                      <div className="rationale-box">
+                        <strong>Why this certification?</strong> {cert.rationale}
+                      </div>
+
+                      <div className="cert-footer">
+                        <div className="rec-skills">
+                          {cert.targetSkills?.map((sk, i) => (
+                            <span key={i} className="rec-skill-tag">{sk}</span>
+                          ))}
+                        </div>
+
+                        {cert.url && (
+                          <a href={cert.url} target="_blank" rel="noopener noreferrer" className="cert-link">
+                            View Cert <ExternalLink size={14} />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
   );
 };

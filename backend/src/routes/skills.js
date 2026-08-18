@@ -101,7 +101,7 @@ router.delete('/:id',
 
       // Verify ownership
       const existing = await prisma.skill.findUnique({ where: { id } });
-      if (!existing || existing.userId !== req.user.userId) {
+      if (!existing || existing.userId !== req.user.id) {
         return res.status(404).json({ error: 'Skill not found' });
       }
 

@@ -1,4 +1,4 @@
-const API_BASE = '/api/v1';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api/v1';
 
 async function request(endpoint, options = {}) {
   const config = {
@@ -8,7 +8,8 @@ async function request(endpoint, options = {}) {
   };
 
   const response = await fetch(`${API_BASE}${endpoint}`, config);
-  const data = await response.json();
+  const text = await response.text();
+  const data = text ? JSON.parse(text) : {};
 
   if (!response.ok) {
     throw new Error(data.error || data.message || 'Something went wrong');
@@ -47,7 +48,8 @@ export const resumeAPI = {
       credentials: 'include',
       body: formData,
     }).then(async (res) => {
-      const data = await res.json();
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : {};
       if (!res.ok) throw new Error(data.error || data.message || 'Upload failed');
       return data;
     });
@@ -70,4 +72,18 @@ export const skillAPI = {
     body: JSON.stringify({ proficiency }),
   }),
   deleteSkill: (id) => request(`/skills/${id}`, { method: 'DELETE' }),
+};
+
+export const roleAPI = {
+  getRoles: () => request('/roles'),
+  getUserTargetRole: () => request('/roles/target'),
+  saveTargetRole: (roleId, customRole) => request('/roles/target', {
+    method: 'POST',
+    body: JSON.stringify({ roleId, customRole }),
+  }),
+};
+
+export const roadmapAPI = {
+  getRoadmap: () => request('/roadmap'),
+  generateRoadmap: () => request('/roadmap/generate', { method: 'POST' }),
 };

@@ -1,6 +1,4 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const fileType = require('file-type');
+import fileType from 'file-type';
 
 export const validateFileType = async (req, res, next) => {
   if (!req.file) {

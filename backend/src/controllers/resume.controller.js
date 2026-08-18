@@ -6,17 +6,17 @@ export const uploadResume = async (req, res) => {
   try {
     const userId = req.user.id;
     const file = req.file;
-    
+
     // Generate random storage key
     const ext = file.originalname.split('.').pop().toLowerCase();
     const storageKey = `${crypto.randomUUID()}.${ext}`;
-    
+
     // Save file to storage
     await saveFile(file.buffer, storageKey);
-    
+
     // Determine mimeType
     const mimeType = ext === 'pdf' ? 'pdf' : 'docx';
-    
+
     // Create resume record
     const resume = await prisma.resume.create({
       data: {
@@ -28,7 +28,7 @@ export const uploadResume = async (req, res) => {
         parsedStatus: 'pending'
       }
     });
-    
+
     // Create async job
     const job = await prisma.job.create({
       data: {
@@ -38,7 +38,7 @@ export const uploadResume = async (req, res) => {
         payload: JSON.stringify({ resumeId: resume.id, storageKey, mimeType })
       }
     });
-    
+
     // Return 202 Accepted with job ID
     res.status(202).json({
       message: 'Resume uploaded. Parsing started.',
@@ -57,13 +57,13 @@ export const getResumeStatus = async (req, res) => {
       where: { userId: req.user.id },
       orderBy: { createdAt: 'desc' }
     });
-    
+
     if (!resume) {
       return res.status(404).json({ error: 'No resume found' });
     }
-    
+
     const parsedData = resume.parsedData ? JSON.parse(resume.parsedData) : null;
-    
+
     res.json({
       id: resume.id,
       originalName: resume.originalName,

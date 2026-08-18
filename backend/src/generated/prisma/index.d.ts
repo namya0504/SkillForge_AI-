@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model RoleReference
+ * 
+ */
+export type RoleReference = $Result.DefaultSelection<Prisma.$RoleReferencePayload>
+/**
  * Model Resume
  * 
  */
@@ -33,6 +38,11 @@ export type Skill = $Result.DefaultSelection<Prisma.$SkillPayload>
  * 
  */
 export type Job = $Result.DefaultSelection<Prisma.$JobPayload>
+/**
+ * Model Roadmap
+ * 
+ */
+export type Roadmap = $Result.DefaultSelection<Prisma.$RoadmapPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -166,6 +176,16 @@ export class PrismaClient<
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.roleReference`: Exposes CRUD operations for the **RoleReference** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RoleReferences
+    * const roleReferences = await prisma.roleReference.findMany()
+    * ```
+    */
+  get roleReference(): Prisma.RoleReferenceDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.resume`: Exposes CRUD operations for the **Resume** model.
     * Example usage:
     * ```ts
@@ -194,6 +214,16 @@ export class PrismaClient<
     * ```
     */
   get job(): Prisma.JobDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.roadmap`: Exposes CRUD operations for the **Roadmap** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Roadmaps
+    * const roadmaps = await prisma.roadmap.findMany()
+    * ```
+    */
+  get roadmap(): Prisma.RoadmapDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -642,9 +672,11 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
+    RoleReference: 'RoleReference',
     Resume: 'Resume',
     Skill: 'Skill',
-    Job: 'Job'
+    Job: 'Job',
+    Roadmap: 'Roadmap'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -660,7 +692,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "resume" | "skill" | "job"
+      modelProps: "user" | "roleReference" | "resume" | "skill" | "job" | "roadmap"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -735,6 +767,80 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>
             result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      RoleReference: {
+        payload: Prisma.$RoleReferencePayload<ExtArgs>
+        fields: Prisma.RoleReferenceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RoleReferenceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoleReferencePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RoleReferenceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoleReferencePayload>
+          }
+          findFirst: {
+            args: Prisma.RoleReferenceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoleReferencePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RoleReferenceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoleReferencePayload>
+          }
+          findMany: {
+            args: Prisma.RoleReferenceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoleReferencePayload>[]
+          }
+          create: {
+            args: Prisma.RoleReferenceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoleReferencePayload>
+          }
+          createMany: {
+            args: Prisma.RoleReferenceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RoleReferenceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoleReferencePayload>[]
+          }
+          delete: {
+            args: Prisma.RoleReferenceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoleReferencePayload>
+          }
+          update: {
+            args: Prisma.RoleReferenceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoleReferencePayload>
+          }
+          deleteMany: {
+            args: Prisma.RoleReferenceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RoleReferenceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RoleReferenceUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoleReferencePayload>[]
+          }
+          upsert: {
+            args: Prisma.RoleReferenceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoleReferencePayload>
+          }
+          aggregate: {
+            args: Prisma.RoleReferenceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRoleReference>
+          }
+          groupBy: {
+            args: Prisma.RoleReferenceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RoleReferenceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RoleReferenceCountArgs<ExtArgs>
+            result: $Utils.Optional<RoleReferenceCountAggregateOutputType> | number
           }
         }
       }
@@ -960,6 +1066,80 @@ export namespace Prisma {
           }
         }
       }
+      Roadmap: {
+        payload: Prisma.$RoadmapPayload<ExtArgs>
+        fields: Prisma.RoadmapFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RoadmapFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadmapPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RoadmapFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadmapPayload>
+          }
+          findFirst: {
+            args: Prisma.RoadmapFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadmapPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RoadmapFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadmapPayload>
+          }
+          findMany: {
+            args: Prisma.RoadmapFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadmapPayload>[]
+          }
+          create: {
+            args: Prisma.RoadmapCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadmapPayload>
+          }
+          createMany: {
+            args: Prisma.RoadmapCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RoadmapCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadmapPayload>[]
+          }
+          delete: {
+            args: Prisma.RoadmapDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadmapPayload>
+          }
+          update: {
+            args: Prisma.RoadmapUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadmapPayload>
+          }
+          deleteMany: {
+            args: Prisma.RoadmapDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RoadmapUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RoadmapUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadmapPayload>[]
+          }
+          upsert: {
+            args: Prisma.RoadmapUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoadmapPayload>
+          }
+          aggregate: {
+            args: Prisma.RoadmapAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRoadmap>
+          }
+          groupBy: {
+            args: Prisma.RoadmapGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RoadmapGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RoadmapCountArgs<ExtArgs>
+            result: $Utils.Optional<RoadmapCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1084,9 +1264,11 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     user?: UserOmit
+    roleReference?: RoleReferenceOmit
     resume?: ResumeOmit
     skill?: SkillOmit
     job?: JobOmit
+    roadmap?: RoadmapOmit
   }
 
   /* Types for Logging */
@@ -1212,6 +1394,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type RoleReferenceCountOutputType
+   */
+
+  export type RoleReferenceCountOutputType = {
+    users: number
+  }
+
+  export type RoleReferenceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    users?: boolean | RoleReferenceCountOutputTypeCountUsersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * RoleReferenceCountOutputType without action
+   */
+  export type RoleReferenceCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleReferenceCountOutputType
+     */
+    select?: RoleReferenceCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * RoleReferenceCountOutputType without action
+   */
+  export type RoleReferenceCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -1229,6 +1442,8 @@ export namespace Prisma {
     id: string | null
     email: string | null
     passwordHash: string | null
+    targetRoleId: string | null
+    customTargetRole: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -1237,6 +1452,8 @@ export namespace Prisma {
     id: string | null
     email: string | null
     passwordHash: string | null
+    targetRoleId: string | null
+    customTargetRole: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -1245,6 +1462,8 @@ export namespace Prisma {
     id: number
     email: number
     passwordHash: number
+    targetRoleId: number
+    customTargetRole: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -1255,6 +1474,8 @@ export namespace Prisma {
     id?: true
     email?: true
     passwordHash?: true
+    targetRoleId?: true
+    customTargetRole?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -1263,6 +1484,8 @@ export namespace Prisma {
     id?: true
     email?: true
     passwordHash?: true
+    targetRoleId?: true
+    customTargetRole?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -1271,6 +1494,8 @@ export namespace Prisma {
     id?: true
     email?: true
     passwordHash?: true
+    targetRoleId?: true
+    customTargetRole?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -1352,6 +1577,8 @@ export namespace Prisma {
     id: string
     email: string
     passwordHash: string
+    targetRoleId: string | null
+    customTargetRole: string | null
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -1377,11 +1604,15 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     passwordHash?: boolean
+    targetRoleId?: boolean
+    customTargetRole?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     resumes?: boolean | User$resumesArgs<ExtArgs>
     skills?: boolean | User$skillsArgs<ExtArgs>
     jobs?: boolean | User$jobsArgs<ExtArgs>
+    roadmap?: boolean | User$roadmapArgs<ExtArgs>
+    targetRole?: boolean | User$targetRoleArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1389,35 +1620,49 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     passwordHash?: boolean
+    targetRoleId?: boolean
+    customTargetRole?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    targetRole?: boolean | User$targetRoleArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     email?: boolean
     passwordHash?: boolean
+    targetRoleId?: boolean
+    customTargetRole?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    targetRole?: boolean | User$targetRoleArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
     id?: boolean
     email?: boolean
     passwordHash?: boolean
+    targetRoleId?: boolean
+    customTargetRole?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "passwordHash" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "passwordHash" | "targetRoleId" | "customTargetRole" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     resumes?: boolean | User$resumesArgs<ExtArgs>
     skills?: boolean | User$skillsArgs<ExtArgs>
     jobs?: boolean | User$jobsArgs<ExtArgs>
+    roadmap?: boolean | User$roadmapArgs<ExtArgs>
+    targetRole?: boolean | User$targetRoleArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    targetRole?: boolean | User$targetRoleArgs<ExtArgs>
+  }
+  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    targetRole?: boolean | User$targetRoleArgs<ExtArgs>
+  }
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
@@ -1425,11 +1670,15 @@ export namespace Prisma {
       resumes: Prisma.$ResumePayload<ExtArgs>[]
       skills: Prisma.$SkillPayload<ExtArgs>[]
       jobs: Prisma.$JobPayload<ExtArgs>[]
+      roadmap: Prisma.$RoadmapPayload<ExtArgs> | null
+      targetRole: Prisma.$RoleReferencePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       email: string
       passwordHash: string
+      targetRoleId: string | null
+      customTargetRole: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -1829,6 +2078,8 @@ export namespace Prisma {
     resumes<T extends User$resumesArgs<ExtArgs> = {}>(args?: Subset<T, User$resumesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResumePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     skills<T extends User$skillsArgs<ExtArgs> = {}>(args?: Subset<T, User$skillsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     jobs<T extends User$jobsArgs<ExtArgs> = {}>(args?: Subset<T, User$jobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    roadmap<T extends User$roadmapArgs<ExtArgs> = {}>(args?: Subset<T, User$roadmapArgs<ExtArgs>>): Prisma__RoadmapClient<$Result.GetResult<Prisma.$RoadmapPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    targetRole<T extends User$targetRoleArgs<ExtArgs> = {}>(args?: Subset<T, User$targetRoleArgs<ExtArgs>>): Prisma__RoleReferenceClient<$Result.GetResult<Prisma.$RoleReferencePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1861,6 +2112,8 @@ export namespace Prisma {
     readonly id: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
     readonly passwordHash: FieldRef<"User", 'String'>
+    readonly targetRoleId: FieldRef<"User", 'String'>
+    readonly customTargetRole: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -2117,6 +2370,10 @@ export namespace Prisma {
      */
     data: UserCreateManyInput | UserCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -2187,6 +2444,10 @@ export namespace Prisma {
      * Limit how many Users to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -2328,6 +2589,44 @@ export namespace Prisma {
   }
 
   /**
+   * User.roadmap
+   */
+  export type User$roadmapArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Roadmap
+     */
+    select?: RoadmapSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Roadmap
+     */
+    omit?: RoadmapOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoadmapInclude<ExtArgs> | null
+    where?: RoadmapWhereInput
+  }
+
+  /**
+   * User.targetRole
+   */
+  export type User$targetRoleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleReference
+     */
+    select?: RoleReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleReference
+     */
+    omit?: RoleReferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleReferenceInclude<ExtArgs> | null
+    where?: RoleReferenceWhereInput
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2343,6 +2642,1107 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model RoleReference
+   */
+
+  export type AggregateRoleReference = {
+    _count: RoleReferenceCountAggregateOutputType | null
+    _min: RoleReferenceMinAggregateOutputType | null
+    _max: RoleReferenceMaxAggregateOutputType | null
+  }
+
+  export type RoleReferenceMinAggregateOutputType = {
+    id: string | null
+    title: string | null
+    category: string | null
+    isPopular: boolean | null
+    description: string | null
+    requiredSkills: string | null
+    createdAt: Date | null
+  }
+
+  export type RoleReferenceMaxAggregateOutputType = {
+    id: string | null
+    title: string | null
+    category: string | null
+    isPopular: boolean | null
+    description: string | null
+    requiredSkills: string | null
+    createdAt: Date | null
+  }
+
+  export type RoleReferenceCountAggregateOutputType = {
+    id: number
+    title: number
+    category: number
+    isPopular: number
+    description: number
+    requiredSkills: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type RoleReferenceMinAggregateInputType = {
+    id?: true
+    title?: true
+    category?: true
+    isPopular?: true
+    description?: true
+    requiredSkills?: true
+    createdAt?: true
+  }
+
+  export type RoleReferenceMaxAggregateInputType = {
+    id?: true
+    title?: true
+    category?: true
+    isPopular?: true
+    description?: true
+    requiredSkills?: true
+    createdAt?: true
+  }
+
+  export type RoleReferenceCountAggregateInputType = {
+    id?: true
+    title?: true
+    category?: true
+    isPopular?: true
+    description?: true
+    requiredSkills?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type RoleReferenceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RoleReference to aggregate.
+     */
+    where?: RoleReferenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RoleReferences to fetch.
+     */
+    orderBy?: RoleReferenceOrderByWithRelationInput | RoleReferenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RoleReferenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RoleReferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RoleReferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RoleReferences
+    **/
+    _count?: true | RoleReferenceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RoleReferenceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RoleReferenceMaxAggregateInputType
+  }
+
+  export type GetRoleReferenceAggregateType<T extends RoleReferenceAggregateArgs> = {
+        [P in keyof T & keyof AggregateRoleReference]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRoleReference[P]>
+      : GetScalarType<T[P], AggregateRoleReference[P]>
+  }
+
+
+
+
+  export type RoleReferenceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RoleReferenceWhereInput
+    orderBy?: RoleReferenceOrderByWithAggregationInput | RoleReferenceOrderByWithAggregationInput[]
+    by: RoleReferenceScalarFieldEnum[] | RoleReferenceScalarFieldEnum
+    having?: RoleReferenceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RoleReferenceCountAggregateInputType | true
+    _min?: RoleReferenceMinAggregateInputType
+    _max?: RoleReferenceMaxAggregateInputType
+  }
+
+  export type RoleReferenceGroupByOutputType = {
+    id: string
+    title: string
+    category: string
+    isPopular: boolean
+    description: string | null
+    requiredSkills: string
+    createdAt: Date
+    _count: RoleReferenceCountAggregateOutputType | null
+    _min: RoleReferenceMinAggregateOutputType | null
+    _max: RoleReferenceMaxAggregateOutputType | null
+  }
+
+  type GetRoleReferenceGroupByPayload<T extends RoleReferenceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RoleReferenceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RoleReferenceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RoleReferenceGroupByOutputType[P]>
+            : GetScalarType<T[P], RoleReferenceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RoleReferenceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    category?: boolean
+    isPopular?: boolean
+    description?: boolean
+    requiredSkills?: boolean
+    createdAt?: boolean
+    users?: boolean | RoleReference$usersArgs<ExtArgs>
+    _count?: boolean | RoleReferenceCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["roleReference"]>
+
+  export type RoleReferenceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    category?: boolean
+    isPopular?: boolean
+    description?: boolean
+    requiredSkills?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["roleReference"]>
+
+  export type RoleReferenceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    category?: boolean
+    isPopular?: boolean
+    description?: boolean
+    requiredSkills?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["roleReference"]>
+
+  export type RoleReferenceSelectScalar = {
+    id?: boolean
+    title?: boolean
+    category?: boolean
+    isPopular?: boolean
+    description?: boolean
+    requiredSkills?: boolean
+    createdAt?: boolean
+  }
+
+  export type RoleReferenceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "category" | "isPopular" | "description" | "requiredSkills" | "createdAt", ExtArgs["result"]["roleReference"]>
+  export type RoleReferenceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    users?: boolean | RoleReference$usersArgs<ExtArgs>
+    _count?: boolean | RoleReferenceCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type RoleReferenceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type RoleReferenceIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $RoleReferencePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RoleReference"
+    objects: {
+      users: Prisma.$UserPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      title: string
+      category: string
+      isPopular: boolean
+      description: string | null
+      requiredSkills: string
+      createdAt: Date
+    }, ExtArgs["result"]["roleReference"]>
+    composites: {}
+  }
+
+  type RoleReferenceGetPayload<S extends boolean | null | undefined | RoleReferenceDefaultArgs> = $Result.GetResult<Prisma.$RoleReferencePayload, S>
+
+  type RoleReferenceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RoleReferenceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RoleReferenceCountAggregateInputType | true
+    }
+
+  export interface RoleReferenceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RoleReference'], meta: { name: 'RoleReference' } }
+    /**
+     * Find zero or one RoleReference that matches the filter.
+     * @param {RoleReferenceFindUniqueArgs} args - Arguments to find a RoleReference
+     * @example
+     * // Get one RoleReference
+     * const roleReference = await prisma.roleReference.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RoleReferenceFindUniqueArgs>(args: SelectSubset<T, RoleReferenceFindUniqueArgs<ExtArgs>>): Prisma__RoleReferenceClient<$Result.GetResult<Prisma.$RoleReferencePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RoleReference that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RoleReferenceFindUniqueOrThrowArgs} args - Arguments to find a RoleReference
+     * @example
+     * // Get one RoleReference
+     * const roleReference = await prisma.roleReference.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RoleReferenceFindUniqueOrThrowArgs>(args: SelectSubset<T, RoleReferenceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RoleReferenceClient<$Result.GetResult<Prisma.$RoleReferencePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RoleReference that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleReferenceFindFirstArgs} args - Arguments to find a RoleReference
+     * @example
+     * // Get one RoleReference
+     * const roleReference = await prisma.roleReference.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RoleReferenceFindFirstArgs>(args?: SelectSubset<T, RoleReferenceFindFirstArgs<ExtArgs>>): Prisma__RoleReferenceClient<$Result.GetResult<Prisma.$RoleReferencePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RoleReference that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleReferenceFindFirstOrThrowArgs} args - Arguments to find a RoleReference
+     * @example
+     * // Get one RoleReference
+     * const roleReference = await prisma.roleReference.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RoleReferenceFindFirstOrThrowArgs>(args?: SelectSubset<T, RoleReferenceFindFirstOrThrowArgs<ExtArgs>>): Prisma__RoleReferenceClient<$Result.GetResult<Prisma.$RoleReferencePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RoleReferences that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleReferenceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RoleReferences
+     * const roleReferences = await prisma.roleReference.findMany()
+     * 
+     * // Get first 10 RoleReferences
+     * const roleReferences = await prisma.roleReference.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const roleReferenceWithIdOnly = await prisma.roleReference.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RoleReferenceFindManyArgs>(args?: SelectSubset<T, RoleReferenceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoleReferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RoleReference.
+     * @param {RoleReferenceCreateArgs} args - Arguments to create a RoleReference.
+     * @example
+     * // Create one RoleReference
+     * const RoleReference = await prisma.roleReference.create({
+     *   data: {
+     *     // ... data to create a RoleReference
+     *   }
+     * })
+     * 
+     */
+    create<T extends RoleReferenceCreateArgs>(args: SelectSubset<T, RoleReferenceCreateArgs<ExtArgs>>): Prisma__RoleReferenceClient<$Result.GetResult<Prisma.$RoleReferencePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RoleReferences.
+     * @param {RoleReferenceCreateManyArgs} args - Arguments to create many RoleReferences.
+     * @example
+     * // Create many RoleReferences
+     * const roleReference = await prisma.roleReference.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RoleReferenceCreateManyArgs>(args?: SelectSubset<T, RoleReferenceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many RoleReferences and returns the data saved in the database.
+     * @param {RoleReferenceCreateManyAndReturnArgs} args - Arguments to create many RoleReferences.
+     * @example
+     * // Create many RoleReferences
+     * const roleReference = await prisma.roleReference.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many RoleReferences and only return the `id`
+     * const roleReferenceWithIdOnly = await prisma.roleReference.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RoleReferenceCreateManyAndReturnArgs>(args?: SelectSubset<T, RoleReferenceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoleReferencePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a RoleReference.
+     * @param {RoleReferenceDeleteArgs} args - Arguments to delete one RoleReference.
+     * @example
+     * // Delete one RoleReference
+     * const RoleReference = await prisma.roleReference.delete({
+     *   where: {
+     *     // ... filter to delete one RoleReference
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RoleReferenceDeleteArgs>(args: SelectSubset<T, RoleReferenceDeleteArgs<ExtArgs>>): Prisma__RoleReferenceClient<$Result.GetResult<Prisma.$RoleReferencePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RoleReference.
+     * @param {RoleReferenceUpdateArgs} args - Arguments to update one RoleReference.
+     * @example
+     * // Update one RoleReference
+     * const roleReference = await prisma.roleReference.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RoleReferenceUpdateArgs>(args: SelectSubset<T, RoleReferenceUpdateArgs<ExtArgs>>): Prisma__RoleReferenceClient<$Result.GetResult<Prisma.$RoleReferencePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RoleReferences.
+     * @param {RoleReferenceDeleteManyArgs} args - Arguments to filter RoleReferences to delete.
+     * @example
+     * // Delete a few RoleReferences
+     * const { count } = await prisma.roleReference.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RoleReferenceDeleteManyArgs>(args?: SelectSubset<T, RoleReferenceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RoleReferences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleReferenceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RoleReferences
+     * const roleReference = await prisma.roleReference.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RoleReferenceUpdateManyArgs>(args: SelectSubset<T, RoleReferenceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RoleReferences and returns the data updated in the database.
+     * @param {RoleReferenceUpdateManyAndReturnArgs} args - Arguments to update many RoleReferences.
+     * @example
+     * // Update many RoleReferences
+     * const roleReference = await prisma.roleReference.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more RoleReferences and only return the `id`
+     * const roleReferenceWithIdOnly = await prisma.roleReference.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RoleReferenceUpdateManyAndReturnArgs>(args: SelectSubset<T, RoleReferenceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoleReferencePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one RoleReference.
+     * @param {RoleReferenceUpsertArgs} args - Arguments to update or create a RoleReference.
+     * @example
+     * // Update or create a RoleReference
+     * const roleReference = await prisma.roleReference.upsert({
+     *   create: {
+     *     // ... data to create a RoleReference
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RoleReference we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RoleReferenceUpsertArgs>(args: SelectSubset<T, RoleReferenceUpsertArgs<ExtArgs>>): Prisma__RoleReferenceClient<$Result.GetResult<Prisma.$RoleReferencePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RoleReferences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleReferenceCountArgs} args - Arguments to filter RoleReferences to count.
+     * @example
+     * // Count the number of RoleReferences
+     * const count = await prisma.roleReference.count({
+     *   where: {
+     *     // ... the filter for the RoleReferences we want to count
+     *   }
+     * })
+    **/
+    count<T extends RoleReferenceCountArgs>(
+      args?: Subset<T, RoleReferenceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RoleReferenceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RoleReference.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleReferenceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RoleReferenceAggregateArgs>(args: Subset<T, RoleReferenceAggregateArgs>): Prisma.PrismaPromise<GetRoleReferenceAggregateType<T>>
+
+    /**
+     * Group by RoleReference.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoleReferenceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RoleReferenceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RoleReferenceGroupByArgs['orderBy'] }
+        : { orderBy?: RoleReferenceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RoleReferenceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRoleReferenceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RoleReference model
+   */
+  readonly fields: RoleReferenceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RoleReference.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RoleReferenceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    users<T extends RoleReference$usersArgs<ExtArgs> = {}>(args?: Subset<T, RoleReference$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RoleReference model
+   */
+  interface RoleReferenceFieldRefs {
+    readonly id: FieldRef<"RoleReference", 'String'>
+    readonly title: FieldRef<"RoleReference", 'String'>
+    readonly category: FieldRef<"RoleReference", 'String'>
+    readonly isPopular: FieldRef<"RoleReference", 'Boolean'>
+    readonly description: FieldRef<"RoleReference", 'String'>
+    readonly requiredSkills: FieldRef<"RoleReference", 'String'>
+    readonly createdAt: FieldRef<"RoleReference", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RoleReference findUnique
+   */
+  export type RoleReferenceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleReference
+     */
+    select?: RoleReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleReference
+     */
+    omit?: RoleReferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleReferenceInclude<ExtArgs> | null
+    /**
+     * Filter, which RoleReference to fetch.
+     */
+    where: RoleReferenceWhereUniqueInput
+  }
+
+  /**
+   * RoleReference findUniqueOrThrow
+   */
+  export type RoleReferenceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleReference
+     */
+    select?: RoleReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleReference
+     */
+    omit?: RoleReferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleReferenceInclude<ExtArgs> | null
+    /**
+     * Filter, which RoleReference to fetch.
+     */
+    where: RoleReferenceWhereUniqueInput
+  }
+
+  /**
+   * RoleReference findFirst
+   */
+  export type RoleReferenceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleReference
+     */
+    select?: RoleReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleReference
+     */
+    omit?: RoleReferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleReferenceInclude<ExtArgs> | null
+    /**
+     * Filter, which RoleReference to fetch.
+     */
+    where?: RoleReferenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RoleReferences to fetch.
+     */
+    orderBy?: RoleReferenceOrderByWithRelationInput | RoleReferenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RoleReferences.
+     */
+    cursor?: RoleReferenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RoleReferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RoleReferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RoleReferences.
+     */
+    distinct?: RoleReferenceScalarFieldEnum | RoleReferenceScalarFieldEnum[]
+  }
+
+  /**
+   * RoleReference findFirstOrThrow
+   */
+  export type RoleReferenceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleReference
+     */
+    select?: RoleReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleReference
+     */
+    omit?: RoleReferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleReferenceInclude<ExtArgs> | null
+    /**
+     * Filter, which RoleReference to fetch.
+     */
+    where?: RoleReferenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RoleReferences to fetch.
+     */
+    orderBy?: RoleReferenceOrderByWithRelationInput | RoleReferenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RoleReferences.
+     */
+    cursor?: RoleReferenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RoleReferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RoleReferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RoleReferences.
+     */
+    distinct?: RoleReferenceScalarFieldEnum | RoleReferenceScalarFieldEnum[]
+  }
+
+  /**
+   * RoleReference findMany
+   */
+  export type RoleReferenceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleReference
+     */
+    select?: RoleReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleReference
+     */
+    omit?: RoleReferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleReferenceInclude<ExtArgs> | null
+    /**
+     * Filter, which RoleReferences to fetch.
+     */
+    where?: RoleReferenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RoleReferences to fetch.
+     */
+    orderBy?: RoleReferenceOrderByWithRelationInput | RoleReferenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RoleReferences.
+     */
+    cursor?: RoleReferenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RoleReferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RoleReferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RoleReferences.
+     */
+    distinct?: RoleReferenceScalarFieldEnum | RoleReferenceScalarFieldEnum[]
+  }
+
+  /**
+   * RoleReference create
+   */
+  export type RoleReferenceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleReference
+     */
+    select?: RoleReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleReference
+     */
+    omit?: RoleReferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleReferenceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a RoleReference.
+     */
+    data: XOR<RoleReferenceCreateInput, RoleReferenceUncheckedCreateInput>
+  }
+
+  /**
+   * RoleReference createMany
+   */
+  export type RoleReferenceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RoleReferences.
+     */
+    data: RoleReferenceCreateManyInput | RoleReferenceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RoleReference createManyAndReturn
+   */
+  export type RoleReferenceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleReference
+     */
+    select?: RoleReferenceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleReference
+     */
+    omit?: RoleReferenceOmit<ExtArgs> | null
+    /**
+     * The data used to create many RoleReferences.
+     */
+    data: RoleReferenceCreateManyInput | RoleReferenceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RoleReference update
+   */
+  export type RoleReferenceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleReference
+     */
+    select?: RoleReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleReference
+     */
+    omit?: RoleReferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleReferenceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a RoleReference.
+     */
+    data: XOR<RoleReferenceUpdateInput, RoleReferenceUncheckedUpdateInput>
+    /**
+     * Choose, which RoleReference to update.
+     */
+    where: RoleReferenceWhereUniqueInput
+  }
+
+  /**
+   * RoleReference updateMany
+   */
+  export type RoleReferenceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RoleReferences.
+     */
+    data: XOR<RoleReferenceUpdateManyMutationInput, RoleReferenceUncheckedUpdateManyInput>
+    /**
+     * Filter which RoleReferences to update
+     */
+    where?: RoleReferenceWhereInput
+    /**
+     * Limit how many RoleReferences to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RoleReference updateManyAndReturn
+   */
+  export type RoleReferenceUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleReference
+     */
+    select?: RoleReferenceSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleReference
+     */
+    omit?: RoleReferenceOmit<ExtArgs> | null
+    /**
+     * The data used to update RoleReferences.
+     */
+    data: XOR<RoleReferenceUpdateManyMutationInput, RoleReferenceUncheckedUpdateManyInput>
+    /**
+     * Filter which RoleReferences to update
+     */
+    where?: RoleReferenceWhereInput
+    /**
+     * Limit how many RoleReferences to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RoleReference upsert
+   */
+  export type RoleReferenceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleReference
+     */
+    select?: RoleReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleReference
+     */
+    omit?: RoleReferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleReferenceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the RoleReference to update in case it exists.
+     */
+    where: RoleReferenceWhereUniqueInput
+    /**
+     * In case the RoleReference found by the `where` argument doesn't exist, create a new RoleReference with this data.
+     */
+    create: XOR<RoleReferenceCreateInput, RoleReferenceUncheckedCreateInput>
+    /**
+     * In case the RoleReference was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RoleReferenceUpdateInput, RoleReferenceUncheckedUpdateInput>
+  }
+
+  /**
+   * RoleReference delete
+   */
+  export type RoleReferenceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleReference
+     */
+    select?: RoleReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleReference
+     */
+    omit?: RoleReferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleReferenceInclude<ExtArgs> | null
+    /**
+     * Filter which RoleReference to delete.
+     */
+    where: RoleReferenceWhereUniqueInput
+  }
+
+  /**
+   * RoleReference deleteMany
+   */
+  export type RoleReferenceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RoleReferences to delete
+     */
+    where?: RoleReferenceWhereInput
+    /**
+     * Limit how many RoleReferences to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RoleReference.users
+   */
+  export type RoleReference$usersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    cursor?: UserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * RoleReference without action
+   */
+  export type RoleReferenceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoleReference
+     */
+    select?: RoleReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoleReference
+     */
+    omit?: RoleReferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoleReferenceInclude<ExtArgs> | null
   }
 
 
@@ -5700,6 +7100,1108 @@ export namespace Prisma {
 
 
   /**
+   * Model Roadmap
+   */
+
+  export type AggregateRoadmap = {
+    _count: RoadmapCountAggregateOutputType | null
+    _min: RoadmapMinAggregateOutputType | null
+    _max: RoadmapMaxAggregateOutputType | null
+  }
+
+  export type RoadmapMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    targetRoleTitle: string | null
+    gapAnalysis: string | null
+    milestones: string | null
+    recommendations: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type RoadmapMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    targetRoleTitle: string | null
+    gapAnalysis: string | null
+    milestones: string | null
+    recommendations: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type RoadmapCountAggregateOutputType = {
+    id: number
+    userId: number
+    targetRoleTitle: number
+    gapAnalysis: number
+    milestones: number
+    recommendations: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type RoadmapMinAggregateInputType = {
+    id?: true
+    userId?: true
+    targetRoleTitle?: true
+    gapAnalysis?: true
+    milestones?: true
+    recommendations?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type RoadmapMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    targetRoleTitle?: true
+    gapAnalysis?: true
+    milestones?: true
+    recommendations?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type RoadmapCountAggregateInputType = {
+    id?: true
+    userId?: true
+    targetRoleTitle?: true
+    gapAnalysis?: true
+    milestones?: true
+    recommendations?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type RoadmapAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Roadmap to aggregate.
+     */
+    where?: RoadmapWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Roadmaps to fetch.
+     */
+    orderBy?: RoadmapOrderByWithRelationInput | RoadmapOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RoadmapWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Roadmaps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Roadmaps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Roadmaps
+    **/
+    _count?: true | RoadmapCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RoadmapMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RoadmapMaxAggregateInputType
+  }
+
+  export type GetRoadmapAggregateType<T extends RoadmapAggregateArgs> = {
+        [P in keyof T & keyof AggregateRoadmap]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRoadmap[P]>
+      : GetScalarType<T[P], AggregateRoadmap[P]>
+  }
+
+
+
+
+  export type RoadmapGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RoadmapWhereInput
+    orderBy?: RoadmapOrderByWithAggregationInput | RoadmapOrderByWithAggregationInput[]
+    by: RoadmapScalarFieldEnum[] | RoadmapScalarFieldEnum
+    having?: RoadmapScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RoadmapCountAggregateInputType | true
+    _min?: RoadmapMinAggregateInputType
+    _max?: RoadmapMaxAggregateInputType
+  }
+
+  export type RoadmapGroupByOutputType = {
+    id: string
+    userId: string
+    targetRoleTitle: string
+    gapAnalysis: string
+    milestones: string
+    recommendations: string
+    createdAt: Date
+    updatedAt: Date
+    _count: RoadmapCountAggregateOutputType | null
+    _min: RoadmapMinAggregateOutputType | null
+    _max: RoadmapMaxAggregateOutputType | null
+  }
+
+  type GetRoadmapGroupByPayload<T extends RoadmapGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RoadmapGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RoadmapGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RoadmapGroupByOutputType[P]>
+            : GetScalarType<T[P], RoadmapGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RoadmapSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    targetRoleTitle?: boolean
+    gapAnalysis?: boolean
+    milestones?: boolean
+    recommendations?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["roadmap"]>
+
+  export type RoadmapSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    targetRoleTitle?: boolean
+    gapAnalysis?: boolean
+    milestones?: boolean
+    recommendations?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["roadmap"]>
+
+  export type RoadmapSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    targetRoleTitle?: boolean
+    gapAnalysis?: boolean
+    milestones?: boolean
+    recommendations?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["roadmap"]>
+
+  export type RoadmapSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    targetRoleTitle?: boolean
+    gapAnalysis?: boolean
+    milestones?: boolean
+    recommendations?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type RoadmapOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "targetRoleTitle" | "gapAnalysis" | "milestones" | "recommendations" | "createdAt" | "updatedAt", ExtArgs["result"]["roadmap"]>
+  export type RoadmapInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type RoadmapIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type RoadmapIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $RoadmapPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Roadmap"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      targetRoleTitle: string
+      gapAnalysis: string
+      milestones: string
+      recommendations: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["roadmap"]>
+    composites: {}
+  }
+
+  type RoadmapGetPayload<S extends boolean | null | undefined | RoadmapDefaultArgs> = $Result.GetResult<Prisma.$RoadmapPayload, S>
+
+  type RoadmapCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RoadmapFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RoadmapCountAggregateInputType | true
+    }
+
+  export interface RoadmapDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Roadmap'], meta: { name: 'Roadmap' } }
+    /**
+     * Find zero or one Roadmap that matches the filter.
+     * @param {RoadmapFindUniqueArgs} args - Arguments to find a Roadmap
+     * @example
+     * // Get one Roadmap
+     * const roadmap = await prisma.roadmap.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RoadmapFindUniqueArgs>(args: SelectSubset<T, RoadmapFindUniqueArgs<ExtArgs>>): Prisma__RoadmapClient<$Result.GetResult<Prisma.$RoadmapPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Roadmap that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RoadmapFindUniqueOrThrowArgs} args - Arguments to find a Roadmap
+     * @example
+     * // Get one Roadmap
+     * const roadmap = await prisma.roadmap.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RoadmapFindUniqueOrThrowArgs>(args: SelectSubset<T, RoadmapFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RoadmapClient<$Result.GetResult<Prisma.$RoadmapPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Roadmap that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoadmapFindFirstArgs} args - Arguments to find a Roadmap
+     * @example
+     * // Get one Roadmap
+     * const roadmap = await prisma.roadmap.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RoadmapFindFirstArgs>(args?: SelectSubset<T, RoadmapFindFirstArgs<ExtArgs>>): Prisma__RoadmapClient<$Result.GetResult<Prisma.$RoadmapPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Roadmap that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoadmapFindFirstOrThrowArgs} args - Arguments to find a Roadmap
+     * @example
+     * // Get one Roadmap
+     * const roadmap = await prisma.roadmap.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RoadmapFindFirstOrThrowArgs>(args?: SelectSubset<T, RoadmapFindFirstOrThrowArgs<ExtArgs>>): Prisma__RoadmapClient<$Result.GetResult<Prisma.$RoadmapPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Roadmaps that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoadmapFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Roadmaps
+     * const roadmaps = await prisma.roadmap.findMany()
+     * 
+     * // Get first 10 Roadmaps
+     * const roadmaps = await prisma.roadmap.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const roadmapWithIdOnly = await prisma.roadmap.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RoadmapFindManyArgs>(args?: SelectSubset<T, RoadmapFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoadmapPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Roadmap.
+     * @param {RoadmapCreateArgs} args - Arguments to create a Roadmap.
+     * @example
+     * // Create one Roadmap
+     * const Roadmap = await prisma.roadmap.create({
+     *   data: {
+     *     // ... data to create a Roadmap
+     *   }
+     * })
+     * 
+     */
+    create<T extends RoadmapCreateArgs>(args: SelectSubset<T, RoadmapCreateArgs<ExtArgs>>): Prisma__RoadmapClient<$Result.GetResult<Prisma.$RoadmapPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Roadmaps.
+     * @param {RoadmapCreateManyArgs} args - Arguments to create many Roadmaps.
+     * @example
+     * // Create many Roadmaps
+     * const roadmap = await prisma.roadmap.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RoadmapCreateManyArgs>(args?: SelectSubset<T, RoadmapCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Roadmaps and returns the data saved in the database.
+     * @param {RoadmapCreateManyAndReturnArgs} args - Arguments to create many Roadmaps.
+     * @example
+     * // Create many Roadmaps
+     * const roadmap = await prisma.roadmap.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Roadmaps and only return the `id`
+     * const roadmapWithIdOnly = await prisma.roadmap.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RoadmapCreateManyAndReturnArgs>(args?: SelectSubset<T, RoadmapCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoadmapPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Roadmap.
+     * @param {RoadmapDeleteArgs} args - Arguments to delete one Roadmap.
+     * @example
+     * // Delete one Roadmap
+     * const Roadmap = await prisma.roadmap.delete({
+     *   where: {
+     *     // ... filter to delete one Roadmap
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RoadmapDeleteArgs>(args: SelectSubset<T, RoadmapDeleteArgs<ExtArgs>>): Prisma__RoadmapClient<$Result.GetResult<Prisma.$RoadmapPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Roadmap.
+     * @param {RoadmapUpdateArgs} args - Arguments to update one Roadmap.
+     * @example
+     * // Update one Roadmap
+     * const roadmap = await prisma.roadmap.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RoadmapUpdateArgs>(args: SelectSubset<T, RoadmapUpdateArgs<ExtArgs>>): Prisma__RoadmapClient<$Result.GetResult<Prisma.$RoadmapPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Roadmaps.
+     * @param {RoadmapDeleteManyArgs} args - Arguments to filter Roadmaps to delete.
+     * @example
+     * // Delete a few Roadmaps
+     * const { count } = await prisma.roadmap.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RoadmapDeleteManyArgs>(args?: SelectSubset<T, RoadmapDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Roadmaps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoadmapUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Roadmaps
+     * const roadmap = await prisma.roadmap.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RoadmapUpdateManyArgs>(args: SelectSubset<T, RoadmapUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Roadmaps and returns the data updated in the database.
+     * @param {RoadmapUpdateManyAndReturnArgs} args - Arguments to update many Roadmaps.
+     * @example
+     * // Update many Roadmaps
+     * const roadmap = await prisma.roadmap.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Roadmaps and only return the `id`
+     * const roadmapWithIdOnly = await prisma.roadmap.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RoadmapUpdateManyAndReturnArgs>(args: SelectSubset<T, RoadmapUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoadmapPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Roadmap.
+     * @param {RoadmapUpsertArgs} args - Arguments to update or create a Roadmap.
+     * @example
+     * // Update or create a Roadmap
+     * const roadmap = await prisma.roadmap.upsert({
+     *   create: {
+     *     // ... data to create a Roadmap
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Roadmap we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RoadmapUpsertArgs>(args: SelectSubset<T, RoadmapUpsertArgs<ExtArgs>>): Prisma__RoadmapClient<$Result.GetResult<Prisma.$RoadmapPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Roadmaps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoadmapCountArgs} args - Arguments to filter Roadmaps to count.
+     * @example
+     * // Count the number of Roadmaps
+     * const count = await prisma.roadmap.count({
+     *   where: {
+     *     // ... the filter for the Roadmaps we want to count
+     *   }
+     * })
+    **/
+    count<T extends RoadmapCountArgs>(
+      args?: Subset<T, RoadmapCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RoadmapCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Roadmap.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoadmapAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RoadmapAggregateArgs>(args: Subset<T, RoadmapAggregateArgs>): Prisma.PrismaPromise<GetRoadmapAggregateType<T>>
+
+    /**
+     * Group by Roadmap.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoadmapGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RoadmapGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RoadmapGroupByArgs['orderBy'] }
+        : { orderBy?: RoadmapGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RoadmapGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRoadmapGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Roadmap model
+   */
+  readonly fields: RoadmapFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Roadmap.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RoadmapClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Roadmap model
+   */
+  interface RoadmapFieldRefs {
+    readonly id: FieldRef<"Roadmap", 'String'>
+    readonly userId: FieldRef<"Roadmap", 'String'>
+    readonly targetRoleTitle: FieldRef<"Roadmap", 'String'>
+    readonly gapAnalysis: FieldRef<"Roadmap", 'String'>
+    readonly milestones: FieldRef<"Roadmap", 'String'>
+    readonly recommendations: FieldRef<"Roadmap", 'String'>
+    readonly createdAt: FieldRef<"Roadmap", 'DateTime'>
+    readonly updatedAt: FieldRef<"Roadmap", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Roadmap findUnique
+   */
+  export type RoadmapFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Roadmap
+     */
+    select?: RoadmapSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Roadmap
+     */
+    omit?: RoadmapOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoadmapInclude<ExtArgs> | null
+    /**
+     * Filter, which Roadmap to fetch.
+     */
+    where: RoadmapWhereUniqueInput
+  }
+
+  /**
+   * Roadmap findUniqueOrThrow
+   */
+  export type RoadmapFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Roadmap
+     */
+    select?: RoadmapSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Roadmap
+     */
+    omit?: RoadmapOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoadmapInclude<ExtArgs> | null
+    /**
+     * Filter, which Roadmap to fetch.
+     */
+    where: RoadmapWhereUniqueInput
+  }
+
+  /**
+   * Roadmap findFirst
+   */
+  export type RoadmapFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Roadmap
+     */
+    select?: RoadmapSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Roadmap
+     */
+    omit?: RoadmapOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoadmapInclude<ExtArgs> | null
+    /**
+     * Filter, which Roadmap to fetch.
+     */
+    where?: RoadmapWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Roadmaps to fetch.
+     */
+    orderBy?: RoadmapOrderByWithRelationInput | RoadmapOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Roadmaps.
+     */
+    cursor?: RoadmapWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Roadmaps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Roadmaps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Roadmaps.
+     */
+    distinct?: RoadmapScalarFieldEnum | RoadmapScalarFieldEnum[]
+  }
+
+  /**
+   * Roadmap findFirstOrThrow
+   */
+  export type RoadmapFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Roadmap
+     */
+    select?: RoadmapSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Roadmap
+     */
+    omit?: RoadmapOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoadmapInclude<ExtArgs> | null
+    /**
+     * Filter, which Roadmap to fetch.
+     */
+    where?: RoadmapWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Roadmaps to fetch.
+     */
+    orderBy?: RoadmapOrderByWithRelationInput | RoadmapOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Roadmaps.
+     */
+    cursor?: RoadmapWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Roadmaps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Roadmaps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Roadmaps.
+     */
+    distinct?: RoadmapScalarFieldEnum | RoadmapScalarFieldEnum[]
+  }
+
+  /**
+   * Roadmap findMany
+   */
+  export type RoadmapFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Roadmap
+     */
+    select?: RoadmapSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Roadmap
+     */
+    omit?: RoadmapOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoadmapInclude<ExtArgs> | null
+    /**
+     * Filter, which Roadmaps to fetch.
+     */
+    where?: RoadmapWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Roadmaps to fetch.
+     */
+    orderBy?: RoadmapOrderByWithRelationInput | RoadmapOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Roadmaps.
+     */
+    cursor?: RoadmapWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Roadmaps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Roadmaps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Roadmaps.
+     */
+    distinct?: RoadmapScalarFieldEnum | RoadmapScalarFieldEnum[]
+  }
+
+  /**
+   * Roadmap create
+   */
+  export type RoadmapCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Roadmap
+     */
+    select?: RoadmapSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Roadmap
+     */
+    omit?: RoadmapOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoadmapInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Roadmap.
+     */
+    data: XOR<RoadmapCreateInput, RoadmapUncheckedCreateInput>
+  }
+
+  /**
+   * Roadmap createMany
+   */
+  export type RoadmapCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Roadmaps.
+     */
+    data: RoadmapCreateManyInput | RoadmapCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Roadmap createManyAndReturn
+   */
+  export type RoadmapCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Roadmap
+     */
+    select?: RoadmapSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Roadmap
+     */
+    omit?: RoadmapOmit<ExtArgs> | null
+    /**
+     * The data used to create many Roadmaps.
+     */
+    data: RoadmapCreateManyInput | RoadmapCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoadmapIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Roadmap update
+   */
+  export type RoadmapUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Roadmap
+     */
+    select?: RoadmapSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Roadmap
+     */
+    omit?: RoadmapOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoadmapInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Roadmap.
+     */
+    data: XOR<RoadmapUpdateInput, RoadmapUncheckedUpdateInput>
+    /**
+     * Choose, which Roadmap to update.
+     */
+    where: RoadmapWhereUniqueInput
+  }
+
+  /**
+   * Roadmap updateMany
+   */
+  export type RoadmapUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Roadmaps.
+     */
+    data: XOR<RoadmapUpdateManyMutationInput, RoadmapUncheckedUpdateManyInput>
+    /**
+     * Filter which Roadmaps to update
+     */
+    where?: RoadmapWhereInput
+    /**
+     * Limit how many Roadmaps to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Roadmap updateManyAndReturn
+   */
+  export type RoadmapUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Roadmap
+     */
+    select?: RoadmapSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Roadmap
+     */
+    omit?: RoadmapOmit<ExtArgs> | null
+    /**
+     * The data used to update Roadmaps.
+     */
+    data: XOR<RoadmapUpdateManyMutationInput, RoadmapUncheckedUpdateManyInput>
+    /**
+     * Filter which Roadmaps to update
+     */
+    where?: RoadmapWhereInput
+    /**
+     * Limit how many Roadmaps to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoadmapIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Roadmap upsert
+   */
+  export type RoadmapUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Roadmap
+     */
+    select?: RoadmapSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Roadmap
+     */
+    omit?: RoadmapOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoadmapInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Roadmap to update in case it exists.
+     */
+    where: RoadmapWhereUniqueInput
+    /**
+     * In case the Roadmap found by the `where` argument doesn't exist, create a new Roadmap with this data.
+     */
+    create: XOR<RoadmapCreateInput, RoadmapUncheckedCreateInput>
+    /**
+     * In case the Roadmap was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RoadmapUpdateInput, RoadmapUncheckedUpdateInput>
+  }
+
+  /**
+   * Roadmap delete
+   */
+  export type RoadmapDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Roadmap
+     */
+    select?: RoadmapSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Roadmap
+     */
+    omit?: RoadmapOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoadmapInclude<ExtArgs> | null
+    /**
+     * Filter which Roadmap to delete.
+     */
+    where: RoadmapWhereUniqueInput
+  }
+
+  /**
+   * Roadmap deleteMany
+   */
+  export type RoadmapDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Roadmaps to delete
+     */
+    where?: RoadmapWhereInput
+    /**
+     * Limit how many Roadmaps to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Roadmap without action
+   */
+  export type RoadmapDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Roadmap
+     */
+    select?: RoadmapSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Roadmap
+     */
+    omit?: RoadmapOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoadmapInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -5717,11 +8219,26 @@ export namespace Prisma {
     id: 'id',
     email: 'email',
     passwordHash: 'passwordHash',
+    targetRoleId: 'targetRoleId',
+    customTargetRole: 'customTargetRole',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+  export const RoleReferenceScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    category: 'category',
+    isPopular: 'isPopular',
+    description: 'description',
+    requiredSkills: 'requiredSkills',
+    createdAt: 'createdAt'
+  };
+
+  export type RoleReferenceScalarFieldEnum = (typeof RoleReferenceScalarFieldEnum)[keyof typeof RoleReferenceScalarFieldEnum]
 
 
   export const ResumeScalarFieldEnum: {
@@ -5765,6 +8282,20 @@ export namespace Prisma {
   };
 
   export type JobScalarFieldEnum = (typeof JobScalarFieldEnum)[keyof typeof JobScalarFieldEnum]
+
+
+  export const RoadmapScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    targetRoleTitle: 'targetRoleTitle',
+    gapAnalysis: 'gapAnalysis',
+    milestones: 'milestones',
+    recommendations: 'recommendations',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type RoadmapScalarFieldEnum = (typeof RoadmapScalarFieldEnum)[keyof typeof RoadmapScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -5825,6 +8356,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -5862,22 +8400,30 @@ export namespace Prisma {
     id?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
     passwordHash?: StringFilter<"User"> | string
+    targetRoleId?: StringNullableFilter<"User"> | string | null
+    customTargetRole?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     resumes?: ResumeListRelationFilter
     skills?: SkillListRelationFilter
     jobs?: JobListRelationFilter
+    roadmap?: XOR<RoadmapNullableScalarRelationFilter, RoadmapWhereInput> | null
+    targetRole?: XOR<RoleReferenceNullableScalarRelationFilter, RoleReferenceWhereInput> | null
   }
 
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
     email?: SortOrder
     passwordHash?: SortOrder
+    targetRoleId?: SortOrderInput | SortOrder
+    customTargetRole?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     resumes?: ResumeOrderByRelationAggregateInput
     skills?: SkillOrderByRelationAggregateInput
     jobs?: JobOrderByRelationAggregateInput
+    roadmap?: RoadmapOrderByWithRelationInput
+    targetRole?: RoleReferenceOrderByWithRelationInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -5887,17 +8433,23 @@ export namespace Prisma {
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     passwordHash?: StringFilter<"User"> | string
+    targetRoleId?: StringNullableFilter<"User"> | string | null
+    customTargetRole?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     resumes?: ResumeListRelationFilter
     skills?: SkillListRelationFilter
     jobs?: JobListRelationFilter
+    roadmap?: XOR<RoadmapNullableScalarRelationFilter, RoadmapWhereInput> | null
+    targetRole?: XOR<RoleReferenceNullableScalarRelationFilter, RoleReferenceWhereInput> | null
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
     email?: SortOrder
     passwordHash?: SortOrder
+    targetRoleId?: SortOrderInput | SortOrder
+    customTargetRole?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -5912,8 +8464,75 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
     passwordHash?: StringWithAggregatesFilter<"User"> | string
+    targetRoleId?: StringNullableWithAggregatesFilter<"User"> | string | null
+    customTargetRole?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+  }
+
+  export type RoleReferenceWhereInput = {
+    AND?: RoleReferenceWhereInput | RoleReferenceWhereInput[]
+    OR?: RoleReferenceWhereInput[]
+    NOT?: RoleReferenceWhereInput | RoleReferenceWhereInput[]
+    id?: StringFilter<"RoleReference"> | string
+    title?: StringFilter<"RoleReference"> | string
+    category?: StringFilter<"RoleReference"> | string
+    isPopular?: BoolFilter<"RoleReference"> | boolean
+    description?: StringNullableFilter<"RoleReference"> | string | null
+    requiredSkills?: StringFilter<"RoleReference"> | string
+    createdAt?: DateTimeFilter<"RoleReference"> | Date | string
+    users?: UserListRelationFilter
+  }
+
+  export type RoleReferenceOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    category?: SortOrder
+    isPopular?: SortOrder
+    description?: SortOrderInput | SortOrder
+    requiredSkills?: SortOrder
+    createdAt?: SortOrder
+    users?: UserOrderByRelationAggregateInput
+  }
+
+  export type RoleReferenceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    title?: string
+    AND?: RoleReferenceWhereInput | RoleReferenceWhereInput[]
+    OR?: RoleReferenceWhereInput[]
+    NOT?: RoleReferenceWhereInput | RoleReferenceWhereInput[]
+    category?: StringFilter<"RoleReference"> | string
+    isPopular?: BoolFilter<"RoleReference"> | boolean
+    description?: StringNullableFilter<"RoleReference"> | string | null
+    requiredSkills?: StringFilter<"RoleReference"> | string
+    createdAt?: DateTimeFilter<"RoleReference"> | Date | string
+    users?: UserListRelationFilter
+  }, "id" | "title">
+
+  export type RoleReferenceOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    category?: SortOrder
+    isPopular?: SortOrder
+    description?: SortOrderInput | SortOrder
+    requiredSkills?: SortOrder
+    createdAt?: SortOrder
+    _count?: RoleReferenceCountOrderByAggregateInput
+    _max?: RoleReferenceMaxOrderByAggregateInput
+    _min?: RoleReferenceMinOrderByAggregateInput
+  }
+
+  export type RoleReferenceScalarWhereWithAggregatesInput = {
+    AND?: RoleReferenceScalarWhereWithAggregatesInput | RoleReferenceScalarWhereWithAggregatesInput[]
+    OR?: RoleReferenceScalarWhereWithAggregatesInput[]
+    NOT?: RoleReferenceScalarWhereWithAggregatesInput | RoleReferenceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"RoleReference"> | string
+    title?: StringWithAggregatesFilter<"RoleReference"> | string
+    category?: StringWithAggregatesFilter<"RoleReference"> | string
+    isPopular?: BoolWithAggregatesFilter<"RoleReference"> | boolean
+    description?: StringNullableWithAggregatesFilter<"RoleReference"> | string | null
+    requiredSkills?: StringWithAggregatesFilter<"RoleReference"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"RoleReference"> | Date | string
   }
 
   export type ResumeWhereInput = {
@@ -6134,54 +8753,138 @@ export namespace Prisma {
     completedAt?: DateTimeNullableWithAggregatesFilter<"Job"> | Date | string | null
   }
 
+  export type RoadmapWhereInput = {
+    AND?: RoadmapWhereInput | RoadmapWhereInput[]
+    OR?: RoadmapWhereInput[]
+    NOT?: RoadmapWhereInput | RoadmapWhereInput[]
+    id?: StringFilter<"Roadmap"> | string
+    userId?: StringFilter<"Roadmap"> | string
+    targetRoleTitle?: StringFilter<"Roadmap"> | string
+    gapAnalysis?: StringFilter<"Roadmap"> | string
+    milestones?: StringFilter<"Roadmap"> | string
+    recommendations?: StringFilter<"Roadmap"> | string
+    createdAt?: DateTimeFilter<"Roadmap"> | Date | string
+    updatedAt?: DateTimeFilter<"Roadmap"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type RoadmapOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    targetRoleTitle?: SortOrder
+    gapAnalysis?: SortOrder
+    milestones?: SortOrder
+    recommendations?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type RoadmapWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId?: string
+    AND?: RoadmapWhereInput | RoadmapWhereInput[]
+    OR?: RoadmapWhereInput[]
+    NOT?: RoadmapWhereInput | RoadmapWhereInput[]
+    targetRoleTitle?: StringFilter<"Roadmap"> | string
+    gapAnalysis?: StringFilter<"Roadmap"> | string
+    milestones?: StringFilter<"Roadmap"> | string
+    recommendations?: StringFilter<"Roadmap"> | string
+    createdAt?: DateTimeFilter<"Roadmap"> | Date | string
+    updatedAt?: DateTimeFilter<"Roadmap"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId">
+
+  export type RoadmapOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    targetRoleTitle?: SortOrder
+    gapAnalysis?: SortOrder
+    milestones?: SortOrder
+    recommendations?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: RoadmapCountOrderByAggregateInput
+    _max?: RoadmapMaxOrderByAggregateInput
+    _min?: RoadmapMinOrderByAggregateInput
+  }
+
+  export type RoadmapScalarWhereWithAggregatesInput = {
+    AND?: RoadmapScalarWhereWithAggregatesInput | RoadmapScalarWhereWithAggregatesInput[]
+    OR?: RoadmapScalarWhereWithAggregatesInput[]
+    NOT?: RoadmapScalarWhereWithAggregatesInput | RoadmapScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Roadmap"> | string
+    userId?: StringWithAggregatesFilter<"Roadmap"> | string
+    targetRoleTitle?: StringWithAggregatesFilter<"Roadmap"> | string
+    gapAnalysis?: StringWithAggregatesFilter<"Roadmap"> | string
+    milestones?: StringWithAggregatesFilter<"Roadmap"> | string
+    recommendations?: StringWithAggregatesFilter<"Roadmap"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Roadmap"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Roadmap"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
     passwordHash: string
+    customTargetRole?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     resumes?: ResumeCreateNestedManyWithoutUserInput
     skills?: SkillCreateNestedManyWithoutUserInput
     jobs?: JobCreateNestedManyWithoutUserInput
+    roadmap?: RoadmapCreateNestedOneWithoutUserInput
+    targetRole?: RoleReferenceCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateInput = {
     id?: string
     email: string
     passwordHash: string
+    targetRoleId?: string | null
+    customTargetRole?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     resumes?: ResumeUncheckedCreateNestedManyWithoutUserInput
     skills?: SkillUncheckedCreateNestedManyWithoutUserInput
     jobs?: JobUncheckedCreateNestedManyWithoutUserInput
+    roadmap?: RoadmapUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
+    customTargetRole?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resumes?: ResumeUpdateManyWithoutUserNestedInput
     skills?: SkillUpdateManyWithoutUserNestedInput
     jobs?: JobUpdateManyWithoutUserNestedInput
+    roadmap?: RoadmapUpdateOneWithoutUserNestedInput
+    targetRole?: RoleReferenceUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
+    targetRoleId?: NullableStringFieldUpdateOperationsInput | string | null
+    customTargetRole?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resumes?: ResumeUncheckedUpdateManyWithoutUserNestedInput
     skills?: SkillUncheckedUpdateManyWithoutUserNestedInput
     jobs?: JobUncheckedUpdateManyWithoutUserNestedInput
+    roadmap?: RoadmapUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
     id?: string
     email: string
     passwordHash: string
+    targetRoleId?: string | null
+    customTargetRole?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -6190,6 +8893,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
+    customTargetRole?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6198,8 +8902,84 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
+    targetRoleId?: NullableStringFieldUpdateOperationsInput | string | null
+    customTargetRole?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoleReferenceCreateInput = {
+    id?: string
+    title: string
+    category?: string
+    isPopular?: boolean
+    description?: string | null
+    requiredSkills: string
+    createdAt?: Date | string
+    users?: UserCreateNestedManyWithoutTargetRoleInput
+  }
+
+  export type RoleReferenceUncheckedCreateInput = {
+    id?: string
+    title: string
+    category?: string
+    isPopular?: boolean
+    description?: string | null
+    requiredSkills: string
+    createdAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutTargetRoleInput
+  }
+
+  export type RoleReferenceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    isPopular?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    requiredSkills?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutTargetRoleNestedInput
+  }
+
+  export type RoleReferenceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    isPopular?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    requiredSkills?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutTargetRoleNestedInput
+  }
+
+  export type RoleReferenceCreateManyInput = {
+    id?: string
+    title: string
+    category?: string
+    isPopular?: boolean
+    description?: string | null
+    requiredSkills: string
+    createdAt?: Date | string
+  }
+
+  export type RoleReferenceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    isPopular?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    requiredSkills?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoleReferenceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    isPopular?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    requiredSkills?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ResumeCreateInput = {
@@ -6437,6 +9217,82 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type RoadmapCreateInput = {
+    id?: string
+    targetRoleTitle: string
+    gapAnalysis: string
+    milestones: string
+    recommendations: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutRoadmapInput
+  }
+
+  export type RoadmapUncheckedCreateInput = {
+    id?: string
+    userId: string
+    targetRoleTitle: string
+    gapAnalysis: string
+    milestones: string
+    recommendations: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RoadmapUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    targetRoleTitle?: StringFieldUpdateOperationsInput | string
+    gapAnalysis?: StringFieldUpdateOperationsInput | string
+    milestones?: StringFieldUpdateOperationsInput | string
+    recommendations?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutRoadmapNestedInput
+  }
+
+  export type RoadmapUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    targetRoleTitle?: StringFieldUpdateOperationsInput | string
+    gapAnalysis?: StringFieldUpdateOperationsInput | string
+    milestones?: StringFieldUpdateOperationsInput | string
+    recommendations?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoadmapCreateManyInput = {
+    id?: string
+    userId: string
+    targetRoleTitle: string
+    gapAnalysis: string
+    milestones: string
+    recommendations: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RoadmapUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    targetRoleTitle?: StringFieldUpdateOperationsInput | string
+    gapAnalysis?: StringFieldUpdateOperationsInput | string
+    milestones?: StringFieldUpdateOperationsInput | string
+    recommendations?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoadmapUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    targetRoleTitle?: StringFieldUpdateOperationsInput | string
+    gapAnalysis?: StringFieldUpdateOperationsInput | string
+    milestones?: StringFieldUpdateOperationsInput | string
+    recommendations?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -6450,6 +9306,21 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
     not?: NestedStringFilter<$PrismaModel> | string
+  }
+
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
   export type DateTimeFilter<$PrismaModel = never> = {
@@ -6481,6 +9352,21 @@ export namespace Prisma {
     none?: JobWhereInput
   }
 
+  export type RoadmapNullableScalarRelationFilter = {
+    is?: RoadmapWhereInput | null
+    isNot?: RoadmapWhereInput | null
+  }
+
+  export type RoleReferenceNullableScalarRelationFilter = {
+    is?: RoleReferenceWhereInput | null
+    isNot?: RoleReferenceWhereInput | null
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
   export type ResumeOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -6497,6 +9383,8 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     passwordHash?: SortOrder
+    targetRoleId?: SortOrder
+    customTargetRole?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6505,6 +9393,8 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     passwordHash?: SortOrder
+    targetRoleId?: SortOrder
+    customTargetRole?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6513,6 +9403,8 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     passwordHash?: SortOrder
+    targetRoleId?: SortOrder
+    customTargetRole?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6535,6 +9427,24 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -6549,6 +9459,59 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type UserListRelationFilter = {
+    every?: UserWhereInput
+    some?: UserWhereInput
+    none?: UserWhereInput
+  }
+
+  export type UserOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type RoleReferenceCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    category?: SortOrder
+    isPopular?: SortOrder
+    description?: SortOrder
+    requiredSkills?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type RoleReferenceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    category?: SortOrder
+    isPopular?: SortOrder
+    description?: SortOrder
+    requiredSkills?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type RoleReferenceMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    category?: SortOrder
+    isPopular?: SortOrder
+    description?: SortOrder
+    requiredSkills?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -6560,29 +9523,9 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type ResumeCountOrderByAggregateInput = {
@@ -6646,24 +9589,6 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type SkillUserIdSkillNameCompoundUniqueInput = {
@@ -6759,6 +9684,39 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type RoadmapCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    targetRoleTitle?: SortOrder
+    gapAnalysis?: SortOrder
+    milestones?: SortOrder
+    recommendations?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RoadmapMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    targetRoleTitle?: SortOrder
+    gapAnalysis?: SortOrder
+    milestones?: SortOrder
+    recommendations?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RoadmapMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    targetRoleTitle?: SortOrder
+    gapAnalysis?: SortOrder
+    milestones?: SortOrder
+    recommendations?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type ResumeCreateNestedManyWithoutUserInput = {
     create?: XOR<ResumeCreateWithoutUserInput, ResumeUncheckedCreateWithoutUserInput> | ResumeCreateWithoutUserInput[] | ResumeUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ResumeCreateOrConnectWithoutUserInput | ResumeCreateOrConnectWithoutUserInput[]
@@ -6778,6 +9736,18 @@ export namespace Prisma {
     connectOrCreate?: JobCreateOrConnectWithoutUserInput | JobCreateOrConnectWithoutUserInput[]
     createMany?: JobCreateManyUserInputEnvelope
     connect?: JobWhereUniqueInput | JobWhereUniqueInput[]
+  }
+
+  export type RoadmapCreateNestedOneWithoutUserInput = {
+    create?: XOR<RoadmapCreateWithoutUserInput, RoadmapUncheckedCreateWithoutUserInput>
+    connectOrCreate?: RoadmapCreateOrConnectWithoutUserInput
+    connect?: RoadmapWhereUniqueInput
+  }
+
+  export type RoleReferenceCreateNestedOneWithoutUsersInput = {
+    create?: XOR<RoleReferenceCreateWithoutUsersInput, RoleReferenceUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: RoleReferenceCreateOrConnectWithoutUsersInput
+    connect?: RoleReferenceWhereUniqueInput
   }
 
   export type ResumeUncheckedCreateNestedManyWithoutUserInput = {
@@ -6801,8 +9771,18 @@ export namespace Prisma {
     connect?: JobWhereUniqueInput | JobWhereUniqueInput[]
   }
 
+  export type RoadmapUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<RoadmapCreateWithoutUserInput, RoadmapUncheckedCreateWithoutUserInput>
+    connectOrCreate?: RoadmapCreateOrConnectWithoutUserInput
+    connect?: RoadmapWhereUniqueInput
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -6851,6 +9831,26 @@ export namespace Prisma {
     deleteMany?: JobScalarWhereInput | JobScalarWhereInput[]
   }
 
+  export type RoadmapUpdateOneWithoutUserNestedInput = {
+    create?: XOR<RoadmapCreateWithoutUserInput, RoadmapUncheckedCreateWithoutUserInput>
+    connectOrCreate?: RoadmapCreateOrConnectWithoutUserInput
+    upsert?: RoadmapUpsertWithoutUserInput
+    disconnect?: RoadmapWhereInput | boolean
+    delete?: RoadmapWhereInput | boolean
+    connect?: RoadmapWhereUniqueInput
+    update?: XOR<XOR<RoadmapUpdateToOneWithWhereWithoutUserInput, RoadmapUpdateWithoutUserInput>, RoadmapUncheckedUpdateWithoutUserInput>
+  }
+
+  export type RoleReferenceUpdateOneWithoutUsersNestedInput = {
+    create?: XOR<RoleReferenceCreateWithoutUsersInput, RoleReferenceUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: RoleReferenceCreateOrConnectWithoutUsersInput
+    upsert?: RoleReferenceUpsertWithoutUsersInput
+    disconnect?: RoleReferenceWhereInput | boolean
+    delete?: RoleReferenceWhereInput | boolean
+    connect?: RoleReferenceWhereUniqueInput
+    update?: XOR<XOR<RoleReferenceUpdateToOneWithWhereWithoutUsersInput, RoleReferenceUpdateWithoutUsersInput>, RoleReferenceUncheckedUpdateWithoutUsersInput>
+  }
+
   export type ResumeUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<ResumeCreateWithoutUserInput, ResumeUncheckedCreateWithoutUserInput> | ResumeCreateWithoutUserInput[] | ResumeUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ResumeCreateOrConnectWithoutUserInput | ResumeCreateOrConnectWithoutUserInput[]
@@ -6893,6 +9893,62 @@ export namespace Prisma {
     deleteMany?: JobScalarWhereInput | JobScalarWhereInput[]
   }
 
+  export type RoadmapUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<RoadmapCreateWithoutUserInput, RoadmapUncheckedCreateWithoutUserInput>
+    connectOrCreate?: RoadmapCreateOrConnectWithoutUserInput
+    upsert?: RoadmapUpsertWithoutUserInput
+    disconnect?: RoadmapWhereInput | boolean
+    delete?: RoadmapWhereInput | boolean
+    connect?: RoadmapWhereUniqueInput
+    update?: XOR<XOR<RoadmapUpdateToOneWithWhereWithoutUserInput, RoadmapUpdateWithoutUserInput>, RoadmapUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserCreateNestedManyWithoutTargetRoleInput = {
+    create?: XOR<UserCreateWithoutTargetRoleInput, UserUncheckedCreateWithoutTargetRoleInput> | UserCreateWithoutTargetRoleInput[] | UserUncheckedCreateWithoutTargetRoleInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutTargetRoleInput | UserCreateOrConnectWithoutTargetRoleInput[]
+    createMany?: UserCreateManyTargetRoleInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type UserUncheckedCreateNestedManyWithoutTargetRoleInput = {
+    create?: XOR<UserCreateWithoutTargetRoleInput, UserUncheckedCreateWithoutTargetRoleInput> | UserCreateWithoutTargetRoleInput[] | UserUncheckedCreateWithoutTargetRoleInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutTargetRoleInput | UserCreateOrConnectWithoutTargetRoleInput[]
+    createMany?: UserCreateManyTargetRoleInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type UserUpdateManyWithoutTargetRoleNestedInput = {
+    create?: XOR<UserCreateWithoutTargetRoleInput, UserUncheckedCreateWithoutTargetRoleInput> | UserCreateWithoutTargetRoleInput[] | UserUncheckedCreateWithoutTargetRoleInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutTargetRoleInput | UserCreateOrConnectWithoutTargetRoleInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutTargetRoleInput | UserUpsertWithWhereUniqueWithoutTargetRoleInput[]
+    createMany?: UserCreateManyTargetRoleInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutTargetRoleInput | UserUpdateWithWhereUniqueWithoutTargetRoleInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutTargetRoleInput | UserUpdateManyWithWhereWithoutTargetRoleInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type UserUncheckedUpdateManyWithoutTargetRoleNestedInput = {
+    create?: XOR<UserCreateWithoutTargetRoleInput, UserUncheckedCreateWithoutTargetRoleInput> | UserCreateWithoutTargetRoleInput[] | UserUncheckedCreateWithoutTargetRoleInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutTargetRoleInput | UserCreateOrConnectWithoutTargetRoleInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutTargetRoleInput | UserUpsertWithWhereUniqueWithoutTargetRoleInput[]
+    createMany?: UserCreateManyTargetRoleInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutTargetRoleInput | UserUpdateWithWhereUniqueWithoutTargetRoleInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutTargetRoleInput | UserUpdateManyWithWhereWithoutTargetRoleInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutResumesInput = {
     create?: XOR<UserCreateWithoutResumesInput, UserUncheckedCreateWithoutResumesInput>
     connectOrCreate?: UserCreateOrConnectWithoutResumesInput
@@ -6905,10 +9961,6 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type UserUpdateOneRequiredWithoutResumesNestedInput = {
@@ -6951,6 +10003,20 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutJobsInput, UserUpdateWithoutJobsInput>, UserUncheckedUpdateWithoutJobsInput>
   }
 
+  export type UserCreateNestedOneWithoutRoadmapInput = {
+    create?: XOR<UserCreateWithoutRoadmapInput, UserUncheckedCreateWithoutRoadmapInput>
+    connectOrCreate?: UserCreateOrConnectWithoutRoadmapInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutRoadmapNestedInput = {
+    create?: XOR<UserCreateWithoutRoadmapInput, UserUncheckedCreateWithoutRoadmapInput>
+    connectOrCreate?: UserCreateOrConnectWithoutRoadmapInput
+    upsert?: UserUpsertWithoutRoadmapInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutRoadmapInput, UserUpdateWithoutRoadmapInput>, UserUncheckedUpdateWithoutRoadmapInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -6963,6 +10029,20 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringFilter<$PrismaModel> | string
+  }
+
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
   export type NestedDateTimeFilter<$PrismaModel = never> = {
@@ -7004,6 +10084,34 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -7018,18 +10126,17 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -7057,34 +10164,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
-  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
@@ -7204,6 +10283,56 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type RoadmapCreateWithoutUserInput = {
+    id?: string
+    targetRoleTitle: string
+    gapAnalysis: string
+    milestones: string
+    recommendations: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RoadmapUncheckedCreateWithoutUserInput = {
+    id?: string
+    targetRoleTitle: string
+    gapAnalysis: string
+    milestones: string
+    recommendations: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RoadmapCreateOrConnectWithoutUserInput = {
+    where: RoadmapWhereUniqueInput
+    create: XOR<RoadmapCreateWithoutUserInput, RoadmapUncheckedCreateWithoutUserInput>
+  }
+
+  export type RoleReferenceCreateWithoutUsersInput = {
+    id?: string
+    title: string
+    category?: string
+    isPopular?: boolean
+    description?: string | null
+    requiredSkills: string
+    createdAt?: Date | string
+  }
+
+  export type RoleReferenceUncheckedCreateWithoutUsersInput = {
+    id?: string
+    title: string
+    category?: string
+    isPopular?: boolean
+    description?: string | null
+    requiredSkills: string
+    createdAt?: Date | string
+  }
+
+  export type RoleReferenceCreateOrConnectWithoutUsersInput = {
+    where: RoleReferenceWhereUniqueInput
+    create: XOR<RoleReferenceCreateWithoutUsersInput, RoleReferenceUncheckedCreateWithoutUsersInput>
+  }
+
   export type ResumeUpsertWithWhereUniqueWithoutUserInput = {
     where: ResumeWhereUniqueInput
     update: XOR<ResumeUpdateWithoutUserInput, ResumeUncheckedUpdateWithoutUserInput>
@@ -7295,24 +10424,157 @@ export namespace Prisma {
     completedAt?: DateTimeNullableFilter<"Job"> | Date | string | null
   }
 
+  export type RoadmapUpsertWithoutUserInput = {
+    update: XOR<RoadmapUpdateWithoutUserInput, RoadmapUncheckedUpdateWithoutUserInput>
+    create: XOR<RoadmapCreateWithoutUserInput, RoadmapUncheckedCreateWithoutUserInput>
+    where?: RoadmapWhereInput
+  }
+
+  export type RoadmapUpdateToOneWithWhereWithoutUserInput = {
+    where?: RoadmapWhereInput
+    data: XOR<RoadmapUpdateWithoutUserInput, RoadmapUncheckedUpdateWithoutUserInput>
+  }
+
+  export type RoadmapUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    targetRoleTitle?: StringFieldUpdateOperationsInput | string
+    gapAnalysis?: StringFieldUpdateOperationsInput | string
+    milestones?: StringFieldUpdateOperationsInput | string
+    recommendations?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoadmapUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    targetRoleTitle?: StringFieldUpdateOperationsInput | string
+    gapAnalysis?: StringFieldUpdateOperationsInput | string
+    milestones?: StringFieldUpdateOperationsInput | string
+    recommendations?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoleReferenceUpsertWithoutUsersInput = {
+    update: XOR<RoleReferenceUpdateWithoutUsersInput, RoleReferenceUncheckedUpdateWithoutUsersInput>
+    create: XOR<RoleReferenceCreateWithoutUsersInput, RoleReferenceUncheckedCreateWithoutUsersInput>
+    where?: RoleReferenceWhereInput
+  }
+
+  export type RoleReferenceUpdateToOneWithWhereWithoutUsersInput = {
+    where?: RoleReferenceWhereInput
+    data: XOR<RoleReferenceUpdateWithoutUsersInput, RoleReferenceUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type RoleReferenceUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    isPopular?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    requiredSkills?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoleReferenceUncheckedUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    isPopular?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    requiredSkills?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserCreateWithoutTargetRoleInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    customTargetRole?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    resumes?: ResumeCreateNestedManyWithoutUserInput
+    skills?: SkillCreateNestedManyWithoutUserInput
+    jobs?: JobCreateNestedManyWithoutUserInput
+    roadmap?: RoadmapCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutTargetRoleInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    customTargetRole?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    resumes?: ResumeUncheckedCreateNestedManyWithoutUserInput
+    skills?: SkillUncheckedCreateNestedManyWithoutUserInput
+    jobs?: JobUncheckedCreateNestedManyWithoutUserInput
+    roadmap?: RoadmapUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutTargetRoleInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTargetRoleInput, UserUncheckedCreateWithoutTargetRoleInput>
+  }
+
+  export type UserCreateManyTargetRoleInputEnvelope = {
+    data: UserCreateManyTargetRoleInput | UserCreateManyTargetRoleInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithWhereUniqueWithoutTargetRoleInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutTargetRoleInput, UserUncheckedUpdateWithoutTargetRoleInput>
+    create: XOR<UserCreateWithoutTargetRoleInput, UserUncheckedCreateWithoutTargetRoleInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutTargetRoleInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutTargetRoleInput, UserUncheckedUpdateWithoutTargetRoleInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutTargetRoleInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutTargetRoleInput>
+  }
+
+  export type UserScalarWhereInput = {
+    AND?: UserScalarWhereInput | UserScalarWhereInput[]
+    OR?: UserScalarWhereInput[]
+    NOT?: UserScalarWhereInput | UserScalarWhereInput[]
+    id?: StringFilter<"User"> | string
+    email?: StringFilter<"User"> | string
+    passwordHash?: StringFilter<"User"> | string
+    targetRoleId?: StringNullableFilter<"User"> | string | null
+    customTargetRole?: StringNullableFilter<"User"> | string | null
+    createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
+  }
+
   export type UserCreateWithoutResumesInput = {
     id?: string
     email: string
     passwordHash: string
+    customTargetRole?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     skills?: SkillCreateNestedManyWithoutUserInput
     jobs?: JobCreateNestedManyWithoutUserInput
+    roadmap?: RoadmapCreateNestedOneWithoutUserInput
+    targetRole?: RoleReferenceCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutResumesInput = {
     id?: string
     email: string
     passwordHash: string
+    targetRoleId?: string | null
+    customTargetRole?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     skills?: SkillUncheckedCreateNestedManyWithoutUserInput
     jobs?: JobUncheckedCreateNestedManyWithoutUserInput
+    roadmap?: RoadmapUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutResumesInput = {
@@ -7335,40 +10597,52 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
+    customTargetRole?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     skills?: SkillUpdateManyWithoutUserNestedInput
     jobs?: JobUpdateManyWithoutUserNestedInput
+    roadmap?: RoadmapUpdateOneWithoutUserNestedInput
+    targetRole?: RoleReferenceUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutResumesInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
+    targetRoleId?: NullableStringFieldUpdateOperationsInput | string | null
+    customTargetRole?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     skills?: SkillUncheckedUpdateManyWithoutUserNestedInput
     jobs?: JobUncheckedUpdateManyWithoutUserNestedInput
+    roadmap?: RoadmapUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutSkillsInput = {
     id?: string
     email: string
     passwordHash: string
+    customTargetRole?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     resumes?: ResumeCreateNestedManyWithoutUserInput
     jobs?: JobCreateNestedManyWithoutUserInput
+    roadmap?: RoadmapCreateNestedOneWithoutUserInput
+    targetRole?: RoleReferenceCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutSkillsInput = {
     id?: string
     email: string
     passwordHash: string
+    targetRoleId?: string | null
+    customTargetRole?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     resumes?: ResumeUncheckedCreateNestedManyWithoutUserInput
     jobs?: JobUncheckedCreateNestedManyWithoutUserInput
+    roadmap?: RoadmapUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSkillsInput = {
@@ -7391,40 +10665,52 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
+    customTargetRole?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resumes?: ResumeUpdateManyWithoutUserNestedInput
     jobs?: JobUpdateManyWithoutUserNestedInput
+    roadmap?: RoadmapUpdateOneWithoutUserNestedInput
+    targetRole?: RoleReferenceUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSkillsInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
+    targetRoleId?: NullableStringFieldUpdateOperationsInput | string | null
+    customTargetRole?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resumes?: ResumeUncheckedUpdateManyWithoutUserNestedInput
     jobs?: JobUncheckedUpdateManyWithoutUserNestedInput
+    roadmap?: RoadmapUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutJobsInput = {
     id?: string
     email: string
     passwordHash: string
+    customTargetRole?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     resumes?: ResumeCreateNestedManyWithoutUserInput
     skills?: SkillCreateNestedManyWithoutUserInput
+    roadmap?: RoadmapCreateNestedOneWithoutUserInput
+    targetRole?: RoleReferenceCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutJobsInput = {
     id?: string
     email: string
     passwordHash: string
+    targetRoleId?: string | null
+    customTargetRole?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     resumes?: ResumeUncheckedCreateNestedManyWithoutUserInput
     skills?: SkillUncheckedCreateNestedManyWithoutUserInput
+    roadmap?: RoadmapUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutJobsInput = {
@@ -7447,20 +10733,94 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
+    customTargetRole?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resumes?: ResumeUpdateManyWithoutUserNestedInput
     skills?: SkillUpdateManyWithoutUserNestedInput
+    roadmap?: RoadmapUpdateOneWithoutUserNestedInput
+    targetRole?: RoleReferenceUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutJobsInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
+    targetRoleId?: NullableStringFieldUpdateOperationsInput | string | null
+    customTargetRole?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resumes?: ResumeUncheckedUpdateManyWithoutUserNestedInput
     skills?: SkillUncheckedUpdateManyWithoutUserNestedInput
+    roadmap?: RoadmapUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutRoadmapInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    customTargetRole?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    resumes?: ResumeCreateNestedManyWithoutUserInput
+    skills?: SkillCreateNestedManyWithoutUserInput
+    jobs?: JobCreateNestedManyWithoutUserInput
+    targetRole?: RoleReferenceCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutRoadmapInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    targetRoleId?: string | null
+    customTargetRole?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    resumes?: ResumeUncheckedCreateNestedManyWithoutUserInput
+    skills?: SkillUncheckedCreateNestedManyWithoutUserInput
+    jobs?: JobUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutRoadmapInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutRoadmapInput, UserUncheckedCreateWithoutRoadmapInput>
+  }
+
+  export type UserUpsertWithoutRoadmapInput = {
+    update: XOR<UserUpdateWithoutRoadmapInput, UserUncheckedUpdateWithoutRoadmapInput>
+    create: XOR<UserCreateWithoutRoadmapInput, UserUncheckedCreateWithoutRoadmapInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutRoadmapInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutRoadmapInput, UserUncheckedUpdateWithoutRoadmapInput>
+  }
+
+  export type UserUpdateWithoutRoadmapInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    customTargetRole?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resumes?: ResumeUpdateManyWithoutUserNestedInput
+    skills?: SkillUpdateManyWithoutUserNestedInput
+    jobs?: JobUpdateManyWithoutUserNestedInput
+    targetRole?: RoleReferenceUpdateOneWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutRoadmapInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    targetRoleId?: NullableStringFieldUpdateOperationsInput | string | null
+    customTargetRole?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resumes?: ResumeUncheckedUpdateManyWithoutUserNestedInput
+    skills?: SkillUncheckedUpdateManyWithoutUserNestedInput
+    jobs?: JobUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ResumeCreateManyUserInput = {
@@ -7585,6 +10945,50 @@ export namespace Prisma {
     errorMsg?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type UserCreateManyTargetRoleInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    customTargetRole?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserUpdateWithoutTargetRoleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    customTargetRole?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resumes?: ResumeUpdateManyWithoutUserNestedInput
+    skills?: SkillUpdateManyWithoutUserNestedInput
+    jobs?: JobUpdateManyWithoutUserNestedInput
+    roadmap?: RoadmapUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTargetRoleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    customTargetRole?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resumes?: ResumeUncheckedUpdateManyWithoutUserNestedInput
+    skills?: SkillUncheckedUpdateManyWithoutUserNestedInput
+    jobs?: JobUncheckedUpdateManyWithoutUserNestedInput
+    roadmap?: RoadmapUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutTargetRoleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    customTargetRole?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

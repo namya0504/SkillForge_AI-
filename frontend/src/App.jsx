@@ -8,6 +8,7 @@ import Register from './pages/Register/Register';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Upload from './pages/Upload/Upload';
 import SkillsConfirm from './pages/SkillsConfirm/SkillsConfirm';
+import RoleSelection from './pages/RoleSelection/RoleSelection';
 import './App.css';
 
 function App() {
@@ -32,6 +33,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <SkillsConfirm />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/role-selection" 
+              element={
+                <ProtectedRoute>
+                  <RoleSelection />
                 </ProtectedRoute>
               } 
             />

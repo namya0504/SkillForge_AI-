@@ -45,7 +45,7 @@ describe('Resume Endpoints', () => {
       .set('Cookie', cookies)
       .attach('resume', fakePdfPath)
       .expect(400);
-    
+
     expect(res.body.error).toContain('Invalid file type');
   });
 
@@ -55,7 +55,7 @@ describe('Resume Endpoints', () => {
       .set('Cookie', cookies)
       .attach('resume', testPdfPath)
       .expect(202);
-    
+
     expect(res.body.jobId).toBeDefined();
     expect(res.body.resumeId).toBeDefined();
 
@@ -64,7 +64,7 @@ describe('Resume Endpoints', () => {
       .get('/api/v1/resume/current')
       .set('Cookie', cookies)
       .expect(200);
-    
+
     expect(statusRes.body.id).toBe(res.body.resumeId);
     expect(statusRes.body.parsedStatus).toBeDefined();
   });

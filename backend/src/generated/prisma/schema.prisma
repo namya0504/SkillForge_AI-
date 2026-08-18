@@ -8,16 +8,33 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(uuid())
-  email        String   @unique
-  passwordHash String   @map("password_hash")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  resumes      Resume[]
-  skills       Skill[]
-  jobs         Job[]
+  id               String         @id @default(uuid())
+  email            String         @unique
+  passwordHash     String         @map("password_hash")
+  targetRoleId     String?        @map("target_role_id")
+  customTargetRole String?        @map("custom_target_role")
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
+  resumes          Resume[]
+  skills           Skill[]
+  jobs             Job[]
+  roadmap          Roadmap?
+  targetRole       RoleReference? @relation(fields: [targetRoleId], references: [id], onDelete: SetNull)
 
   @@map("users")
+}
+
+model RoleReference {
+  id             String   @id @default(uuid())
+  title          String   @unique
+  category       String   @default("Software Development")
+  isPopular      Boolean  @default(false) @map("is_popular")
+  description    String?
+  requiredSkills String   @map("required_skills") // JSON string array of required skills with baseline proficiencies
+  createdAt      DateTime @default(now()) @map("created_at")
+  users          User[]
+
+  @@map("roles_reference")
 }
 
 model Resume {
@@ -62,4 +79,18 @@ model Job {
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("jobs")
+}
+
+model Roadmap {
+  id              String   @id @default(uuid())
+  userId          String   @unique @map("user_id")
+  targetRoleTitle String   @map("target_role_title")
+  gapAnalysis     String   @map("gap_analysis") // JSON string: { matchedSkills, missingSkills, levelGaps }
+  milestones      String // JSON string array of learning phases
+  recommendations String // JSON string object: { projects, certifications }
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("roadmaps")
 }

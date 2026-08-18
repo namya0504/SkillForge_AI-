@@ -18,7 +18,7 @@ const SkillsConfirm = () => {
 
   const fetchSkills = async () => {
     try {
-      const { data } = await skillAPI.getSkills();
+      const data = await skillAPI.getSkills();
       setSkills(data.skills);
     } catch (err) {
       setError('Failed to load skills.');
@@ -43,7 +43,7 @@ const SkillsConfirm = () => {
     setNewSkill('');
 
     try {
-      const { data } = await skillAPI.addSkill(skillToAdd.skillName, skillToAdd.proficiency);
+      const data = await skillAPI.addSkill(skillToAdd.skillName, skillToAdd.proficiency);
       // Replace temp id with real id
       setSkills(prev => prev.map(s => s.id === skillToAdd.id ? data.skill : s));
     } catch (err) {
@@ -86,7 +86,7 @@ const SkillsConfirm = () => {
   };
 
   const handleContinue = () => {
-    navigate('/role-selection'); // Next phase
+    navigate('/role-selection'); // Proceed to Step 3: Select Role
   };
 
   if (loading) return <div className="skills-page"><div className="loader"></div></div>;
