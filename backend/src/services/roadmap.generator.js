@@ -176,60 +176,68 @@ export async function generateRoadmapForUser(userId) {
 function generateWithRuleEngine(roleTitle, userSkills, gapAnalysis) {
   const allGaps = [...gapAnalysis.missingSkills.map(s => s.name), ...gapAnalysis.levelGaps.map(s => s.name)];
   const primaryGap = allGaps[0] || 'Core Development';
+  const secondaryGap = allGaps[1] || allGaps[0] || 'System Architecture';
+  const tertiaryGap = allGaps[2] || 'Testing & Security';
 
-  // 1. Build Milestones
+  const phase1Skills = allGaps.slice(0, 3);
+  const phase2Skills = allGaps.slice(3, 6).length > 0 ? allGaps.slice(3, 6) : allGaps.slice(1, 4);
+  const phase3Skills = allGaps.slice(6, 9).length > 0 ? allGaps.slice(6, 9) : [primaryGap, 'Performance Optimization', 'CI/CD Deployment'];
+
+  // 1. Build Dynamic Milestones
   const milestones = [
     {
       phase: 1,
       title: 'Phase 1: Foundation & Gap Remediation',
       duration: '3 - 4 Weeks',
-      description: `Master essential missing fundamentals required for ${roleTitle}, focusing on ${allGaps.slice(0, 3).join(', ') || 'Core Skills'}.`,
-      topics: allGaps.length > 0 ? allGaps.slice(0, 3).map(g => `In-depth ${g} core concepts & patterns`) : ['Advanced Syntax', 'Core Data Structures', 'Design Patterns'],
-      targetSkills: allGaps.slice(0, 3)
+      description: `Master essential missing fundamentals required for ${roleTitle}, focusing on ${phase1Skills.join(', ') || 'Core Skills'}.`,
+      topics: phase1Skills.length > 0 
+        ? phase1Skills.map(g => `In-depth ${g} core syntax, patterns & best practices`)
+        : ['Advanced Syntax', 'Core Data Structures', 'Design Patterns'],
+      targetSkills: phase1Skills
     },
     {
       phase: 2,
-      title: 'Phase 2: Intermediate Implementation & Integration',
+      title: 'Phase 2: Intermediate Implementation & Feature Architecture',
       duration: '4 - 6 Weeks',
-      description: `Build real-world application components for ${roleTitle} integrating API protocols, state management, and persistence.`,
-      topics: ['RESTful API Design & Validation', 'Database Schema Modeling', 'State Management & Async Workflows'],
-      targetSkills: allGaps.slice(2, 5)
+      description: `Build real-world components and integrations for ${roleTitle} incorporating ${phase2Skills.join(', ')}.`,
+      topics: phase2Skills.map(g => `Building production features with ${g} & component integration`),
+      targetSkills: phase2Skills
     },
     {
       phase: 3,
-      title: 'Phase 3: Production Systems, Cloud & Deployment',
+      title: 'Phase 3: Production Delivery, Performance & Deployment',
       duration: '3 - 4 Weeks',
-      description: `Prepare for ${roleTitle} technical interviews by implementing containerized CI/CD deployment pipelines, system testing, and security best practices.`,
-      topics: ['Docker Containerization', 'Automated Integration Testing', 'Cloud Deployment & Monitoring'],
-      targetSkills: ['Docker', 'CI/CD', 'Testing']
+      description: `Prepare for ${roleTitle} technical interviews by implementing automated testing, performance tuning, and CI/CD pipelines.`,
+      topics: [
+        `Performance Tuning & Security for ${roleTitle}`,
+        `Automated Integration & Unit Testing`,
+        `Production CI/CD Deployment for ${roleTitle}`
+      ],
+      targetSkills: phase3Skills
     }
   ];
 
-  // 2. Build Projects Recommendations (Feature 6)
-  const projects = [];
-
-  // Project 1: Targeted at primary gap
-  projects.push({
-    id: `proj-${crypto.randomUUID().slice(0, 8)}`,
-    title: `Full-Featured ${primaryGap} Application Platform`,
-    description: `Build a production-grade web application featuring authentication, state persistence, and responsive UI emphasizing ${primaryGap}.`,
-    rationale: `Directly addresses your primary skill gap in ${primaryGap} to build resume-worthy hands-on proof of competence.`,
-    difficulty: 'Intermediate',
-    estimatedHours: '25 - 30 hrs',
-    targetSkills: [primaryGap, 'REST API', 'Git']
-  });
-
-  // Project 2: Microservices / Full-stack project
-  const secondaryGap = allGaps[1] || 'State Management';
-  projects.push({
-    id: `proj-${crypto.randomUUID().slice(0, 8)}`,
-    title: `${roleTitle} Portfolio Capstone Project`,
-    description: `Construct a scalable full-stack system incorporating automated testing, error logging, and API optimization tailored for ${roleTitle} roles.`,
-    rationale: `Demonstrates end-to-end domain expertise for ${roleTitle} positions by combining ${secondaryGap} with system integration.`,
-    difficulty: 'Advanced',
-    estimatedHours: '40 - 50 hrs',
-    targetSkills: [secondaryGap, 'Docker', 'PostgreSQL']
-  });
+  // 2. Build Dynamic Project Recommendations (Feature 6)
+  const projects = [
+    {
+      id: `proj-${crypto.randomUUID().slice(0, 8)}`,
+      title: `Full-Featured ${primaryGap} Application Platform`,
+      description: `Build a production-grade application featuring state management, UI component architecture, and API integration emphasizing ${primaryGap}.`,
+      rationale: `Directly addresses your primary skill gap in ${primaryGap} to build resume-worthy hands-on proof of competence.`,
+      difficulty: 'Intermediate',
+      estimatedHours: '25 - 30 hrs',
+      targetSkills: [primaryGap, secondaryGap, 'Git'].filter(Boolean)
+    },
+    {
+      id: `proj-${crypto.randomUUID().slice(0, 8)}`,
+      title: `${roleTitle} Enterprise Portfolio Capstone`,
+      description: `Construct an end-to-end production system demonstrating expertise in ${secondaryGap} and ${tertiaryGap} tailored for ${roleTitle} positions.`,
+      rationale: `Demonstrates end-to-end domain expertise for ${roleTitle} hiring managers by synthesizing key skill gaps.`,
+      difficulty: 'Advanced',
+      estimatedHours: '40 - 50 hrs',
+      targetSkills: [secondaryGap, tertiaryGap, 'Testing'].filter(Boolean)
+    }
+  ];
 
   // 3. Build Certification Recommendations (Feature 6)
   const certifications = [];
