@@ -14,8 +14,13 @@ export async function extractText(buffer, mimeType) {
     const data = await pdf(buffer);
     text = data.text || '';
   } else if (isDocx) {
-    const result = await mammoth.extractRawText({ buffer });
-    text = result.value || '';
+    try {
+      const result = await mammoth.extractRawText({ buffer });
+      text = result.value || '';
+    } catch (docxErr) {
+      console.warn('Mammoth zip extraction warning, attempting raw buffer text fallback:', docxErr.message);
+      text = buffer.toString('utf-8').replace(/[\x00-\x09\x0B-\x1F\x7F-\x9F]/g, ' ');
+    }
   } else {
     throw new Error('Unsupported file type. Only PDF and DOCX files are accepted.');
   }
