@@ -2,6 +2,42 @@ import prisma from '../config/database.js';
 import { config } from '../config/env.js';
 import crypto from 'crypto';
 
+export function normalizeSkillName(name) {
+  if (!name) return '';
+  const clean = name.toLowerCase().trim()
+    .replace(/[\/\._\-]/g, ' ')
+    .replace(/\s+/g, ' ');
+  
+  const ALIASES = {
+    'js': 'javascript',
+    'ts': 'typescript',
+    'react js': 'react',
+    'reactjs': 'react',
+    'node': 'node.js',
+    'nodejs': 'node.js',
+    'node js': 'node.js',
+    'express js': 'express',
+    'expressjs': 'express',
+    'postgres': 'postgresql',
+    'pg': 'postgresql',
+    'mongo': 'mongodb',
+    'react native': 'react native',
+    'reactnative': 'react native',
+    'rest': 'rest api',
+    'restful': 'rest api',
+    'restful api': 'rest api',
+    'ui ux': 'ui/ux',
+    'html5': 'html',
+    'css3': 'css',
+    'k8s': 'kubernetes',
+    'aws': 'aws',
+    'amazon web services': 'aws',
+    'ml': 'machine learning'
+  };
+
+  return ALIASES[clean] || clean;
+}
+
 // Mapping of proficiencies to numeric values for gap matrix calculations
 const PROFICIENCY_SCORES = {
   'beginner': 1,
@@ -87,14 +123,17 @@ export async function generateRoadmapForUser(userId) {
 
   // 2. Perform Gap Analysis Matrix
   const userSkillsMap = new Map();
-  user.skills.forEach(s => userSkillsMap.set(s.skillName.toLowerCase(), s.proficiency));
+  user.skills.forEach(s => {
+    const key = normalizeSkillName(s.skillName);
+    userSkillsMap.set(key, s.proficiency);
+  });
 
   const matchedSkills = [];
   const levelGaps = [];
   const missingSkills = [];
 
   requiredRoleSkills.forEach(reqSkill => {
-    const normName = reqSkill.name.toLowerCase();
+    const normName = normalizeSkillName(reqSkill.name);
     const userProficiency = userSkillsMap.get(normName);
     const targetProficiency = reqSkill.proficiency || 'Intermediate';
 
