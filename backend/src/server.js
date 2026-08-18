@@ -4,8 +4,11 @@ import { connectDB } from './config/database.js';
 import prisma from './config/database.js';
 import { worker } from './services/worker.js';
 
+import { ensureUploadDir } from './config/storage.js';
+
 const startServer = async () => {
   await connectDB();
+  await ensureUploadDir();
 
   const server = app.listen(config.port, () => {
     console.log(`Server running in ${config.nodeEnv} mode on port ${config.port}`);
