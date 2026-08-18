@@ -282,9 +282,12 @@ const Upload = () => {
                 </div>
               </div>
 
-              <div className="results-actions">
-                <button className="btn-primary full-width" onClick={() => navigate('/skills')}>
-                  Continue to Skill Review <ChevronRight size={18} />
+              <div className="results-actions flex-actions">
+                <button className="btn-secondary" onClick={() => navigate('/skills')}>
+                  Review Extracted Skills <ChevronRight size={18} />
+                </button>
+                <button className="btn-primary" onClick={() => navigate('/dashboard')}>
+                  Go to Dashboard & Roadmap <ChevronRight size={18} />
                 </button>
               </div>
             </div>

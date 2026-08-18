@@ -56,6 +56,40 @@
   font-weight: 500;
 }
 
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.nav-link:hover {
+  background-color: var(--color-bg-elevated, rgba(255, 255, 255, 0.05));
+  color: var(--color-accent, #F4A259);
+}
+
+.mobile-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text);
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: var(--radius-md);
+}
+
+.mobile-nav-link:hover {
+  background-color: var(--color-bg-elevated);
+}
+
 .btn-logout {
   display: flex;
   align-items: center;
