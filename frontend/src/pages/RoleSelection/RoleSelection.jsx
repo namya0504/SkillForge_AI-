@@ -108,6 +108,14 @@ const RoleSelection = () => {
       const customRoleToSend = isCustomMode ? customRole.trim() : null;
 
       await roleAPI.saveTargetRole(roleIdToSend, customRoleToSend);
+      
+      // Auto-regenerate roadmap for the newly selected target role
+      try {
+        await roadmapAPI.generateRoadmap();
+      } catch (genErr) {
+        console.warn('Roadmap auto-regen notice:', genErr.message);
+      }
+
       setShowRegenModal(false);
       navigate('/dashboard');
     } catch (err) {

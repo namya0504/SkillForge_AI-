@@ -2,6 +2,7 @@ import express from 'express';
 import { body, validationResult } from 'express-validator';
 import prisma from '../config/database.js';
 import { authenticate } from '../middleware/auth.js';
+import { generateRoadmapForUser } from '../services/roadmap.generator.js';
 
 const router = express.Router();
 
@@ -100,6 +101,13 @@ router.post('/target',
         },
         include: { targetRole: true }
       });
+
+      // Automatically regenerate roadmap for the updated target role
+      try {
+        await generateRoadmapForUser(req.user.id);
+      } catch (genErr) {
+        console.warn('Roadmap auto-regeneration on target role change notice:', genErr.message);
+      }
 
       let parsedTargetRole = null;
       if (updatedUser.targetRole) {
