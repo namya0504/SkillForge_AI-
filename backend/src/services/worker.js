@@ -73,10 +73,15 @@ class JobWorker {
 
   async handleResumeParse(job) {
     const payload = JSON.parse(job.payload);
-    const { resumeId, storageKey, mimeType } = payload;
+    const { resumeId, storageKey, mimeType, fileBase64 } = payload;
 
-    // Step 1: Read file from storage
-    const buffer = await readFile(storageKey);
+    // Step 1: Read file buffer (direct base64 from database job payload or fallback to disk)
+    let buffer;
+    if (fileBase64) {
+      buffer = Buffer.from(fileBase64, 'base64');
+    } else {
+      buffer = await readFile(storageKey);
+    }
 
     // Step 2: Extract raw text (throws if scanned/empty/unreadable)
     const rawText = await extractText(buffer, mimeType);

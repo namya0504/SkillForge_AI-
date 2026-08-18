@@ -29,13 +29,18 @@ export const uploadResume = async (req, res) => {
       }
     });
 
-    // Create async job
+    // Create async job with base64 payload for 100% cloud reliability
     const job = await prisma.job.create({
       data: {
         userId,
         type: 'resume_parse',
         status: 'pending',
-        payload: JSON.stringify({ resumeId: resume.id, storageKey, mimeType })
+        payload: JSON.stringify({ 
+          resumeId: resume.id, 
+          storageKey, 
+          mimeType,
+          fileBase64: file.buffer.toString('base64')
+        })
       }
     });
 
