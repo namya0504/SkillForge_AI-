@@ -40,7 +40,7 @@ const Register = () => {
     setErrorMsg('');
     try {
       await register(email, password);
-      navigate('/dashboard');
+      navigate('/upload');
     } catch (err) {
       setErrorMsg(err.message || 'Failed to register');
       setIsSubmitting(false);

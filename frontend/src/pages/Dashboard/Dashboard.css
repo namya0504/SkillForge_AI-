@@ -11,6 +11,154 @@
   justify-content: center;
 }
 
+/* ── Onboarding Empty State ── */
+.onboarding-empty-state {
+  max-width: 640px;
+  width: 100%;
+  text-align: center;
+}
+
+.empty-state-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, rgba(15, 76, 92, 0.4), rgba(244, 162, 89, 0.3));
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px auto;
+  color: #F4A259;
+}
+
+.onboarding-empty-state h1 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.empty-state-subtitle {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 32px;
+}
+
+.onboarding-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 28px;
+  text-align: left;
+}
+
+.onboarding-step {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s ease;
+}
+
+.onboarding-step.next {
+  border-color: rgba(244, 162, 89, 0.5);
+  background: rgba(244, 162, 89, 0.08);
+}
+
+.onboarding-step.completed {
+  opacity: 0.6;
+}
+
+.step-icon {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  background: #0f172a;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+}
+
+.step-icon.done {
+  background: rgba(74, 222, 128, 0.15);
+  color: #4ade80;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-content h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.step-number {
+  background: #0F4C5C;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+.step-badge-done {
+  background: rgba(74, 222, 128, 0.15);
+  color: #4ade80;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+.step-content p {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  line-height: 1.35;
+}
+
+.step-action-btn {
+  background: transparent;
+  border: 1px solid #F4A259;
+  color: #F4A259;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.step-action-btn:hover {
+  background: rgba(244, 162, 89, 0.15);
+}
+
+.empty-state-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
 .loader-box {
   background: #1e293b;
   border: 1px solid #334155;

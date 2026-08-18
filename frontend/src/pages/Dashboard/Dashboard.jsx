@@ -1,26 +1,119 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { useOnboardingStatus } from '../../hooks/useOnboardingStatus';
 import { roadmapAPI } from '../../services/api';
 import { 
   Target, Sparkles, CheckCircle2, AlertCircle, RefreshCw, 
-  Map, Award, FolderGit2, ExternalLink, Clock, ChevronRight, Edit3, ShieldCheck
+  Map, Award, FolderGit2, ExternalLink, Clock, ChevronRight, Edit3, ShieldCheck,
+  Upload, UserCheck, Compass, ArrowRight
 } from 'lucide-react';
 import './Dashboard.css';
 
+/* ──────────────────────────────────────────────────────────
+   Empty State — shown when the user hasn't finished onboarding
+   ────────────────────────────────────────────────────────── */
+const OnboardingEmptyState = ({ hasResume, hasSkills, hasTargetRole, email }) => {
+  const steps = [
+    {
+      done: hasResume || hasSkills, // either uploaded resume OR manually added skills counts
+      icon: <Upload size={24} />,
+      title: 'Upload Your Resume',
+      desc: 'Upload a PDF or DOCX resume so we can extract your skills automatically.',
+      link: '/upload',
+      btnText: 'Upload Resume',
+    },
+    {
+      done: hasSkills,
+      icon: <UserCheck size={24} />,
+      title: 'Confirm Your Skills',
+      desc: 'Review extracted skills or add them manually to build your profile.',
+      link: '/skills-confirm',
+      btnText: 'Manage Skills',
+    },
+    {
+      done: hasTargetRole,
+      icon: <Compass size={24} />,
+      title: 'Select Target Role',
+      desc: 'Choose the career role you want to grow into — this powers your personalized roadmap.',
+      link: '/role-selection',
+      btnText: 'Choose Role',
+    },
+  ];
+
+  // Find the first incomplete step to highlight
+  const nextStep = steps.find(s => !s.done);
+
+  return (
+    <div className="dashboard-container center-content">
+      <div className="onboarding-empty-state">
+        <div className="empty-state-icon">
+          <Map size={48} />
+        </div>
+        <h1>Welcome, {email}!</h1>
+        <p className="empty-state-subtitle">
+          Complete your profile to unlock your personalized AI-powered career roadmap.
+        </p>
+
+        <div className="onboarding-steps">
+          {steps.map((step, idx) => (
+            <div key={idx} className={`onboarding-step ${step.done ? 'completed' : ''} ${nextStep === step ? 'next' : ''}`}>
+              <div className={`step-icon ${step.done ? 'done' : ''}`}>
+                {step.done ? <CheckCircle2 size={24} /> : step.icon}
+              </div>
+              <div className="step-content">
+                <h3>
+                  <span className="step-number">Step {idx + 1}</span>
+                  {step.title}
+                  {step.done && <span className="step-badge-done">Completed</span>}
+                </h3>
+                <p>{step.desc}</p>
+              </div>
+              {!step.done && (
+                <Link to={step.link} className="step-action-btn">
+                  {step.btnText} <ArrowRight size={16} />
+                </Link>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {nextStep && (
+          <Link to={nextStep.link} className="btn-primary empty-state-cta">
+            {nextStep.btnText} <ArrowRight size={18} />
+          </Link>
+        )}
+      </div>
+    </div>
+  );
+};
+
+/* ──────────────────────────────────────────────────────────
+   Main Dashboard Component
+   ────────────────────────────────────────────────────────── */
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const onboarding = useOnboardingStatus();
 
   const [roadmap, setRoadmap] = useState(null);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('projects'); // 'projects' or 'certifications'
+  const [activeTab, setActiveTab] = useState('projects');
 
   useEffect(() => {
+    // Don't fetch roadmap until onboarding status is loaded
+    if (onboarding.isLoading) return;
+
+    // If onboarding is incomplete, skip roadmap fetch entirely
+    if (!onboarding.isComplete) {
+      setLoading(false);
+      return;
+    }
+
     fetchRoadmap();
-  }, []);
+  }, [onboarding.isLoading, onboarding.isComplete]);
 
   const fetchRoadmap = async () => {
     try {
@@ -28,12 +121,11 @@ const Dashboard = () => {
       const res = await roadmapAPI.getRoadmap();
       if (res.roadmap) {
         setRoadmap(res.roadmap);
-      } else {
-        // Auto-generate if not yet generated
-        await handleGenerate();
       }
+      // Don't auto-generate — let the user click "Generate" explicitly
     } catch (err) {
-      setError('Failed to load roadmap.');
+      // Roadmap doesn't exist yet — that's fine, show generate prompt
+      setRoadmap(null);
     } finally {
       setLoading(false);
     }
@@ -52,18 +144,59 @@ const Dashboard = () => {
     }
   };
 
-  if (loading) {
+  // ── Loading state ──
+  if (loading || onboarding.isLoading) {
     return (
       <div className="dashboard-container center-content">
         <div className="loader-box">
           <RefreshCw size={36} className="spin-icon text-teal" />
-          <h2>Generating Your Personal Career Roadmap...</h2>
-          <p>Analyzing skill gaps, structuring milestone phases, and matching project recommendations.</p>
+          <h2>Loading Your Dashboard...</h2>
+          <p>Checking your profile and roadmap status.</p>
         </div>
       </div>
     );
   }
 
+  // ── Onboarding incomplete → show empty state (BUG-01 + BUG-07 fix) ──
+  if (!onboarding.isComplete) {
+    return (
+      <OnboardingEmptyState
+        hasResume={onboarding.hasResume}
+        hasSkills={onboarding.hasSkills}
+        hasTargetRole={onboarding.hasTargetRole}
+        email={user?.email}
+      />
+    );
+  }
+
+  // ── Onboarding complete but no roadmap generated yet ──
+  if (!roadmap) {
+    return (
+      <div className="dashboard-container center-content">
+        <div className="onboarding-empty-state">
+          <div className="empty-state-icon">
+            <Sparkles size={48} />
+          </div>
+          <h1>Your Profile Is Ready!</h1>
+          <p className="empty-state-subtitle">
+            You've completed all onboarding steps. Generate your personalized AI career roadmap now.
+          </p>
+          {error && (
+            <div className="error-message" style={{ marginBottom: '16px' }}>
+              <AlertCircle size={18} />
+              <span>{error}</span>
+            </div>
+          )}
+          <button className="btn-primary empty-state-cta" onClick={handleGenerate} disabled={generating}>
+            <RefreshCw size={18} className={generating ? 'spin-icon' : ''} />
+            {generating ? 'Generating...' : 'Generate Your Roadmap'}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Full roadmap dashboard ──
   const gapAnalysis = roadmap?.gapAnalysis || { matchedSkills: [], levelGaps: [], missingSkills: [] };
   const milestones = roadmap?.milestones || [];
   const recommendations = roadmap?.recommendations || { projects: [], certifications: [] };
