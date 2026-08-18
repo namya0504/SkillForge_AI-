@@ -1,4 +1,12 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api/v1';
+const rawApiBase = import.meta.env.VITE_API_BASE_URL || '/api/v1';
+const formatApiBase = (url) => {
+  let trimmed = url.replace(/\/+$/, '');
+  if (!trimmed.endsWith('/api/v1')) {
+    trimmed = `${trimmed}/api/v1`;
+  }
+  return trimmed;
+};
+const API_BASE = rawApiBase.startsWith('http') ? formatApiBase(rawApiBase) : rawApiBase;
 
 async function request(endpoint, options = {}) {
   const config = {
