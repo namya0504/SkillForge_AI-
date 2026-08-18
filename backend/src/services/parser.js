@@ -3,10 +3,17 @@ import mammoth from 'mammoth';
 
 export async function extractText(buffer, mimeType) {
   let text = '';
-  if (mimeType === 'application/pdf' || mimeType === 'pdf') {
+  const isPdf = mimeType === 'application/pdf' || mimeType === 'pdf';
+  const isDocx = mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+              || mimeType === 'docx' 
+              || mimeType === 'application/zip'
+              || mimeType === 'application/x-zip-compressed'
+              || mimeType === 'application/msword';
+
+  if (isPdf) {
     const data = await pdf(buffer);
     text = data.text || '';
-  } else if (mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || mimeType === 'docx') {
+  } else if (isDocx) {
     const result = await mammoth.extractRawText({ buffer });
     text = result.value || '';
   } else {

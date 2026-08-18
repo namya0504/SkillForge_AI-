@@ -7,7 +7,8 @@
 [![ORM](https://img.shields.io/badge/ORM-Prisma_7.9.1-2D3748?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
 [![AI Provider](https://img.shields.io/badge/AI_Engine-Groq_Qwen_3.6_27B-F4A259?style=for-the-badge)](https://groq.com/)
 
-> **Live Demo:** [https://skill-forge-ai-rose.vercel.app/](https://skill-forge-ai-rose.vercel.app/)
+> **🌐 Live Frontend:** [https://skill-forge-ai-rose.vercel.app/](https://skill-forge-ai-rose.vercel.app/)  
+> **⚡ Live Backend API:** [https://skillforge-backend.onrender.com/api/v1](https://skillforge-backend.onrender.com/api/v1)
 
 SkillForge AI is a production-ready, full-stack web application designed to help tech professionals and job seekers analyze their current skill set, benchmark themselves against target industry roles, and receive personalized 3-phase milestone learning roadmaps complete with traceable project and certification recommendations.
 
