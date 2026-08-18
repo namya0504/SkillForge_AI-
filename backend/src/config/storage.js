@@ -2,23 +2,15 @@ import fs from 'fs/promises';
 import fsSync from 'fs';
 import path from 'path';
 import os from 'os';
-import { config } from './env.js';
+
+// Guarantee a single, canonical, absolute upload directory path across all processes and requests
+const UPLOAD_DIR = path.join(os.tmpdir(), 'skillforge_uploads');
 
 const getUploadDir = () => {
-  const primaryDir = config.uploadDir || path.join(process.cwd(), 'uploads');
-  try {
-    if (!fsSync.existsSync(primaryDir)) {
-      fsSync.mkdirSync(primaryDir, { recursive: true });
-    }
-    return primaryDir;
-  } catch (err) {
-    console.warn(`Could not use primary upload dir ${primaryDir}, falling back to system temp dir`, err.message);
-    const fallbackDir = path.join(os.tmpdir(), 'skillforge_uploads');
-    if (!fsSync.existsSync(fallbackDir)) {
-      fsSync.mkdirSync(fallbackDir, { recursive: true });
-    }
-    return fallbackDir;
+  if (!fsSync.existsSync(UPLOAD_DIR)) {
+    fsSync.mkdirSync(UPLOAD_DIR, { recursive: true });
   }
+  return UPLOAD_DIR;
 };
 
 export const ensureUploadDir = async () => {
@@ -35,12 +27,7 @@ export const saveFile = async (buffer, storageKey) => {
 export const readFile = async (storageKey) => {
   const dir = getUploadDir();
   const filePath = path.join(dir, storageKey);
-  try {
-    return await fs.readFile(filePath);
-  } catch (err) {
-    const fallbackPath = path.join(os.tmpdir(), 'skillforge_uploads', storageKey);
-    return await fs.readFile(fallbackPath);
-  }
+  return await fs.readFile(filePath);
 };
 
 export const deleteFile = async (storageKey) => {
@@ -49,11 +36,6 @@ export const deleteFile = async (storageKey) => {
     const filePath = path.join(dir, storageKey);
     await fs.unlink(filePath);
   } catch (err) {
-    try {
-      const fallbackPath = path.join(os.tmpdir(), 'skillforge_uploads', storageKey);
-      await fs.unlink(fallbackPath);
-    } catch (e) {
-      // Ignore cleanup error
-    }
+    // Ignore cleanup error
   }
 };
