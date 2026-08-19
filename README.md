@@ -139,17 +139,6 @@ cd backend
 npm install
 ```
 
-Create `backend/.env`:
-```env
-DATABASE_URL="postgresql://postgres:password@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
-JWT_SECRET="your-development-jwt-secret-key"
-JWT_EXPIRES_IN="30m"
-PORT=3001
-FRONTEND_URL="http://localhost:5173"
-NODE_ENV="development"
-LLM_API_KEY="gsk_your_groq_api_key" # Optional
-```
-
 Seed the grounding dataset & run migrations:
 ```bash
 node prisma/seedRoles.js
@@ -181,7 +170,7 @@ Open `http://localhost:5173` in your browser.
 
 - **Frontend**: Deployed on [Vercel](https://vercel.com) with root directory set to `frontend` and `VITE_API_BASE_URL` pointed to Render.
 - **Backend**: Deployed on [Render](https://render.com) as a Node.js Web Service with root directory set to `backend`.
-- **Database**: Hosted on [Supabase](https://supabase.com) using PgBouncer pooler on port `6543`.
+- **Database**: Hosted on [Supabase](https://supabase.com) using PgBouncer.
 
 > For complete deployment instructions, view [`DEPLOYMENT_GUIDE.md`](./DEPLOYMENT_GUIDE.md).
 
