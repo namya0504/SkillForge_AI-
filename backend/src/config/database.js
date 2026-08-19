@@ -1,8 +1,9 @@
+import './env.js';
 import { PrismaClient } from '../generated/prisma/client.js';
 import pg from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
 
-// Create the Postgres adapter
+// Create the Postgres adapter with loaded environment variables
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 

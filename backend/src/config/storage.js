@@ -1,24 +1,38 @@
 import { createClient } from '@supabase/supabase-js';
 import { config } from './env.js';
 
-const supabase = createClient(config.supabaseUrl, config.supabaseServiceRoleKey);
+let supabase = null;
+if (config.supabaseUrl && config.supabaseServiceRoleKey && !config.supabaseServiceRoleKey.includes('placeholder')) {
+  try {
+    supabase = createClient(config.supabaseUrl, config.supabaseServiceRoleKey);
+  } catch (err) {
+    console.warn('Supabase client init warning:', err.message);
+  }
+}
+
 const BUCKET = 'resumes';
 
 export const saveFile = async (buffer, storageKey) => {
-  if (!config.supabaseServiceRoleKey) {
-    console.warn('SUPABASE_SERVICE_ROLE_KEY missing. File storage operating in fallback mode.');
+  if (!supabase) {
+    console.warn('Supabase client not configured or key is placeholder. Skipping bucket upload.');
     return storageKey;
   }
-  const { error } = await supabase.storage
-    .from(BUCKET)
-    .upload(storageKey, buffer, { upsert: true });
-  if (error) throw new Error(`Storage upload failed: ${error.message}`);
+  try {
+    const { error } = await supabase.storage
+      .from(BUCKET)
+      .upload(storageKey, buffer, { upsert: true });
+    if (error) {
+      console.warn(`Supabase storage upload warning: ${error.message}. Job processing will use base64 payload fallback.`);
+    }
+  } catch (err) {
+    console.warn('Supabase storage upload exception:', err.message);
+  }
   return storageKey;
 };
 
 export const readFile = async (storageKey) => {
-  if (!config.supabaseServiceRoleKey) {
-    throw new Error('Storage read failed: SUPABASE_SERVICE_ROLE_KEY missing');
+  if (!supabase) {
+    throw new Error('Storage read failed: Supabase storage is not configured.');
   }
   const { data, error } = await supabase.storage
     .from(BUCKET)
@@ -28,9 +42,13 @@ export const readFile = async (storageKey) => {
 };
 
 export const deleteFile = async (storageKey) => {
-  if (!config.supabaseServiceRoleKey) return;
-  const { error } = await supabase.storage.from(BUCKET).remove([storageKey]);
-  if (error) console.error(`Failed to delete file ${storageKey}:`, error.message);
+  if (!supabase) return;
+  try {
+    const { error } = await supabase.storage.from(BUCKET).remove([storageKey]);
+    if (error) console.error(`Failed to delete file ${storageKey}:`, error.message);
+  } catch (err) {
+    // ignore cleanup error
+  }
 };
 
 export const ensureUploadDir = async () => {

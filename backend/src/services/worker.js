@@ -48,7 +48,7 @@ class JobWorker {
       if (!job) return; // either no pending job, or another worker won the race
       this.processJob(job);
     } catch (err) {
-      console.error('Worker poll error:', err.message);
+      console.error('Worker poll error:', err?.message || err);
     }
   }
 

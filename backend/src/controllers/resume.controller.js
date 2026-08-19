@@ -7,24 +7,29 @@ export const uploadResume = async (req, res) => {
     const userId = req.user.id;
     const file = req.file;
 
+    if (!file || !file.buffer) {
+      return res.status(400).json({ error: 'No resume file provided. Please attach a valid PDF or DOCX resume.' });
+    }
+
     // Generate random storage key
-    const ext = file.originalname.split('.').pop().toLowerCase();
+    const originalName = file.originalname || 'resume.pdf';
+    const ext = originalName.includes('.') ? originalName.split('.').pop().toLowerCase() : 'pdf';
     const storageKey = `${crypto.randomUUID()}.${ext}`;
 
-    // Save file to storage
+    // Save file to storage (resilient fallback)
     await saveFile(file.buffer, storageKey);
 
     // Determine mimeType
-    const mimeType = ext === 'pdf' ? 'pdf' : 'docx';
+    const mimeType = ext === 'docx' || ext === 'doc' ? 'docx' : 'pdf';
 
     // Create resume record
     const resume = await prisma.resume.create({
       data: {
         userId,
         storageKey,
-        originalName: file.originalname,
+        originalName,
         mimeType,
-        fileSize: file.size,
+        fileSize: file.size || file.buffer.length,
         parsedStatus: 'pending'
       }
     });
@@ -52,7 +57,7 @@ export const uploadResume = async (req, res) => {
     });
   } catch (error) {
     console.error('Upload error:', error);
-    res.status(500).json({ error: 'Failed to upload resume' });
+    res.status(500).json({ error: error.message || 'Failed to upload resume' });
   }
 };
 
