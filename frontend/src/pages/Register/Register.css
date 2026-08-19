@@ -32,3 +32,48 @@
 .req-item.met {
   color: var(--color-success);
 }
+
+.otp-info-box {
+  background: rgba(15, 76, 92, 0.15);
+  border: 1px solid rgba(15, 76, 92, 0.4);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.otp-info-box h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 4px;
+}
+
+.otp-info-box p {
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  margin-bottom: 8px;
+}
+
+.simulated-otp-badge {
+  display: inline-block;
+  background: #0F4C5C;
+  color: #ffffff;
+  font-size: 0.82rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.simulated-otp-badge:hover {
+  background: #146175;
+}
+
+.click-to-fill {
+  font-size: 0.72rem;
+  color: #F4A259;
+  font-weight: 500;
+}

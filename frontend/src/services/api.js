@@ -27,15 +27,25 @@ async function request(endpoint, options = {}) {
 }
 
 export const authAPI = {
-  register: (email, password) =>
+  sendOTP: (email) =>
+    request('/auth/send-otp', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    }),
+  verifyOTP: (otpToken, code) =>
+    request('/auth/verify-otp', {
+      method: 'POST',
+      body: JSON.stringify({ otpToken, code }),
+    }),
+  register: (email, password, otpToken, otpCode) =>
     request('/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password, otpToken, otpCode }),
     }),
-  login: (email, password) =>
+  login: (email, password, otpToken, otpCode) =>
     request('/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password, otpToken, otpCode }),
     }),
   logout: () =>
     request('/auth/logout', { method: 'POST' }),

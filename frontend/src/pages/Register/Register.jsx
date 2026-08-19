@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Mail, Lock, CheckCircle } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, CheckCircle, ShieldCheck, KeyRound, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
-import '../Login/Login.css'; // Reusing base auth styles
+import { authAPI } from '../../services/api';
+import '../Login/Login.css';
 import './Register.css';
 
 const Register = () => {
@@ -11,9 +12,15 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  
+
+  // Email OTP Verification state
+  const [step, setStep] = useState(1); // 1: Info, 2: OTP Verification
+  const [otpCode, setOtpCode] = useState('');
+  const [otpToken, setOtpToken] = useState('');
+  const [simulatedCode, setSimulatedCode] = useState('');
+
   const [pwdReqs, setPwdReqs] = useState({ length: false, number: false });
-  const [pwdStrength, setPwdStrength] = useState(0); // 0-2
+  const [pwdStrength, setPwdStrength] = useState(0);
 
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -29,7 +36,7 @@ const Register = () => {
     setPwdStrength(strength);
   }, [password]);
 
-  const handleSubmit = async (e) => {
+  const handleSendOTP = async (e) => {
     e.preventDefault();
     if (!pwdReqs.length || !pwdReqs.number) {
       setErrorMsg('Please meet all password requirements.');
@@ -38,11 +45,34 @@ const Register = () => {
 
     setIsSubmitting(true);
     setErrorMsg('');
+
     try {
-      await register(email, password);
+      const res = await authAPI.sendOTP(email);
+      setOtpToken(res.otpToken);
+      setSimulatedCode(res.otpCode);
+      setStep(2);
+    } catch (err) {
+      setErrorMsg(err.message || 'Failed to send email verification code');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleVerifyAndRegister = async (e) => {
+    e.preventDefault();
+    if (!otpCode || otpCode.length < 6) {
+      setErrorMsg('Please enter the 6-digit email authentication code.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setErrorMsg('');
+
+    try {
+      await register(email, password, otpToken, otpCode);
       navigate('/upload');
     } catch (err) {
-      setErrorMsg(err.message || 'Failed to register');
+      setErrorMsg(err.message || 'Failed to complete registration');
       setIsSubmitting(false);
     }
   };
@@ -58,76 +88,120 @@ const Register = () => {
       <div className="auth-card">
         <div className="auth-header">
           <h2>Create Account</h2>
-          <p>Join SkillForge AI today</p>
+          <p>{step === 1 ? 'Join SkillForge AI today' : `Verify your email: ${email}`}</p>
         </div>
 
         {errorMsg && <div className="auth-error">{errorMsg}</div>}
 
-        <form onSubmit={handleSubmit} className="auth-form">
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <div className="input-wrapper">
-              <Mail className="input-icon" size={20} />
-              <input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={isSubmitting}
-                required
-              />
+        {step === 1 ? (
+          <form onSubmit={handleSendOTP} className="auth-form">
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <div className="input-wrapper">
+                <Mail className="input-icon" size={20} />
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={isSubmitting}
+                  required
+                />
+              </div>
             </div>
-          </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <div className="input-wrapper">
-              <Lock className="input-icon" size={20} />
-              <input
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Create a password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={isSubmitting}
-                required
-              />
-              <button
-                type="button"
-                className="btn-toggle-password"
-                onClick={() => setShowPassword(!showPassword)}
-                tabIndex="-1"
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <div className="input-wrapper">
+                <Lock className="input-icon" size={20} />
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Create a password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={isSubmitting}
+                  required
+                />
+                <button
+                  type="button"
+                  className="btn-toggle-password"
+                  onClick={() => setShowPassword(!showPassword)}
+                  tabIndex="-1"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+              
+              <div className="pwd-strength-container">
+                <div 
+                  className="pwd-strength-bar" 
+                  style={{ 
+                    width: `${(pwdStrength / 2) * 100}%`,
+                    backgroundColor: getStrengthColor() 
+                  }}
+                ></div>
+              </div>
+              
+              <div className="pwd-requirements">
+                <div className={`req-item ${pwdReqs.length ? 'met' : ''}`}>
+                  <CheckCircle size={14} /> Min 8 characters
+                </div>
+                <div className={`req-item ${pwdReqs.number ? 'met' : ''}`}>
+                  <CheckCircle size={14} /> Contains a number
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" className="btn-submit" disabled={isSubmitting || pwdStrength < 2}>
+              {isSubmitting ? <span className="btn-spinner"></span> : 'Send Email Verification Code'}
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={handleVerifyAndRegister} className="auth-form">
+            <div className="otp-info-box">
+              <ShieldCheck size={28} className="text-teal" />
+              <div>
+                <h4>Email Authentication Code Sent</h4>
+                <p>Enter the 6-digit security code sent to <strong>{email}</strong>.</p>
+                {simulatedCode && (
+                  <div className="simulated-otp-badge" onClick={() => setOtpCode(simulatedCode)}>
+                    Code: <strong>{simulatedCode}</strong> <span className="click-to-fill">(Click to Auto-fill)</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="otpCode">6-Digit Verification Code</label>
+              <div className="input-wrapper">
+                <KeyRound className="input-icon" size={20} />
+                <input
+                  id="otpCode"
+                  type="text"
+                  placeholder="123456"
+                  maxLength={6}
+                  value={otpCode}
+                  onChange={(e) => setOtpCode(e.target.value)}
+                  disabled={isSubmitting}
+                  autoFocus
+                  required
+                />
+              </div>
+            </div>
+
+            <button type="submit" className="btn-submit" disabled={isSubmitting || otpCode.length < 6}>
+              {isSubmitting ? <span className="btn-spinner"></span> : 'Verify Email & Create Account'}
+            </button>
+
+            <div className="auth-footer">
+              <button type="button" className="btn-link flex-center gap-xs" onClick={() => setStep(1)}>
+                <ArrowLeft size={16} /> Back to Sign Up Details
               </button>
             </div>
-            
-            {/* Password strength indicator */}
-            <div className="pwd-strength-container">
-              <div 
-                className="pwd-strength-bar" 
-                style={{ 
-                  width: `${(pwdStrength / 2) * 100}%`,
-                  backgroundColor: getStrengthColor() 
-                }}
-              ></div>
-            </div>
-            
-            <div className="pwd-requirements">
-              <div className={`req-item ${pwdReqs.length ? 'met' : ''}`}>
-                <CheckCircle size={14} /> Min 8 characters
-              </div>
-              <div className={`req-item ${pwdReqs.number ? 'met' : ''}`}>
-                <CheckCircle size={14} /> Contains a number
-              </div>
-            </div>
-          </div>
-
-          <button type="submit" className="btn-submit" disabled={isSubmitting || pwdStrength < 2}>
-            {isSubmitting ? <span className="btn-spinner"></span> : 'Sign Up'}
-          </button>
-        </form>
+          </form>
+        )}
 
         <div className="auth-footer">
           <p>Already have an account? <Link to="/login">Log in</Link></p>

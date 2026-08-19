@@ -1,11 +1,30 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
-import { register, login, logout, getMe, forgotPassword, resetPassword } from '../controllers/auth.controller.js';
+import { register, login, logout, getMe, forgotPassword, resetPassword, sendOTP, verifyOTP } from '../controllers/auth.controller.js';
 import { validate } from '../middleware/validate.js';
 import { authLimiter } from '../middleware/rateLimiter.js';
 import { authenticate } from '../middleware/auth.js';
 
 const router = Router();
+
+router.post('/send-otp',
+  authLimiter,
+  [
+    body('email').isEmail().withMessage('Valid email is required')
+  ],
+  validate,
+  sendOTP
+);
+
+router.post('/verify-otp',
+  authLimiter,
+  [
+    body('otpToken').notEmpty().withMessage('Verification token is required'),
+    body('code').isLength({ min: 6, max: 6 }).withMessage('6-digit code is required')
+  ],
+  validate,
+  verifyOTP
+);
 
 router.post('/register',
   authLimiter,

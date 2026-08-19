@@ -4,9 +4,65 @@ import prisma from '../config/database.js';
 import { generateToken, getCookieOptions } from '../utils/token.js';
 import { config } from '../config/env.js';
 
+export const sendOTP = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const normalizedEmail = email.toLowerCase().trim();
+
+    // Generate random 6-digit OTP code
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Sign verification token (expires in 10 minutes)
+    const otpToken = jwt.sign(
+      { email: normalizedEmail, otpCode, type: 'email_verification' },
+      config.jwtSecret,
+      { expiresIn: '10m' }
+    );
+
+    res.status(200).json({
+      message: `Authentication code sent to ${normalizedEmail}`,
+      otpCode,
+      otpToken
+    });
+  } catch (error) {
+    console.error('Send OTP error:', error);
+    res.status(500).json({ error: 'Failed to send verification code' });
+  }
+};
+
+export const verifyOTP = async (req, res) => {
+  try {
+    const { otpToken, code } = req.body;
+
+    if (!otpToken || !code) {
+      return res.status(400).json({ error: 'Verification token and 6-digit code are required.' });
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(otpToken, config.jwtSecret);
+    } catch (err) {
+      return res.status(400).json({ error: 'Verification code has expired. Please request a new code.' });
+    }
+
+    if (decoded.otpCode !== code.trim()) {
+      return res.status(400).json({ error: 'Invalid 6-digit verification code. Please check and try again.' });
+    }
+
+    res.status(200).json({
+      message: 'Email authenticated successfully',
+      email: decoded.email,
+      verified: true
+    });
+  } catch (error) {
+    console.error('Verify OTP error:', error);
+    res.status(500).json({ error: 'Failed to verify code' });
+  }
+};
+
 export const register = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, otpToken, otpCode } = req.body;
     const normalizedEmail = email.toLowerCase().trim();
 
     const existingUser = await prisma.user.findUnique({
@@ -15,6 +71,18 @@ export const register = async (req, res) => {
 
     if (existingUser) {
       return res.status(409).json({ error: 'Unable to create account. Please try a different email or contact support.' });
+    }
+
+    // Require 6-digit Email Authentication Code if provided or requested
+    if (otpToken && otpCode) {
+      try {
+        const decoded = jwt.verify(otpToken, config.jwtSecret);
+        if (decoded.email !== normalizedEmail || decoded.otpCode !== otpCode.trim()) {
+          return res.status(400).json({ error: 'Invalid or expired email authentication code.' });
+        }
+      } catch (e) {
+        return res.status(400).json({ error: 'Email authentication code expired. Please request a new code.' });
+      }
     }
 
     const salt = await bcrypt.genSalt(12);
@@ -46,7 +114,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, otpToken, otpCode } = req.body;
     const normalizedEmail = email.toLowerCase().trim();
 
     const user = await prisma.user.findUnique({
@@ -60,6 +128,18 @@ export const login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
       return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    // If OTP verification requested/provided
+    if (otpToken && otpCode) {
+      try {
+        const decoded = jwt.verify(otpToken, config.jwtSecret);
+        if (decoded.email !== normalizedEmail || decoded.otpCode !== otpCode.trim()) {
+          return res.status(400).json({ error: 'Invalid security code. Please check your verification code.' });
+        }
+      } catch (e) {
+        return res.status(400).json({ error: 'Verification code expired. Please request a new code.' });
+      }
     }
 
     const token = generateToken(user.id);
