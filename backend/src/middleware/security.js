@@ -1,12 +1,24 @@
 import helmet from 'helmet';
 import cors from 'cors';
-import { config } from '../config/env.js';
+
+const frontendUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, '') : '';
 
 const allowedOrigins = [
-  config.frontendUrl,
-  'http://localhost:5173',
-  'http://localhost:3000'
+  frontendUrl,
+  process.env.FRONTEND_URL,
+  'http://localhost:5173'
 ].filter(Boolean);
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+};
 
 export const securityMiddleware = [
   helmet({
@@ -14,14 +26,5 @@ export const securityMiddleware = [
     xContentTypeOptions: true,
     xFrameOptions: { action: 'deny' },
   }),
-  cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
-        return callback(null, true);
-      }
-      return callback(null, origin);
-    },
-    credentials: true,
-  })
+  cors(corsOptions)
 ];
