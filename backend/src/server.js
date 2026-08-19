@@ -3,7 +3,6 @@ import { config } from './config/env.js';
 import { connectDB } from './config/database.js';
 import prisma from './config/database.js';
 import { worker } from './services/worker.js';
-
 import { ensureUploadDir } from './config/storage.js';
 
 const startServer = async () => {
@@ -12,7 +11,12 @@ const startServer = async () => {
 
   const server = app.listen(config.port, () => {
     console.log(`Server running in ${config.nodeEnv} mode on port ${config.port}`);
-    worker.start();
+    if (process.env.RUN_WORKER === 'true') {
+      worker.start();
+      console.log('Worker started inside web server process.');
+    } else {
+      console.log('Worker NOT started in this process (RUN_WORKER not set to true).');
+    }
   });
 
   // Graceful shutdown

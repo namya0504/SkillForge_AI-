@@ -19,6 +19,19 @@ async function request(endpoint, options = {}) {
   const text = await response.text();
   const data = text ? JSON.parse(text) : {};
 
+  if (response.status === 401) {
+    const isExcluded = endpoint === '/auth/login' || endpoint === '/auth/me';
+    if (!isExcluded) {
+      try {
+        localStorage.removeItem('user');
+      } catch (e) {
+        // ignore storage errors
+      }
+      window.location.href = '/login';
+      throw new Error(data.error || data.message || 'Session expired. Redirecting to login.');
+    }
+  }
+
   if (!response.ok) {
     throw new Error(data.error || data.message || 'Something went wrong');
   }
@@ -78,6 +91,15 @@ export const resumeAPI = {
     }).then(async (res) => {
       const text = await res.text();
       const data = text ? JSON.parse(text) : {};
+      if (res.status === 401) {
+        try {
+          localStorage.removeItem('user');
+        } catch (e) {
+          // ignore storage errors
+        }
+        window.location.href = '/login';
+        throw new Error(data.error || data.message || 'Session expired. Redirecting to login.');
+      }
       if (!res.ok) throw new Error(data.error || data.message || 'Upload failed');
       return data;
     });

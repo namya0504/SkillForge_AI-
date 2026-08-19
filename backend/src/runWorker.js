@@ -1,21 +1,12 @@
-import 'dotenv/config';
 import { connectDB } from './config/database.js';
+import { ensureUploadDir } from './config/storage.js';
 import { worker } from './services/worker.js';
 
-const startWorker = async () => {
-  console.log('Initializing standalone worker process...');
+const startStandaloneWorker = async () => {
   await connectDB();
+  await ensureUploadDir();
+  console.log('Starting standalone background worker process...');
   worker.start();
-
-  // Graceful shutdown
-  const shutdown = async () => {
-    console.log('Shutting down worker gracefully...');
-    worker.stop();
-    process.exit(0);
-  };
-
-  process.on('SIGTERM', shutdown);
-  process.on('SIGINT', shutdown);
 };
 
-startWorker();
+startStandaloneWorker();

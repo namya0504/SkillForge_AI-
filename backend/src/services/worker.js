@@ -23,12 +23,30 @@ class JobWorker {
   async poll() {
     if (this.activeJobs >= this.maxConcurrent) return;
     try {
-      const job = await prisma.job.findFirst({
-        where: { status: 'pending' },
-        orderBy: { createdAt: 'asc' }
+      // Compare-and-swap pattern inside a Prisma transaction to prevent race conditions:
+      // Two concurrent transactions racing on the same row will have their updateMany calls 
+      // serialized by Postgres's row-level locking — only one can see status still 'pending' 
+      // and succeed; the other sees 0 rows matched and correctly backs off instead of double-processing.
+      const job = await prisma.$transaction(async (tx) => {
+        const candidate = await tx.job.findFirst({
+          where: { status: 'pending' },
+          orderBy: { createdAt: 'asc' }
+        });
+        if (!candidate) return null;
+
+        // Atomic claim: only succeeds if status is STILL 'pending' at update time.
+        // If another worker already claimed it between findFirst and this update,
+        // count will be 0 and we know we lost the race.
+        const claim = await tx.job.updateMany({
+          where: { id: candidate.id, status: 'pending' },
+          data: { status: 'processing' }
+        });
+
+        return claim.count === 1 ? candidate : null;
       });
-      if (!job) return;
-      this.processJob(job); // fire-and-forget, don't await
+
+      if (!job) return; // either no pending job, or another worker won the race
+      this.processJob(job);
     } catch (err) {
       console.error('Worker poll error:', err.message);
     }
@@ -37,8 +55,6 @@ class JobWorker {
   async processJob(job) {
     this.activeJobs++;
     try {
-      await prisma.job.update({ where: { id: job.id }, data: { status: 'processing' } });
-      
       switch (job.type) {
         case 'resume_parse':
           await this.handleResumeParse(job);
