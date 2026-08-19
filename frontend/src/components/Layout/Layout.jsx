@@ -19,11 +19,19 @@ const Layout = ({ children }) => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
+  const handleDashboardClick = (e) => {
+    setMobileMenuOpen(false);
+    if (window.location.pathname === '/dashboard') {
+      e.preventDefault();
+      window.dispatchEvent(new CustomEvent('refresh-dashboard'));
+    }
+  };
+
   return (
     <div className="layout-container">
       <header className="navbar">
         <div className="navbar-content">
-          <Link to={isAuthenticated ? '/dashboard' : '/'} className="logo">
+          <Link to={isAuthenticated ? '/dashboard' : '/'} className="logo" onClick={handleDashboardClick}>
             <Rocket className="logo-icon" />
             <span className="logo-text">SkillForge AI</span>
           </Link>
@@ -32,7 +40,7 @@ const Layout = ({ children }) => {
           <nav className="nav-desktop">
             {isAuthenticated ? (
               <div className="nav-user-section">
-                <Link to="/dashboard" className="nav-link"><Map size={16} /> Dashboard</Link>
+                <Link to="/dashboard" className="nav-link" onClick={handleDashboardClick}><Map size={16} /> Dashboard</Link>
                 <Link to="/upload" className="nav-link"><Upload size={16} /> Re-upload Resume</Link>
                 <Link to="/role-selection" className="nav-link"><Target size={16} /> Target Role</Link>
                 <span className="user-email">{user?.email}</span>
@@ -62,7 +70,7 @@ const Layout = ({ children }) => {
           {isAuthenticated ? (
             <div className="mobile-user-section">
               <span className="mobile-email">{user?.email}</span>
-              <Link to="/dashboard" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}><Map size={16} /> Dashboard</Link>
+              <Link to="/dashboard" className="mobile-nav-link" onClick={handleDashboardClick}><Map size={16} /> Dashboard</Link>
               <Link to="/upload" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}><Upload size={16} /> Re-upload Resume</Link>
               <Link to="/role-selection" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}><Target size={16} /> Target Role</Link>
               <button onClick={handleLogout} className="btn-mobile-logout">

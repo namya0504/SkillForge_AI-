@@ -115,6 +115,16 @@ const Dashboard = () => {
     fetchRoadmap();
   }, [onboarding.isLoading, onboarding.isComplete]);
 
+  useEffect(() => {
+    const handleDashboardRefresh = () => {
+      onboarding.refresh();
+      fetchRoadmap();
+    };
+
+    window.addEventListener('refresh-dashboard', handleDashboardRefresh);
+    return () => window.removeEventListener('refresh-dashboard', handleDashboardRefresh);
+  }, [onboarding]);
+
   const fetchRoadmap = async () => {
     try {
       setLoading(true);
