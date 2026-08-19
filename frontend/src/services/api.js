@@ -41,6 +41,16 @@ export const authAPI = {
     request('/auth/logout', { method: 'POST' }),
   getMe: () =>
     request('/auth/me'),
+  forgotPassword: (email) =>
+    request('/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    }),
+  resetPassword: (token, newPassword) =>
+    request('/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify({ token, newPassword }),
+    }),
 };
 
 export const healthAPI = {

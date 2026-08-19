@@ -63,7 +63,10 @@ const Login = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <div className="label-wrapper flex-between">
+              <label htmlFor="password">Password</label>
+              <Link to="/forgot-password" className="forgot-pwd-link">Forgot Password?</Link>
+            </div>
             <div className="input-wrapper">
               <Lock className="input-icon" size={20} />
               <input

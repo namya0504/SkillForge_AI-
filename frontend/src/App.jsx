@@ -5,6 +5,8 @@ import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import Landing from './pages/Landing/Landing';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
+import ForgotPassword from './pages/Login/ForgotPassword';
+import ResetPassword from './pages/Login/ResetPassword';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Upload from './pages/Upload/Upload';
 import SkillsConfirm from './pages/SkillsConfirm/SkillsConfirm';
@@ -20,6 +22,8 @@ function App() {
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route 
               path="/upload" 
               element={

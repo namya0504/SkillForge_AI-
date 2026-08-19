@@ -212,6 +212,37 @@ export async function generateRoadmapForUser(userId) {
   };
 }
 
+const RESOURCE_LINKS = {
+  'javascript': { title: 'MDN Web Docs — JavaScript Guide', url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide' },
+  'typescript': { title: 'TypeScript Official Documentation', url: 'https://www.typescriptlang.org/docs/' },
+  'react': { title: 'React Official Documentation & Guides', url: 'https://react.dev/learn' },
+  'react native': { title: 'React Native Official Docs', url: 'https://reactnative.dev/docs/getting-started' },
+  'flutter': { title: 'Flutter Docs & Codelabs', url: 'https://docs.flutter.dev/' },
+  'next.js': { title: 'Next.js Documentation & App Router', url: 'https://nextjs.org/docs' },
+  'node.js': { title: 'Node.js Official Documentation', url: 'https://nodejs.org/en/docs/' },
+  'python': { title: 'Python Official Documentation & Tutorials', url: 'https://docs.python.org/3/tutorial/' },
+  'postgresql': { title: 'PostgreSQL Tutorial & Documentation', url: 'https://www.postgresqltutorial.com/' },
+  'mongodb': { title: 'MongoDB University & Manual', url: 'https://www.mongodb.com/docs/manual/' },
+  'docker': { title: 'Docker Official Get Started Guides', url: 'https://docs.docker.com/get-started/' },
+  'kubernetes': { title: 'Kubernetes Official Tutorials', url: 'https://kubernetes.io/docs/tutorials/' },
+  'aws': { title: 'AWS Skill Builder & Documentation', url: 'https://aws.amazon.com/getting-started/' },
+  'git': { title: 'Git Official Book & Reference', url: 'https://git-scm.com/book/en/v2' },
+  'rest api': { title: 'RESTful API Design Best Practices Guide', url: 'https://restfulapi.net/' },
+  'ui/ux': { title: 'Figma UI/UX Design System Guide', url: 'https://help.figma.com/hc/en-us' },
+  'machine learning': { title: 'Google Machine Learning Crash Course', url: 'https://developers.google.com/machine-learning/crash-course' },
+  'sql': { title: 'SQL Zoo Interactive Tutorials', url: 'https://sqlzoo.net/' },
+  'html': { title: 'MDN Web Docs — HTML Fundamentals', url: 'https://developer.mozilla.org/en-US/docs/Web/HTML' },
+  'css': { title: 'CSS Tricks & MDN Layout Guides', url: 'https://developer.mozilla.org/en-US/docs/Web/CSS' }
+};
+
+function getResourceForSkill(skillName) {
+  const norm = (skillName || '').toLowerCase().trim();
+  for (const [key, resource] of Object.entries(RESOURCE_LINKS)) {
+    if (norm.includes(key)) return resource;
+  }
+  return { title: 'FreeCodeCamp Interactive Tech Learning', url: 'https://www.freecodecamp.org/learn' };
+}
+
 function generateWithRuleEngine(roleTitle, userSkills, gapAnalysis) {
   const allGaps = [...gapAnalysis.missingSkills.map(s => s.name), ...gapAnalysis.levelGaps.map(s => s.name)];
   const primaryGap = allGaps[0] || 'Core Development';
@@ -222,7 +253,7 @@ function generateWithRuleEngine(roleTitle, userSkills, gapAnalysis) {
   const phase2Skills = allGaps.slice(3, 6).length > 0 ? allGaps.slice(3, 6) : allGaps.slice(1, 4);
   const phase3Skills = allGaps.slice(6, 9).length > 0 ? allGaps.slice(6, 9) : [primaryGap, 'Performance Optimization', 'CI/CD Deployment'];
 
-  // 1. Build Dynamic Milestones
+  // 1. Build Dynamic Milestones with Learning Resource Links
   const milestones = [
     {
       phase: 1,
@@ -230,8 +261,14 @@ function generateWithRuleEngine(roleTitle, userSkills, gapAnalysis) {
       duration: '3 - 4 Weeks',
       description: `Master essential missing fundamentals required for ${roleTitle}, focusing on ${phase1Skills.join(', ') || 'Core Skills'}.`,
       topics: phase1Skills.length > 0 
-        ? phase1Skills.map(g => `In-depth ${g} core syntax, patterns & best practices`)
-        : ['Advanced Syntax', 'Core Data Structures', 'Design Patterns'],
+        ? phase1Skills.map(g => ({
+            title: `In-depth ${g} core syntax, patterns & best practices`,
+            resource: getResourceForSkill(g)
+          }))
+        : [
+            { title: 'Advanced Syntax & Language Fundamentals', resource: { title: 'MDN Web Docs', url: 'https://developer.mozilla.org' } },
+            { title: 'Core Data Structures & Algorithms', resource: { title: 'GeeksforGeeks Data Structures', url: 'https://www.geeksforgeeks.org' } }
+          ],
       targetSkills: phase1Skills
     },
     {
@@ -239,7 +276,10 @@ function generateWithRuleEngine(roleTitle, userSkills, gapAnalysis) {
       title: 'Phase 2: Intermediate Implementation & Feature Architecture',
       duration: '4 - 6 Weeks',
       description: `Build real-world components and integrations for ${roleTitle} incorporating ${phase2Skills.join(', ')}.`,
-      topics: phase2Skills.map(g => `Building production features with ${g} & component integration`),
+      topics: phase2Skills.map(g => ({
+        title: `Building production features with ${g} & component integration`,
+        resource: getResourceForSkill(g)
+      })),
       targetSkills: phase2Skills
     },
     {
@@ -248,9 +288,9 @@ function generateWithRuleEngine(roleTitle, userSkills, gapAnalysis) {
       duration: '3 - 4 Weeks',
       description: `Prepare for ${roleTitle} technical interviews by implementing automated testing, performance tuning, and CI/CD pipelines.`,
       topics: [
-        `Performance Tuning & Security for ${roleTitle}`,
-        `Automated Integration & Unit Testing`,
-        `Production CI/CD Deployment for ${roleTitle}`
+        { title: `Performance Tuning & Security for ${roleTitle}`, resource: getResourceForSkill(primaryGap) },
+        { title: `Automated Integration & Unit Testing`, resource: getResourceForSkill('testing') },
+        { title: `Production CI/CD Deployment for ${roleTitle}`, resource: getResourceForSkill('docker') }
       ],
       targetSkills: phase3Skills
     }

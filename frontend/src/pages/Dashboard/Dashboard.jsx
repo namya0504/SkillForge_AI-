@@ -6,7 +6,7 @@ import { roadmapAPI } from '../../services/api';
 import { 
   Target, Sparkles, CheckCircle2, AlertCircle, RefreshCw, 
   Map, Award, FolderGit2, ExternalLink, Clock, ChevronRight, Edit3, ShieldCheck,
-  Upload, UserCheck, Compass, ArrowRight
+  Upload, UserCheck, Compass, ArrowRight, BookOpen, CheckSquare
 } from 'lucide-react';
 import './Dashboard.css';
 
@@ -101,6 +101,32 @@ const Dashboard = () => {
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('projects');
+  const [completedTopics, setCompletedTopics] = useState(new Set());
+
+  useEffect(() => {
+    if (user?.id) {
+      try {
+        const saved = localStorage.getItem(`completed_topics_${user.id}`);
+        if (saved) {
+          setCompletedTopics(new Set(JSON.parse(saved)));
+        }
+      } catch (e) {
+        console.warn('Failed to load completed topics', e);
+      }
+    }
+  }, [user?.id]);
+
+  const toggleTopicCompleted = (topicKey) => {
+    setCompletedTopics(prev => {
+      const next = new Set(prev);
+      if (next.has(topicKey)) next.delete(topicKey);
+      else next.add(topicKey);
+      if (user?.id) {
+        localStorage.setItem(`completed_topics_${user.id}`, JSON.stringify(Array.from(next)));
+      }
+      return next;
+    });
+  };
 
   useEffect(() => {
     // Don't fetch roadmap until onboarding status is loaded
@@ -307,41 +333,111 @@ const Dashboard = () => {
 
           {/* Milestone Learning Timeline (Feature 5) */}
           <div className="milestones-section">
-            <div className="section-title">
-              <Map size={22} className="text-teal" />
-              <h2>Personalized Learning Path</h2>
-            </div>
+            {(() => {
+              let totalTopicsCount = 0;
+              milestones.forEach((m) => {
+                (m.topics || []).forEach(() => totalTopicsCount++);
+              });
 
-            <div className="milestones-timeline">
-              {milestones.map((m, idx) => (
-                <div key={idx} className="milestone-card">
-                  <div className="milestone-badge">
-                    <span className="phase-num">Phase {m.phase || idx + 1}</span>
-                    <span className="phase-duration"><Clock size={13} /> {m.duration}</span>
-                  </div>
+              let completedCount = 0;
+              completedTopics.forEach(k => {
+                if (k.startsWith('m-')) completedCount++;
+              });
 
-                  <h3>{m.title}</h3>
-                  <p className="milestone-desc">{m.description}</p>
+              const overallProgress = totalTopicsCount > 0 
+                ? Math.min(100, Math.round((completedCount / totalTopicsCount) * 100)) 
+                : 0;
 
-                  <div className="milestone-topics">
-                    <h4>Key Focus Topics:</h4>
-                    <ul>
-                      {m.topics?.map((topic, tIdx) => (
-                        <li key={tIdx}>{topic}</li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {m.targetSkills && (
-                    <div className="milestone-skills">
-                      {m.targetSkills.map((sk, skIdx) => (
-                        <span key={skIdx} className="milestone-skill-chip">{sk}</span>
-                      ))}
+              return (
+                <>
+                  <div className="section-title flex-between">
+                    <div className="flex-center gap-sm">
+                      <Map size={22} className="text-teal" />
+                      <h2>Personalized Learning Path</h2>
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
+                    <div className="progress-badge flex-center gap-xs">
+                      <CheckSquare size={16} className="text-teal" />
+                      <span>{completedCount} / {totalTopicsCount} Tasks Done ({overallProgress}%)</span>
+                    </div>
+                  </div>
+
+                  {/* Overall Progress Bar */}
+                  <div className="overall-progress-card">
+                    <div className="progress-bar-bg">
+                      <div className="progress-bar-fill" style={{ width: `${overallProgress}%` }}></div>
+                    </div>
+                  </div>
+
+                  <div className="milestones-timeline">
+                    {milestones.map((m, idx) => {
+                      const phaseTopics = m.topics || [];
+                      const phaseCompleted = phaseTopics.filter((_, tIdx) => completedTopics.has(`m-${idx}-t-${tIdx}`)).length;
+                      const phaseProgressPercent = phaseTopics.length > 0 ? Math.round((phaseCompleted / phaseTopics.length) * 100) : 0;
+
+                      return (
+                        <div key={idx} className="milestone-card">
+                          <div className="milestone-badge flex-between">
+                            <div className="flex-center gap-xs">
+                              <span className="phase-num">Phase {m.phase || idx + 1}</span>
+                              <span className="phase-duration"><Clock size={13} /> {m.duration}</span>
+                            </div>
+                            <span className="phase-progress-text">{phaseCompleted}/{phaseTopics.length} Done ({phaseProgressPercent}%)</span>
+                          </div>
+
+                          <h3>{m.title}</h3>
+                          <p className="milestone-desc">{m.description}</p>
+
+                          <div className="milestone-topics">
+                            <h4>Key Focus Topics & Learning Resources:</h4>
+                            <ul className="topics-checklist">
+                              {phaseTopics.map((topicItem, tIdx) => {
+                                const topicKey = `m-${idx}-t-${tIdx}`;
+                                const isDone = completedTopics.has(topicKey);
+                                const topicTitle = typeof topicItem === 'object' ? topicItem.title : topicItem;
+                                const resource = typeof topicItem === 'object' ? topicItem.resource : null;
+
+                                return (
+                                  <li key={tIdx} className={`topic-item ${isDone ? 'completed' : ''}`}>
+                                    <label className="checkbox-label">
+                                      <input
+                                        type="checkbox"
+                                        checked={isDone}
+                                        onChange={() => toggleTopicCompleted(topicKey)}
+                                      />
+                                      <span className="topic-text">{topicTitle}</span>
+                                    </label>
+
+                                    {resource && resource.url && (
+                                      <a 
+                                        href={resource.url} 
+                                        target="_blank" 
+                                        rel="noreferrer" 
+                                        className="resource-link-chip"
+                                        title={`Open ${resource.title}`}
+                                      >
+                                        <BookOpen size={12} /> {resource.title} <ExternalLink size={10} />
+                                      </a>
+                                    )}
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          </div>
+
+                          {m.targetSkills && (
+                            <div className="milestone-skills">
+                              {m.targetSkills.map((sk, skIdx) => (
+                                <span key={skIdx} className="milestone-skill-chip">{sk}</span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              );
+            })()}
           </div>
 
         </div>

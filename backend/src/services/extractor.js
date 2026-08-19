@@ -1,13 +1,22 @@
 import { config } from '../config/env.js';
 
 const SKILLS_LIST = [
-  'Python', 'JavaScript', 'Java', 'C++', 'C#', 'Go', 'Rust', 'TypeScript', 'Ruby', 'PHP', 'Swift', 'Kotlin', 'R', 'MATLAB', 'Scala',
-  'React', 'Angular', 'Vue', 'Next.js', 'Express', 'Django', 'Flask', 'FastAPI', 'Spring', 'Node.js', '.NET', 'Laravel', 'Rails', 'TensorFlow', 'PyTorch', 'Pandas', 'NumPy',
-  'MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'SQLite', 'DynamoDB', 'Cassandra', 'Oracle', 'Firebase',
-  'AWS', 'Azure', 'GCP', 'Docker', 'Kubernetes', 'CI/CD', 'Jenkins', 'Terraform', 'Git', 'GitHub', 'Linux',
-  'Machine Learning', 'Deep Learning', 'NLP', 'Computer Vision', 'Data Analysis', 'Data Science', 'Big Data', 'ETL', 'Tableau', 'Power BI',
-  'HTML', 'CSS', 'REST API', 'GraphQL', 'WebSocket', 'HTTP',
-  'Agile', 'Scrum', 'JIRA', 'Figma', 'UI/UX', 'Microservices', 'System Design', 'OOP'
+  // Programming Languages
+  'Python', 'JavaScript', 'TypeScript', 'Java', 'C++', 'C#', 'Go', 'Rust', 'Ruby', 'PHP', 'Swift', 'Kotlin', 'R', 'MATLAB', 'Scala', 'Dart', 'SQL', 'HTML', 'CSS', 'Sass', 'Bash', 'Shell',
+  // Frontend & Mobile
+  'React', 'React Native', 'Flutter', 'Next.js', 'Vue', 'Vue.js', 'Angular', 'Svelte', 'TailwindCSS', 'Bootstrap', 'Redux', 'Zustand', 'HTML5', 'CSS3', 'Figma', 'UI/UX', 'Webpack', 'Vite', 'iOS', 'Android',
+  // Backend & APIs
+  'Node.js', 'Express', 'Express.js', 'NestJS', 'Django', 'Flask', 'FastAPI', 'Spring', 'Spring Boot', '.NET', 'ASP.NET', 'Laravel', 'Rails', 'Ruby on Rails', 'REST API', 'GraphQL', 'gRPC', 'WebSocket', 'Microservices',
+  // Databases & Caching
+  'PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'SQLite', 'DynamoDB', 'Cassandra', 'Oracle', 'Firebase', 'Prisma', 'TypeORM', 'Sequelize', 'Supabase', 'Neo4j',
+  // Cloud, DevOps & Infrastructure
+  'AWS', 'Azure', 'GCP', 'Docker', 'Kubernetes', 'CI/CD', 'Jenkins', 'GitHub Actions', 'GitLab CI', 'Terraform', 'Ansible', 'Linux', 'Git', 'GitHub', 'Bitbucket', 'Helm', 'Prometheus', 'Grafana', 'Nginx', 'Kafka', 'RabbitMQ',
+  // AI, Data Science & Machine Learning
+  'Machine Learning', 'Deep Learning', 'NLP', 'Computer Vision', 'Data Analysis', 'Data Science', 'Big Data', 'ETL', 'Tableau', 'Power BI', 'TensorFlow', 'PyTorch', 'Pandas', 'NumPy', 'Scikit-Learn', 'Keras', 'OpenCV', 'LangChain', 'LlamaIndex', 'Vector DBs', 'Pinecone',
+  // Testing & Quality Assurance
+  'Jest', 'Cypress', 'Playwright', 'Selenium', 'Postman', 'JUnit', 'PyTest',
+  // Methodology & Tools
+  'Agile', 'Scrum', 'JIRA', 'Confluence', 'System Design', 'OOP', 'Design Patterns'
 ];
 
 export async function extractStructuredData(text) {
@@ -30,6 +39,31 @@ async function extractWithLLM(text) {
         : 'https://api.openai.com/v1/chat/completions';
       const model = isGroq ? 'qwen/qwen3.6-27b' : 'gpt-3.5-turbo';
 
+      const prompt = `Extract structured data from the candidate resume text below.
+CRITICAL REQUIREMENT:
+1. ONLY extract skills, tools, frameworks, and programming languages that are EXPLICITLY mentioned in the provided text.
+2. Do NOT hallucinate, infer, or add any skills that do not appear in the text.
+3. For each skill found, determine proficiency ('Beginner', 'Intermediate', or 'Advanced') based on candidate experience or context.
+
+Return ONLY valid JSON matching this schema:
+{
+  "skills": [
+    { "name": "SkillName", "proficiency": "Beginner|Intermediate|Advanced" }
+  ],
+  "education": [
+    { "degree": "Degree Name", "institution": "University/School", "year": "Year" }
+  ],
+  "experience": [
+    { "title": "Job Title", "company": "Company Name", "duration": "Dates/Duration", "description": "Brief summary" }
+  ],
+  "certifications": [
+    { "name": "Certification Name", "issuer": "Issuer Organization" }
+  ]
+}
+
+RESUME TEXT:
+${text}`;
+
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -39,8 +73,8 @@ async function extractWithLLM(text) {
         body: JSON.stringify({
           model,
           messages: [
-            { role: 'system', content: 'You are a resume parser. Extract structured data from the following resume text. Return ONLY valid JSON.' },
-            { role: 'user', content: `DATA:\n${text}` }
+            { role: 'system', content: 'You are a precise resume parser. Return ONLY JSON.' },
+            { role: 'user', content: prompt }
           ]
         }),
         signal: controller.signal
@@ -55,7 +89,6 @@ async function extractWithLLM(text) {
       const data = await response.json();
       let resultText = data.choices[0].message.content || '';
       
-      // Clean thinking tags or markdown code blocks
       resultText = resultText.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
       const match = resultText.match(/\{[\s\S]*\}/);
       if (match) {
@@ -63,17 +96,30 @@ async function extractWithLLM(text) {
       }
       
       const parsed = JSON.parse(resultText);
-      // Validate schema basic fields
       if (!parsed.skills || !Array.isArray(parsed.skills)) throw new Error('Invalid schema');
       return parsed;
     } catch (err) {
       retries--;
       if (retries < 0) {
-        console.warn('LLM extraction failed after retries, falling back', err);
+        console.warn('LLM extraction failed after retries, falling back to rule engine', err.message);
         return extractWithFallback(text);
       }
     }
   }
+}
+
+function matchSkillInText(skill, textLower) {
+  const sLower = skill.toLowerCase();
+  const idx = textLower.indexOf(sLower);
+  if (idx === -1) return false;
+
+  const charBefore = idx > 0 ? textLower[idx - 1] : ' ';
+  const charAfter = (idx + sLower.length) < textLower.length ? textLower[idx + sLower.length] : ' ';
+
+  const isValidBefore = /[\s,;:()\/\-\n\r\[\]\{\}]/.test(charBefore) || idx === 0;
+  const isValidAfter = /[\s,;:()\/\-\n\r\[\]\{\}]/.test(charAfter) || (idx + sLower.length) === textLower.length;
+
+  return isValidBefore && isValidAfter;
 }
 
 function extractWithFallback(text) {
@@ -85,21 +131,26 @@ function extractWithFallback(text) {
   };
 
   const textLower = text.toLowerCase();
+  const addedSkills = new Set();
 
   SKILLS_LIST.forEach(skill => {
-    const regex = new RegExp(`\\b${skill.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
-    if (regex.test(text)) {
-      let proficiency = 'Beginner';
-      const skillIdx = textLower.indexOf(skill.toLowerCase());
-      if (skillIdx !== -1) {
-        const context = textLower.substring(Math.max(0, skillIdx - 30), Math.min(textLower.length, skillIdx + 30));
-        if (context.includes('expert') || context.includes('advanced') || context.includes('senior')) {
-          proficiency = 'Advanced';
-        } else if (context.includes('intermediate') || context.includes('proficient') || context.includes('experienced')) {
-          proficiency = 'Intermediate';
+    if (matchSkillInText(skill, textLower)) {
+      const normSkillKey = skill.toLowerCase();
+      if (!addedSkills.has(normSkillKey)) {
+        addedSkills.add(normSkillKey);
+        
+        let proficiency = 'Beginner';
+        const skillIdx = textLower.indexOf(normSkillKey);
+        if (skillIdx !== -1) {
+          const context = textLower.substring(Math.max(0, skillIdx - 40), Math.min(textLower.length, skillIdx + 40));
+          if (context.includes('expert') || context.includes('advanced') || context.includes('senior') || context.includes('lead') || context.includes('architect')) {
+            proficiency = 'Advanced';
+          } else if (context.includes('intermediate') || context.includes('proficient') || context.includes('experienced') || context.includes('working knowledge')) {
+            proficiency = 'Intermediate';
+          }
         }
+        result.skills.push({ name: skill, proficiency });
       }
-      result.skills.push({ name: skill, proficiency });
     }
   });
 
@@ -114,7 +165,7 @@ function extractWithFallback(text) {
     }
   });
 
-  const expPatterns = ['intern', 'developer', 'engineer', 'analyst'];
+  const expPatterns = ['intern', 'developer', 'engineer', 'analyst', 'manager', 'lead', 'architect'];
   expPatterns.forEach(pattern => {
     const regex = new RegExp(`([^\\n]*?${pattern}[^\\n]*)`, 'ig');
     const matches = text.match(regex);

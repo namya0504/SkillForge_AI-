@@ -437,18 +437,120 @@
   font-size: 0.8rem;
   color: #F4A259;
   text-transform: uppercase;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
-.milestone-topics ul {
-  padding-left: 18px;
+.overall-progress-card {
+  margin-bottom: 16px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(15, 76, 92, 0.4);
+  padding: 12px 16px;
+  border-radius: 12px;
+}
+
+.progress-bar-bg {
+  width: 100%;
+  height: 8px;
+  background: #334155;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0F4C5C 0%, #F4A259 100%);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.progress-badge {
+  background: rgba(15, 76, 92, 0.25);
+  border: 1px solid rgba(15, 76, 92, 0.5);
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.phase-progress-text {
+  font-size: 0.78rem;
+  color: #F4A259;
+  font-weight: 600;
+}
+
+.topics-checklist {
+  list-style: none !important;
+  padding-left: 0 !important;
   margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.milestone-topics li {
-  font-size: 0.85rem;
+.topic-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.topic-item:hover {
+  background: rgba(15, 76, 92, 0.2);
+}
+
+.topic-item.completed {
+  opacity: 0.75;
+  background: rgba(15, 76, 92, 0.3);
+  border-color: rgba(15, 76, 92, 0.5);
+}
+
+.topic-item.completed .topic-text {
+  text-decoration: line-through;
   color: #94a3b8;
-  margin-bottom: 4px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.86rem;
+  color: #e2e8f0;
+  user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+  accent-color: #0F4C5C;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.resource-link-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(244, 162, 89, 0.15);
+  color: #F4A259;
+  border: 1px solid rgba(244, 162, 89, 0.4);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.resource-link-chip:hover {
+  background: #F4A259;
+  color: #0f172a;
 }
 
 .milestone-skills {

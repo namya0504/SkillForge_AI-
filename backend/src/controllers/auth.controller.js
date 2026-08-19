@@ -1,6 +1,8 @@
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import prisma from '../config/database.js';
 import { generateToken, getCookieOptions } from '../utils/token.js';
+import { config } from '../config/env.js';
 
 export const register = async (req, res) => {
   try {
@@ -101,5 +103,73 @@ export const getMe = async (req, res) => {
   } catch (error) {
     console.error('Get me error:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const normalizedEmail = email.toLowerCase().trim();
+
+    const user = await prisma.user.findUnique({
+      where: { email: normalizedEmail }
+    });
+
+    if (!user) {
+      return res.status(200).json({
+        message: 'If an account exists with that email, password reset instructions have been generated.'
+      });
+    }
+
+    const resetToken = jwt.sign(
+      { userId: user.id, email: user.email, type: 'password_reset' },
+      config.jwtSecret,
+      { expiresIn: '1h' }
+    );
+
+    const resetLink = `${config.frontendUrl}/reset-password?token=${resetToken}&email=${encodeURIComponent(user.email)}`;
+
+    res.status(200).json({
+      message: 'Password reset token generated successfully.',
+      resetLink,
+      resetToken
+    });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({ error: 'Failed to process password reset' });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword || newPassword.length < 8) {
+      return res.status(400).json({ error: 'Password must be at least 8 characters long.' });
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, config.jwtSecret);
+    } catch (err) {
+      return res.status(400).json({ error: 'Password reset link is invalid or has expired. Please request a new one.' });
+    }
+
+    if (decoded.type !== 'password_reset') {
+      return res.status(400).json({ error: 'Invalid reset token' });
+    }
+
+    const salt = await bcrypt.genSalt(12);
+    const passwordHash = await bcrypt.hash(newPassword, salt);
+
+    await prisma.user.update({
+      where: { id: decoded.userId },
+      data: { passwordHash }
+    });
+
+    res.status(200).json({ message: 'Password updated successfully. You can now log in with your new password.' });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({ error: 'Failed to reset password' });
   }
 };

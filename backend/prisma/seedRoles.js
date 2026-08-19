@@ -24,7 +24,7 @@ const CURATED_ROLES = [
     title: 'Frontend Engineer',
     category: 'Software Engineering',
     isPopular: true,
-    description: 'Specializes in craft UI/UX, client-side application logic, performance, and responsive design.',
+    description: 'Specializes in crafting UI/UX, client-side application logic, performance, and responsive design.',
     requiredSkills: JSON.stringify([
       { name: 'HTML', proficiency: 'Advanced' },
       { name: 'CSS', proficiency: 'Advanced' },
@@ -106,7 +106,7 @@ const CURATED_ROLES = [
   {
     title: 'Mobile App Developer (React Native / Flutter)',
     category: 'Software Engineering',
-    isPopular: false,
+    isPopular: true,
     description: 'Develops cross-platform or native mobile applications for iOS and Android devices.',
     requiredSkills: JSON.stringify([
       { name: 'JavaScript', proficiency: 'Advanced' },
@@ -116,6 +116,20 @@ const CURATED_ROLES = [
       { name: 'REST API', proficiency: 'Advanced' },
       { name: 'Git', proficiency: 'Intermediate' },
       { name: 'UI/UX', proficiency: 'Intermediate' }
+    ])
+  },
+  {
+    title: 'AI / Prompt Engineer',
+    category: 'Data & AI',
+    isPopular: true,
+    description: 'Designs LLM prompt architectures, RAG pipelines, fine-tuning workflows, and generative AI agents.',
+    requiredSkills: JSON.stringify([
+      { name: 'Python', proficiency: 'Advanced' },
+      { name: 'NLP', proficiency: 'Advanced' },
+      { name: 'LangChain', proficiency: 'Advanced' },
+      { name: 'REST API', proficiency: 'Advanced' },
+      { name: 'Vector DBs', proficiency: 'Intermediate' },
+      { name: 'Machine Learning', proficiency: 'Intermediate' }
     ])
   },
   {
@@ -217,17 +231,59 @@ const CURATED_ROLES = [
     ])
   },
   {
-    title: 'AI / Prompt Engineer',
-    category: 'Data & AI',
-    isPopular: true,
-    description: 'Designs LLM prompt architectures, RAG pipelines, fine-tuning workflows, and generative AI agents.',
+    title: 'Blockchain & Web3 Developer',
+    category: 'Software Engineering',
+    isPopular: false,
+    description: 'Builds decentralized applications (dApps), smart contracts, token protocols, and blockchain integrations.',
     requiredSkills: JSON.stringify([
-      { name: 'Python', proficiency: 'Advanced' },
-      { name: 'NLP', proficiency: 'Advanced' },
-      { name: 'LangChain', proficiency: 'Advanced' },
-      { name: 'REST API', proficiency: 'Advanced' },
-      { name: 'Vector DBs', proficiency: 'Intermediate' },
-      { name: 'Machine Learning', proficiency: 'Intermediate' }
+      { name: 'Solidity', proficiency: 'Advanced' },
+      { name: 'Ethereum', proficiency: 'Advanced' },
+      { name: 'Web3.js', proficiency: 'Intermediate' },
+      { name: 'Rust', proficiency: 'Intermediate' },
+      { name: 'Smart Contracts', proficiency: 'Advanced' },
+      { name: 'Cryptography', proficiency: 'Intermediate' }
+    ])
+  },
+  {
+    title: 'Game Developer (Unity / Unreal)',
+    category: 'Software Engineering',
+    isPopular: false,
+    description: 'Engineers 2D/3D game mechanics, physics engines, shader graphics, and interactive real-time systems.',
+    requiredSkills: JSON.stringify([
+      { name: 'C++', proficiency: 'Advanced' },
+      { name: 'C#', proficiency: 'Advanced' },
+      { name: 'Unity', proficiency: 'Advanced' },
+      { name: 'Unreal Engine', proficiency: 'Intermediate' },
+      { name: '3D Math', proficiency: 'Intermediate' },
+      { name: 'Physics', proficiency: 'Intermediate' }
+    ])
+  },
+  {
+    title: 'Data Analyst & BI Specialist',
+    category: 'Data & AI',
+    isPopular: false,
+    description: 'Transforms raw business data into interactive dashboards, KPI reports, and statistical insights.',
+    requiredSkills: JSON.stringify([
+      { name: 'SQL', proficiency: 'Advanced' },
+      { name: 'Python', proficiency: 'Intermediate' },
+      { name: 'Tableau', proficiency: 'Advanced' },
+      { name: 'Power BI', proficiency: 'Advanced' },
+      { name: 'Data Visualization', proficiency: 'Advanced' },
+      { name: 'Data Analysis', proficiency: 'Advanced' }
+    ])
+  },
+  {
+    title: 'Solutions Architect',
+    category: 'Cloud & Infrastructure',
+    isPopular: false,
+    description: 'Constructs enterprise system blueprints, multi-cloud strategy, scalability models, and security compliance.',
+    requiredSkills: JSON.stringify([
+      { name: 'AWS', proficiency: 'Advanced' },
+      { name: 'System Design', proficiency: 'Advanced' },
+      { name: 'Microservices', proficiency: 'Advanced' },
+      { name: 'Docker', proficiency: 'Intermediate' },
+      { name: 'Kubernetes', proficiency: 'Intermediate' },
+      { name: 'Security', proficiency: 'Intermediate' }
     ])
   }
 ];
