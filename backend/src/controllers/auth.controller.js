@@ -73,7 +73,7 @@ export const register = async (req, res) => {
       return res.status(409).json({ error: 'Unable to create account. Please try a different email or contact support.' });
     }
 
-    // Require 6-digit Email Authentication Code if provided or requested
+    // Require 6-digit Email Authentication Code if provided
     if (otpToken && otpCode) {
       try {
         const decoded = jwt.verify(otpToken, config.jwtSecret);
@@ -130,7 +130,7 @@ export const login = async (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    // If OTP verification requested/provided
+    // If OTP verification provided
     if (otpToken && otpCode) {
       try {
         const decoded = jwt.verify(otpToken, config.jwtSecret);
@@ -207,7 +207,13 @@ export const forgotPassword = async (req, res) => {
       { expiresIn: '1h' }
     );
 
-    const resetLink = `${config.frontendUrl}/reset-password?token=${resetToken}&email=${encodeURIComponent(user.email)}`;
+    // Dynamically derive client base URL from request origin to prevent pointing to private Vercel project domains
+    const originHeader = req.headers.origin || (req.headers.referer ? new URL(req.headers.referer).origin : '');
+    const clientBaseUrl = (originHeader && !originHeader.includes('localhost'))
+      ? originHeader.replace(/\/$/, '')
+      : (config.frontendUrl || 'https://skill-forge-ai-rose.vercel.app').replace(/\/$/, '');
+
+    const resetLink = `${clientBaseUrl}/reset-password?token=${resetToken}&email=${encodeURIComponent(user.email)}`;
 
     res.status(200).json({
       message: 'Password reset token generated successfully.',
