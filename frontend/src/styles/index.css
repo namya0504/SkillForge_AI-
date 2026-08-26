@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-:root {
-  /* Colors */
+:root, [data-theme="light"] {
+  /* Light Theme Colors */
   --color-primary: #0F4C5C;
   --color-primary-light: #1A6B7F;
   --color-primary-dark: #0A3540;
@@ -9,11 +9,12 @@
   --color-accent-light: #F7B97A;
   --color-accent-dark: #E8923F;
   --color-success: #4C956C;
-  --color-success-light: #6BAF87;
+  --color-success-light: #E8F5E9;
   --color-error: #D64045;
   --color-error-light: #FEE2E2;
   --color-warning: #E9C46A;
   --color-bg: #FAF7F2;
+  --bg-primary: #FAF7F2;
   --color-bg-card: #FFFFFF;
   --color-bg-elevated: #F5F0E8;
   --color-text: #1B1B1F;
@@ -62,6 +63,36 @@
   --transition-slow: 350ms ease;
 }
 
+[data-theme="dark"] {
+  /* Dark Theme Colors */
+  --color-primary: #1A6B7F;
+  --color-primary-light: #2A8B9F;
+  --color-primary-dark: #0F4C5C;
+  --color-accent: #F4A259;
+  --color-accent-light: #F7B97A;
+  --color-accent-dark: #E8923F;
+  --color-success: #4ade80;
+  --color-success-light: rgba(74, 222, 128, 0.15);
+  --color-error: #f87171;
+  --color-error-light: rgba(248, 113, 113, 0.15);
+  --color-warning: #fbbf24;
+  --color-bg: #0b1120;
+  --bg-primary: #0b1120;
+  --color-bg-card: #1e293b;
+  --color-bg-elevated: #162032;
+  --color-text: #f8fafc;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-border: #334155;
+  --color-border-focus: #F4A259;
+
+  /* Dark Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
+}
+
 /* Reset */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -73,6 +104,7 @@ html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--transition-base), color var(--transition-base);
 }
 
 body {
@@ -82,16 +114,17 @@ body {
   background-color: var(--color-bg);
   line-height: 1.6;
   min-height: 100vh;
+  transition: background-color var(--transition-base), color var(--transition-base);
 }
 
 a {
-  color: var(--color-primary);
+  color: var(--color-accent);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 a:hover {
-  color: var(--color-primary-light);
+  color: var(--color-accent-light);
 }
 
 button {
@@ -105,6 +138,6 @@ input, textarea, select {
 
 /* Focus visible styles */
 :focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }

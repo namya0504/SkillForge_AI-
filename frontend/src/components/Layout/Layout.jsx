@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, Menu, X, Rocket, Upload, Target, Map, Trash2, Shield, AlertTriangle } from 'lucide-react';
+import { LogOut, Menu, X, Rocket, Upload, Target, Map, Trash2, Shield, AlertTriangle, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
+import { useTheme } from '../../hooks/useTheme';
 import { authAPI } from '../../services/api';
 import './Layout.css';
 
 const Layout = ({ children }) => {
   const { user, isAuthenticated, logout } = useAuth();
+  const { theme, toggleTheme, isDark } = useTheme();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -69,6 +71,17 @@ const Layout = ({ children }) => {
                 <Link to="/upload" className="nav-link"><Upload size={16} /> Update Resume</Link>
                 <Link to="/role-selection" className="nav-link"><Target size={16} /> Target Role</Link>
                 <span className="user-email">{user?.email}</span>
+                
+                {/* Theme Toggle Button */}
+                <button
+                  onClick={toggleTheme}
+                  className="btn-theme-toggle"
+                  title={`Switch to ${isDark ? 'Light' : 'Dark'} Mode`}
+                  aria-label="Toggle theme"
+                >
+                  {isDark ? <Sun size={17} className="text-amber" /> : <Moon size={17} className="text-primary" />}
+                </button>
+
                 <button 
                   onClick={() => setDeleteModalOpen(true)} 
                   className="btn-link-icon" 
@@ -84,6 +97,16 @@ const Layout = ({ children }) => {
               </div>
             ) : (
               <div className="nav-auth-section">
+                {/* Theme Toggle Button for Guests */}
+                <button
+                  onClick={toggleTheme}
+                  className="btn-theme-toggle"
+                  title={`Switch to ${isDark ? 'Light' : 'Dark'} Mode`}
+                  aria-label="Toggle theme"
+                >
+                  {isDark ? <Sun size={17} className="text-amber" /> : <Moon size={17} className="text-primary" />}
+                </button>
+
                 <Link to="/login" className="btn-login">Log In</Link>
                 <Link to="/register" className="btn-register">Sign Up</Link>
               </div>
@@ -91,9 +114,19 @@ const Layout = ({ children }) => {
           </nav>
 
           {/* Mobile Menu Toggle */}
-          <button className="mobile-menu-btn" onClick={toggleMenu} aria-label="Toggle menu">
-            {mobileMenuOpen ? <X /> : <Menu />}
-          </button>
+          <div className="mobile-header-actions flex-center gap-xs">
+            <button
+              onClick={toggleTheme}
+              className="btn-theme-toggle mobile-theme-btn"
+              title={`Switch to ${isDark ? 'Light' : 'Dark'} Mode`}
+              aria-label="Toggle theme"
+            >
+              {isDark ? <Sun size={18} className="text-amber" /> : <Moon size={18} className="text-primary" />}
+            </button>
+            <button className="mobile-menu-btn" onClick={toggleMenu} aria-label="Toggle menu">
+              {mobileMenuOpen ? <X /> : <Menu />}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -106,6 +139,15 @@ const Layout = ({ children }) => {
               <Link to="/dashboard" className="mobile-nav-link" onClick={handleDashboardClick}><Map size={16} /> Dashboard</Link>
               <Link to="/upload" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}><Upload size={16} /> Update Resume</Link>
               <Link to="/role-selection" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}><Target size={16} /> Target Role</Link>
+              
+              <button 
+                onClick={toggleTheme}
+                className="mobile-nav-link"
+              >
+                {isDark ? <Sun size={16} className="text-amber" /> : <Moon size={16} className="text-primary" />}
+                <span>{isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}</span>
+              </button>
+
               <button 
                 onClick={() => { setMobileMenuOpen(false); setDeleteModalOpen(true); }}
                 className="mobile-nav-link text-danger"
@@ -119,6 +161,13 @@ const Layout = ({ children }) => {
             </div>
           ) : (
             <div className="mobile-auth-section">
+              <button 
+                onClick={toggleTheme}
+                className="mobile-nav-link"
+              >
+                {isDark ? <Sun size={16} className="text-amber" /> : <Moon size={16} className="text-primary" />}
+                <span>{isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}</span>
+              </button>
               <Link to="/login" className="btn-mobile-login" onClick={() => setMobileMenuOpen(false)}>Log In</Link>
               <Link to="/register" className="btn-mobile-register" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
             </div>

@@ -1,8 +1,8 @@
 .dashboard-container {
   min-height: 100vh;
   padding: 30px 24px;
-  background-color: var(--bg-primary, #0f172a);
-  color: #f8fafc;
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }
 
 .dashboard-container.center-content {
@@ -21,24 +21,24 @@
 .empty-state-icon {
   width: 80px;
   height: 80px;
-  background: linear-gradient(135deg, rgba(15, 76, 92, 0.4), rgba(244, 162, 89, 0.3));
+  background: linear-gradient(135deg, rgba(15, 76, 92, 0.2), rgba(244, 162, 89, 0.2));
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 20px auto;
-  color: #F4A259;
+  color: var(--color-accent);
 }
 
 .onboarding-empty-state h1 {
   font-size: 1.6rem;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--color-text);
   margin-bottom: 8px;
 }
 
 .empty-state-subtitle {
-  color: #94a3b8;
+  color: var(--color-text-secondary);
   font-size: 0.95rem;
   line-height: 1.5;
   margin-bottom: 32px;
@@ -53,8 +53,8 @@
 }
 
 .onboarding-step {
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
   border-radius: 14px;
   padding: 18px 20px;
   display: flex;
@@ -64,8 +64,8 @@
 }
 
 .onboarding-step.next {
-  border-color: rgba(244, 162, 89, 0.5);
-  background: rgba(244, 162, 89, 0.08);
+  border-color: var(--color-accent);
+  background: var(--color-bg-elevated);
 }
 
 .onboarding-step.completed {
@@ -76,12 +76,12 @@
   width: 44px;
   height: 44px;
   min-width: 44px;
-  background: #0f172a;
+  background: var(--color-bg-elevated);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: var(--color-text-muted);
 }
 
 .step-icon.done {
@@ -253,10 +253,10 @@
 }
 
 .gap-analysis-card {
-  background: #1e293b;
+  background: var(--color-bg-card);
   border-radius: 16px;
   padding: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border);
   margin-bottom: 24px;
 }
 
@@ -270,7 +270,7 @@
 .gap-card-header h2 {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-text);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -278,9 +278,9 @@
 
 .grounding-badge {
   font-size: 0.72rem;
-  color: #38bdf8;
-  background: rgba(56, 189, 248, 0.1);
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  color: var(--color-primary-light);
+  background: rgba(15, 76, 92, 0.1);
+  border: 1px solid rgba(15, 76, 92, 0.25);
   padding: 2px 8px;
   border-radius: 12px;
   margin-top: 4px;
@@ -294,7 +294,7 @@
   padding: 14px 20px;
   border-radius: 12px;
   margin-bottom: 20px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--shadow-lg);
   font-weight: 600;
   font-size: 0.95rem;
   animation: slideDownToast 0.3s ease-out;
@@ -320,8 +320,8 @@
 }
 
 .match-score-badge {
-  background: rgba(244, 162, 89, 0.2);
-  color: #F4A259;
+  background: rgba(244, 162, 89, 0.15);
+  color: var(--color-accent);
   border: 1px solid rgba(244, 162, 89, 0.4);
   padding: 4px 12px;
   border-radius: 20px;
@@ -332,7 +332,7 @@
 .gap-progress-bar-container {
   width: 100%;
   height: 10px;
-  background: #0f172a;
+  background: var(--color-bg-elevated);
   border-radius: 6px;
   overflow: hidden;
   margin-bottom: 20px;
@@ -353,10 +353,10 @@
 }
 
 .gap-stat {
-  background: #0f172a;
+  background: var(--color-bg-elevated);
   padding: 12px;
   border-radius: 10px;
-  border: 1px solid #334155;
+  border: 1px solid var(--color-border);
   text-align: center;
 }
 
@@ -372,7 +372,7 @@
 
 .stat-label {
   font-size: 0.75rem;
-  color: #cbd5e1;
+  color: var(--color-text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -421,7 +421,7 @@
 .section-title h2 {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-text);
 }
 
 .milestones-timeline {
@@ -431,10 +431,10 @@
 }
 
 .milestone-card {
-  background: #1e293b;
+  background: var(--color-bg-card);
   border-radius: 14px;
   padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border);
   position: relative;
 }
 
@@ -446,7 +446,7 @@
 }
 
 .phase-num {
-  background: #0F4C5C;
+  background: var(--color-primary);
   color: #ffffff;
   font-size: 0.75rem;
   font-weight: 700;
@@ -456,7 +456,7 @@
 
 .phase-duration {
   font-size: 0.8rem;
-  color: #94a3b8;
+  color: var(--color-text-secondary);
   display: flex;
   align-items: center;
   gap: 4px;
@@ -465,28 +465,28 @@
 .milestone-card h3 {
   font-size: 1.05rem;
   font-weight: 700;
-  color: #f8fafc;
+  color: var(--color-text);
   margin-bottom: 8px;
 }
 
 .milestone-desc {
   font-size: 0.88rem;
-  color: #cbd5e1;
+  color: var(--color-text-secondary);
   line-height: 1.4;
   margin-bottom: 14px;
 }
 
 .milestone-topics h4 {
   font-size: 0.8rem;
-  color: #F4A259;
+  color: var(--color-accent);
   text-transform: uppercase;
   margin-bottom: 8px;
 }
 
 .overall-progress-card {
   margin-bottom: 16px;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(15, 76, 92, 0.4);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
   padding: 12px 16px;
   border-radius: 12px;
 }

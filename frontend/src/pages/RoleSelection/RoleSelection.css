@@ -1,8 +1,8 @@
 .role-selection-page {
   min-height: 100vh;
   padding: 40px 20px;
-  background-color: var(--bg-primary, #0f172a);
-  color: #f8fafc;
+  background-color: var(--color-bg);
+  color: var(--color-text);
   display: flex;
   justify-content: center;
 }
@@ -20,12 +20,12 @@
 .role-header h1 {
   font-size: 2.2rem;
   font-weight: 700;
-  color: #f8fafc;
+  color: var(--color-text);
   margin-bottom: 8px;
 }
 
 .role-header p {
-  color: #94a3b8;
+  color: var(--color-text-secondary);
   font-size: 1rem;
   max-width: 650px;
   margin: 0 auto;
@@ -37,10 +37,10 @@
   gap: 12px;
   margin: 24px 0;
   flex-wrap: wrap;
-  background: rgba(30, 41, 59, 0.6);
+  background: var(--color-bg-elevated);
   padding: 14px 20px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border);
 }
 
 .chips-label {
@@ -49,7 +49,7 @@
   gap: 6px;
   font-size: 0.9rem;
   font-weight: 600;
-  color: #F4A259;
+  color: var(--color-accent);
 }
 
 .popular-chips {
@@ -59,9 +59,9 @@
 }
 
 .chip {
-  background: rgba(15, 76, 92, 0.25);
-  border: 1px solid rgba(15, 76, 92, 0.5);
-  color: #cbd5e1;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
   padding: 6px 14px;
   border-radius: 20px;
   font-size: 0.85rem;
@@ -70,17 +70,16 @@
 }
 
 .chip:hover {
-  background: rgba(15, 76, 92, 0.5);
-  color: #ffffff;
-  border-color: #0F4C5C;
+  background: var(--color-bg-elevated);
+  color: var(--color-text);
+  border-color: var(--color-accent);
 }
 
 .chip.active {
-  background: #0F4C5C;
+  background: var(--color-primary);
   color: #ffffff;
-  border-color: #0F4C5C;
+  border-color: var(--color-primary);
   font-weight: 600;
-  box-shadow: 0 0 12px rgba(15, 76, 92, 0.4);
 }
 
 .role-content-grid {
@@ -96,10 +95,10 @@
 }
 
 .role-selector-card {
-  background: #1e293b;
+  background: var(--color-bg-card);
   border-radius: 16px;
   padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
   height: 520px;
@@ -115,22 +114,22 @@
   left: 14px;
   top: 50%;
   transform: translateY(-50%);
-  color: #64748b;
+  color: var(--color-text-muted);
 }
 
 .search-bar input {
   width: 100%;
   padding: 12px 14px 12px 42px;
-  background: #0f172a;
-  border: 1px solid #334155;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
   border-radius: 10px;
-  color: #ffffff;
+  color: var(--color-text);
   font-size: 0.9rem;
   outline: none;
 }
 
 .search-bar input:focus {
-  border-color: #0F4C5C;
+  border-color: var(--color-accent);
 }
 
 .roles-list {
@@ -147,13 +146,13 @@
 }
 
 .roles-list::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: var(--color-border);
   border-radius: 3px;
 }
 
 .role-item {
-  background: #0f172a;
-  border: 1px solid #334155;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 14px;
   cursor: pointer;
@@ -161,8 +160,8 @@
 }
 
 .role-item:hover {
-  border-color: #0F4C5C;
-  background: rgba(15, 76, 92, 0.15);
+  border-color: var(--color-accent);
+  background: var(--color-bg-card);
 }
 
 .role-item.selected {
@@ -224,18 +223,18 @@
 .custom-input-wrapper input {
   width: 100%;
   padding: 10px 12px;
-  background: #1e293b;
-  border: 1px solid #F4A259;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-accent);
   border-radius: 8px;
-  color: #ffffff;
+  color: var(--color-text);
   font-size: 0.9rem;
 }
 
 .role-preview-card {
-  background: #1e293b;
+  background: var(--color-bg-card);
   border-radius: 16px;
   padding: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -251,22 +250,22 @@
 .preview-icon {
   width: 46px;
   height: 46px;
-  background: rgba(15, 76, 92, 0.3);
+  background: rgba(15, 76, 92, 0.2);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #F4A259;
+  color: var(--color-accent);
 }
 
 .preview-header h2 {
   font-size: 1.3rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-text);
 }
 
 .preview-description {
-  color: #cbd5e1;
+  color: var(--color-text-secondary);
   font-size: 0.9rem;
   line-height: 1.5;
   margin-bottom: 20px;
@@ -279,12 +278,11 @@
 
 .required-skills-section h3 {
   font-size: 0.95rem;
-  color: #f8fafc;
+  color: var(--color-text);
   display: flex;
   align-items: center;
   gap: 8px;
   margin-bottom: 12px;
-
 }
 
 .required-skills-grid {
@@ -296,10 +294,10 @@
 }
 
 .required-skill-card {
-  background: #0f172a;
+  background: var(--color-bg-elevated);
   padding: 8px 12px;
   border-radius: 8px;
-  border: 1px solid #334155;
+  border: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -308,7 +306,7 @@
 .skill-name {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #f8fafc;
+  color: var(--color-text);
 }
 
 .proficiency-tag {

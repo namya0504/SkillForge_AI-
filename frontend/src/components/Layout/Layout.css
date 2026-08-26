@@ -74,6 +74,28 @@
   color: var(--color-accent, #F4A259);
 }
 
+.btn-theme-toggle {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  padding: 6px 10px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-theme-toggle:hover {
+  border-color: var(--color-accent);
+  transform: scale(1.05);
+}
+
+.mobile-header-actions {
+  display: none;
+}
+
 .btn-link-icon {
   background: none;
   border: 1px solid var(--color-border);
@@ -281,6 +303,12 @@
 @media (max-width: 768px) {
   .nav-desktop {
     display: none;
+  }
+
+  .mobile-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   .mobile-menu-btn {
