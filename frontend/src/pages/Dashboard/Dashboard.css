@@ -783,20 +783,23 @@
   background: var(--color-primary-light);
 }
 
-.btn-secondary {
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  color: var(--color-text);
+.btn-secondary,
+button.btn-secondary {
+  background-color: var(--color-bg-card) !important;
+  border: 1px solid var(--color-border) !important;
+  color: var(--color-text) !important;
   padding: 8px 14px;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
+  box-shadow: var(--shadow-sm);
   transition: all 0.2s ease;
 }
 
-.btn-secondary:hover {
-  border-color: var(--color-accent);
-  background: var(--color-bg-elevated);
+.btn-secondary:hover,
+button.btn-secondary:hover {
+  border-color: var(--color-accent) !important;
+  background-color: var(--color-bg-elevated) !important;
 }
 
 .text-teal { color: var(--color-primary); }
@@ -833,7 +836,7 @@
   }
 
   .target-role-heading {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     line-height: 1.3;
     word-break: break-word;
   }
@@ -843,18 +846,20 @@
   }
 
   .banner-actions {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     width: 100%;
-    gap: 8px;
+    gap: 6px;
   }
 
   .banner-actions button {
-    flex: 1 1 calc(50% - 6px);
-    padding: 10px 12px;
-    font-size: 0.82rem;
+    width: 100%;
+    padding: 8px 6px;
+    font-size: 0.76rem;
     justify-content: center;
     text-align: center;
+    white-space: nowrap;
+    gap: 4px;
   }
 
   .gap-analysis-card,
@@ -893,6 +898,25 @@
     flex-direction: column;
     gap: 2px;
     text-align: center;
+  }
+
+  .section-title {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .section-title h2 {
+    font-size: 1.05rem;
+    margin: 0;
+  }
+
+  .progress-badge {
+    font-size: 0.74rem;
+    padding: 3px 8px;
   }
 
   .milestone-badge {
@@ -957,9 +981,15 @@
     padding: 12px 8px;
   }
 
+  .banner-actions {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+  }
+
   .banner-actions button {
-    flex: 1 1 100%;
-    width: 100%;
+    padding: 8px 4px;
+    font-size: 0.7rem;
+    gap: 3px;
   }
 
   .gap-stats-grid {

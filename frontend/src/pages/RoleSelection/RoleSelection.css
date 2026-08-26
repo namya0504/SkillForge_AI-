@@ -376,12 +376,19 @@
 }
 
 .btn-secondary {
-  background: #334155;
-  color: #ffffff;
-  border: none;
+  background: var(--color-bg-elevated);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
   padding: 10px 16px;
   border-radius: 8px;
   cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-accent);
+  background: var(--color-bg-card);
 }
 
 .spin-icon {
