@@ -260,7 +260,7 @@ const Dashboard = () => {
         </div>
         <div className="banner-actions">
           <button className="btn-secondary flex-center" onClick={() => navigate('/upload')}>
-            <Upload size={16} /> Re-upload Resume
+            <Upload size={16} /> Update Resume
           </button>
           <button className="btn-secondary flex-center" onClick={() => navigate('/role-selection')}>
             <Edit3 size={16} /> Change Goal Role

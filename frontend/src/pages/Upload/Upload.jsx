@@ -154,33 +154,41 @@ const Upload = () => {
 
         <div className="upload-content">
           {status === 'initial' && (
-            <div 
-              className={`drop-zone ${dragActive ? 'drag-active' : ''}`}
-              onDragEnter={handleDrag}
-              onDragLeave={handleDrag}
-              onDragOver={handleDrag}
-              onDrop={handleDrop}
-              onClick={onButtonClick}
-              onKeyDown={(e) => e.key === 'Enter' && onButtonClick()}
-              tabIndex={0}
-              role="button"
-              aria-label="Upload resume"
-            >
-              <input 
-                ref={fileInputRef}
-                type="file" 
-                accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                onChange={handleChange} 
-                style={{ display: 'none' }}
-              />
-              <div className="drop-zone-content">
-                <div className="upload-icon-wrapper">
-                  <UploadIcon size={48} />
+            <>
+              <div 
+                className={`drop-zone ${dragActive ? 'drag-active' : ''}`}
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={handleDrop}
+                onClick={onButtonClick}
+                onKeyDown={(e) => e.key === 'Enter' && onButtonClick()}
+                tabIndex={0}
+                role="button"
+                aria-label="Upload resume"
+              >
+                <input 
+                  ref={fileInputRef}
+                  type="file" 
+                  accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  onChange={handleChange} 
+                  style={{ display: 'none' }}
+                />
+                <div className="drop-zone-content">
+                  <div className="upload-icon-wrapper">
+                    <UploadIcon size={48} />
+                  </div>
+                  <h2>Drag & drop your resume here</h2>
+                  <p>or click to browse &bull; PDF or DOCX &bull; Max 5MB</p>
                 </div>
-                <h2>Drag & drop your resume here</h2>
-                <p>or click to browse &bull; PDF or DOCX &bull; Max 5MB</p>
               </div>
-            </div>
+
+              <div className="skip-manual-container">
+                <Link to="/skills" className="skip-manual-link">
+                  Don't have a resume? <span>Skip & enter skills manually &rarr;</span>
+                </Link>
+              </div>
+            </>
           )}
 
           {error && status === 'initial' && (

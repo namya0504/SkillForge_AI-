@@ -108,21 +108,7 @@ ${text}`;
   }
 }
 
-function matchSkillInText(skill, textLower) {
-  const sLower = skill.toLowerCase();
-  const idx = textLower.indexOf(sLower);
-  if (idx === -1) return false;
-
-  const charBefore = idx > 0 ? textLower[idx - 1] : ' ';
-  const charAfter = (idx + sLower.length) < textLower.length ? textLower[idx + sLower.length] : ' ';
-
-  const isValidBefore = /[\s,;:()\/\-\n\r\[\]\{\}]/.test(charBefore) || idx === 0;
-  const isValidAfter = /[\s,;:()\/\-\n\r\[\]\{\}]/.test(charAfter) || (idx + sLower.length) === textLower.length;
-
-  return isValidBefore && isValidAfter;
-}
-
-function extractWithFallback(text) {
+export function extractWithFallback(text) {
   const result = {
     skills: [],
     education: [],
@@ -134,7 +120,13 @@ function extractWithFallback(text) {
   const addedSkills = new Set();
 
   SKILLS_LIST.forEach(skill => {
-    if (matchSkillInText(skill, textLower)) {
+    const escaped = skill.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const isStandardWord = !/[^\w\s]/.test(skill);
+    const pattern = isStandardWord
+      ? new RegExp(`\\b${escaped}\\b`, 'i')
+      : new RegExp(`(?<![a-zA-Z0-9])${escaped}(?![a-zA-Z0-9])`, 'i');
+
+    if (pattern.test(text)) {
       const normSkillKey = skill.toLowerCase();
       if (!addedSkills.has(normSkillKey)) {
         addedSkills.add(normSkillKey);
@@ -142,7 +134,7 @@ function extractWithFallback(text) {
         let proficiency = 'Beginner';
         const skillIdx = textLower.indexOf(normSkillKey);
         if (skillIdx !== -1) {
-          const context = textLower.substring(Math.max(0, skillIdx - 40), Math.min(textLower.length, skillIdx + 40));
+          const context = textLower.substring(Math.max(0, skillIdx - 20), Math.min(textLower.length, skillIdx + 15));
           if (context.includes('expert') || context.includes('advanced') || context.includes('senior') || context.includes('lead') || context.includes('architect')) {
             proficiency = 'Advanced';
           } else if (context.includes('intermediate') || context.includes('proficient') || context.includes('experienced') || context.includes('working knowledge')) {

@@ -41,7 +41,7 @@ const Layout = ({ children }) => {
             {isAuthenticated ? (
               <div className="nav-user-section">
                 <Link to="/dashboard" className="nav-link" onClick={handleDashboardClick}><Map size={16} /> Dashboard</Link>
-                <Link to="/upload" className="nav-link"><Upload size={16} /> Re-upload Resume</Link>
+                <Link to="/upload" className="nav-link"><Upload size={16} /> Update Resume</Link>
                 <Link to="/role-selection" className="nav-link"><Target size={16} /> Target Role</Link>
                 <span className="user-email">{user?.email}</span>
                 <button onClick={handleLogout} className="btn-logout">
@@ -71,7 +71,7 @@ const Layout = ({ children }) => {
             <div className="mobile-user-section">
               <span className="mobile-email">{user?.email}</span>
               <Link to="/dashboard" className="mobile-nav-link" onClick={handleDashboardClick}><Map size={16} /> Dashboard</Link>
-              <Link to="/upload" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}><Upload size={16} /> Re-upload Resume</Link>
+              <Link to="/upload" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}><Upload size={16} /> Update Resume</Link>
               <Link to="/role-selection" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}><Target size={16} /> Target Role</Link>
               <button onClick={handleLogout} className="btn-mobile-logout">
                 <LogOut size={18} />

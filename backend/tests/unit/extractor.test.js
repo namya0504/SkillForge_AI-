@@ -1,14 +1,14 @@
-import { extractStructuredData } from '../../src/services/extractor.js';
+import { extractWithFallback } from '../../src/services/extractor.js';
 
 describe('Resume Extractor', () => {
-  it('should extract skills from raw text using fallback logic', async () => {
+  it('should extract skills from raw text using fallback logic', () => {
     const rawText = `
       John Doe
       I am a Software Engineer.
-      Expert in Python, intermediate in JavaScript.
+      Expert in Python. Intermediate in JavaScript.
       React and Node.js developer.
     `;
-    const result = await extractStructuredData(rawText);
+    const result = extractWithFallback(rawText);
 
     expect(result.skills).toBeDefined();
     
@@ -18,22 +18,34 @@ describe('Resume Extractor', () => {
 
     expect(skillMap['python']).toBe('Advanced');
     expect(skillMap['javascript']).toBe('Intermediate');
-    expect(skillMap['react']).toBe('Beginner'); // Default if no proficiency keyword is found
+    expect(skillMap['react']).toBe('Beginner');
     expect(skillMap['node.js']).toBe('Beginner');
   });
 
-  it('should extract education using fallback logic', async () => {
+  it('should correctly extract special-character skills (C++, C#, and Node.js)', () => {
+    const rawText = 'Experienced in C++, C#, and Node.js development.';
+    const result = extractWithFallback(rawText);
+
+    expect(result.skills).toBeDefined();
+    const skillNames = result.skills.map(s => s.name);
+
+    expect(skillNames).toContain('C++');
+    expect(skillNames).toContain('C#');
+    expect(skillNames).toContain('Node.js');
+  });
+
+  it('should extract education using fallback logic', () => {
     const rawText = `Education: B.Tech in Computer Science from IIT Delhi, 2024.`;
-    const result = await extractStructuredData(rawText);
+    const result = extractWithFallback(rawText);
     
     expect(result.education).toBeDefined();
     expect(result.education.length).toBeGreaterThan(0);
     expect(result.education[0].degree.toLowerCase()).toContain('b.tech');
   });
 
-  it('should extract experience using fallback logic', async () => {
+  it('should extract experience using fallback logic', () => {
     const rawText = `Experience: Software Developer Intern at Google for 6 months.`;
-    const result = await extractStructuredData(rawText);
+    const result = extractWithFallback(rawText);
     
     expect(result.experience).toBeDefined();
     expect(result.experience.length).toBeGreaterThan(0);

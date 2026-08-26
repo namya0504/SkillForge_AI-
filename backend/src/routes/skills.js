@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
 // POST /api/skills - Add a new skill
 router.post('/',
   [
-    body('skillName').isString().trim().notEmpty().isLength({ max: 50 }).escape(),
+    body('skillName').isString().trim().notEmpty().isLength({ max: 50 }),
     body('proficiency').isIn(['Beginner', 'Intermediate', 'Advanced'])
   ],
   handleValidation,
