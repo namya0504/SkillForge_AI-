@@ -6,7 +6,7 @@ import { roadmapAPI, progressAPI, certificationAPI } from '../../services/api';
 import { 
   Target, Sparkles, CheckCircle2, AlertCircle, RefreshCw, 
   Map, Award, FolderGit2, ExternalLink, Clock, ChevronRight, ChevronDown, Edit3, ShieldCheck,
-  Upload, UserCheck, Compass, ArrowRight, BookOpen, CheckSquare, Trophy, Zap, TrendingUp, Check
+  Upload, UserCheck, Compass, ArrowRight, BookOpen, CheckSquare, Trophy, Zap, TrendingUp, Check, Download
 } from 'lucide-react';
 import './Dashboard.css';
 
@@ -330,6 +330,42 @@ const Dashboard = () => {
     });
   });
 
+  const handleExportData = () => {
+    if (!roadmap) return;
+    const exportPayload = {
+      exportDate: new Date().toISOString(),
+      user: {
+        email: user?.email,
+        targetRole: roadmap?.targetRoleTitle
+      },
+      gapAnalysis: gapAnalysis,
+      progressSummary: progressSummary,
+      milestones: (roadmap?.milestones || []).map((m, pIdx) => ({
+        phase: m.phase || (pIdx + 1),
+        title: m.title,
+        duration: m.duration,
+        topics: (m.topics || []).map((t, tIdx) => {
+          const topicId = typeof t === 'object' && t.id ? t.id : `p${m.phase || pIdx + 1}-t${tIdx + 1}`;
+          const topicTitle = typeof t === 'object' ? t.title : t;
+          return {
+            title: topicTitle,
+            status: progressMap[topicId] || 'not_started'
+          };
+        })
+      })),
+      recommendations: recommendations,
+      certificationStatuses: certProgressMap
+    };
+
+    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(exportPayload, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute('href', dataStr);
+    downloadAnchor.setAttribute('download', `skillforge-career-profile-${(roadmap?.targetRoleTitle || 'roadmap').toLowerCase().replace(/\s+/g, '-')}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+  };
+
   return (
     <div className="dashboard-container">
       
@@ -363,6 +399,9 @@ const Dashboard = () => {
           </button>
           <button className="btn-secondary flex-center" onClick={() => navigate('/role-selection')}>
             <Edit3 size={16} /> Change Goal Role
+          </button>
+          <button className="btn-secondary flex-center" onClick={handleExportData} title="Export full career roadmap as JSON">
+            <Download size={16} /> Export JSON
           </button>
           <button className="btn-secondary flex-center" onClick={handleGenerate} disabled={generating} title="Regenerate learning path">
             <RefreshCw size={14} className={generating ? 'spin-icon' : ''} />
