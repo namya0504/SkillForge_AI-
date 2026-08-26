@@ -276,6 +276,49 @@
   gap: 8px;
 }
 
+.grounding-badge {
+  font-size: 0.72rem;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-top: 4px;
+  display: inline-flex;
+  font-weight: 500;
+}
+
+.achievement-toast {
+  background: linear-gradient(135deg, rgba(15, 76, 92, 0.95), rgba(244, 162, 89, 0.95));
+  color: #ffffff;
+  padding: 14px 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  font-weight: 600;
+  font-size: 0.95rem;
+  animation: slideDownToast 0.3s ease-out;
+}
+
+@keyframes slideDownToast {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.close-toast-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.close-toast-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
 .match-score-badge {
   background: rgba(244, 162, 89, 0.2);
   color: #F4A259;

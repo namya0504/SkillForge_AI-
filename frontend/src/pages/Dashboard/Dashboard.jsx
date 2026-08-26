@@ -6,7 +6,7 @@ import { roadmapAPI, progressAPI } from '../../services/api';
 import { 
   Target, Sparkles, CheckCircle2, AlertCircle, RefreshCw, 
   Map, Award, FolderGit2, ExternalLink, Clock, ChevronRight, ChevronDown, Edit3, ShieldCheck,
-  Upload, UserCheck, Compass, ArrowRight, BookOpen, CheckSquare, Circle, PlayCircle
+  Upload, UserCheck, Compass, ArrowRight, BookOpen, CheckSquare, Trophy, Zap, TrendingUp
 } from 'lucide-react';
 import './Dashboard.css';
 
@@ -112,6 +112,7 @@ const Dashboard = () => {
 
   // Collapsed phases state: { [phaseIndex]: boolean }
   const [collapsedPhases, setCollapsedPhases] = useState({});
+  const [achievementToast, setAchievementToast] = useState(null);
 
   useEffect(() => {
     // Don't fetch roadmap until onboarding status is loaded
@@ -169,19 +170,37 @@ const Dashboard = () => {
     }
   };
 
-  const handleToggleTopicStatus = async (itemId) => {
+  const handleToggleTopicStatus = async (itemId, specificStatus = null, phaseIndex = null, phaseTitle = null, phaseTotalTopics = 0) => {
     const currentStatus = progressMap[itemId] || 'not_started';
-    let nextStatus = 'in_progress';
-    if (currentStatus === 'not_started') nextStatus = 'in_progress';
-    else if (currentStatus === 'in_progress') nextStatus = 'completed';
-    else if (currentStatus === 'completed') nextStatus = 'not_started';
+    let nextStatus = specificStatus;
+    
+    if (!nextStatus) {
+      if (currentStatus === 'not_started') nextStatus = 'in_progress';
+      else if (currentStatus === 'in_progress') nextStatus = 'completed';
+      else if (currentStatus === 'completed') nextStatus = 'not_started';
+    }
 
     // Optimistic UI update
-    setProgressMap(prev => ({ ...prev, [itemId]: nextStatus }));
+    const nextMap = { ...progressMap, [itemId]: nextStatus };
+    setProgressMap(nextMap);
+
+    // Check if this action completed an entire phase
+    if (nextStatus === 'completed' && phaseIndex !== null && phaseTotalTopics > 0 && roadmap?.milestones) {
+      const currentMilestone = roadmap.milestones[phaseIndex];
+      const phaseTopics = currentMilestone?.topics || [];
+      const completedCount = phaseTopics.filter((t, tIdx) => {
+        const tId = (typeof t === 'object' && t.id) ? t.id : `p${phaseIndex + 1}-t${tIdx + 1}`;
+        return tId === itemId ? true : nextMap[tId] === 'completed';
+      }).length;
+
+      if (completedCount === phaseTopics.length) {
+        setAchievementToast(`🎉 Amazing work! You completed Phase ${phaseIndex + 1}: ${phaseTitle || currentMilestone.title}!`);
+        setTimeout(() => setAchievementToast(null), 5000);
+      }
+    }
 
     try {
       await progressAPI.update(itemId, nextStatus);
-      // Refresh summary
       const summary = await progressAPI.getSummary();
       setProgressSummary(summary);
     } catch (err) {
@@ -273,9 +292,32 @@ const Dashboard = () => {
   const totalSkillsCount = matchedCount + gapCount;
   const matchPercentage = totalSkillsCount > 0 ? Math.round((matchedCount / totalSkillsCount) * 100) : 0;
 
+  // Compute total task count and completed task count across all milestones
+  let totalTopics = 0;
+  let completedTopics = 0;
+  milestones.forEach((m, mIdx) => {
+    const phaseNum = m.phase || mIdx + 1;
+    (m.topics || []).forEach((t, tIdx) => {
+      totalTopics++;
+      const itemId = (typeof t === 'object' && t.id) ? t.id : `p${phaseNum}-t${tIdx + 1}`;
+      if (progressMap[itemId] === 'completed') completedTopics++;
+    });
+  });
+
   return (
     <div className="dashboard-container">
       
+      {/* Phase Completion Achievement Toast */}
+      {achievementToast && (
+        <div className="achievement-toast flex-between">
+          <div className="flex-center gap-sm">
+            <Trophy size={22} className="text-amber" />
+            <span>{achievementToast}</span>
+          </div>
+          <button className="close-toast-btn" onClick={() => setAchievementToast(null)}>✕</button>
+        </div>
+      )}
+
       {/* Top Banner: User Greeting & Target Role */}
       <header className="dashboard-banner">
         <div className="banner-left">
@@ -319,7 +361,13 @@ const Dashboard = () => {
           {/* Where You Stand / Skill Benchmark Card */}
           <div className="gap-analysis-card">
             <div className="gap-card-header">
-              <h2><Sparkles size={20} className="text-amber" /> Where You Stand</h2>
+              <div>
+                <h2><Sparkles size={20} className="text-amber" /> Where You Stand</h2>
+                <div className="grounding-badge flex-center gap-xs">
+                  <ShieldCheck size={13} className="text-teal" />
+                  <span>Curated Benchmark &bull; 20+ Roles Verified</span>
+                </div>
+              </div>
               <span className="match-score-badge">{matchPercentage}% Match</span>
             </div>
 
@@ -371,18 +419,21 @@ const Dashboard = () => {
               </div>
               <div className="progress-badge flex-center gap-xs">
                 <CheckSquare size={16} className="text-teal" />
-                <span>{progressSummary.completedItems} of {progressSummary.totalItems} Done ({progressSummary.completionPercent}%)</span>
+                <span>{completedTopics} of {totalTopics} Tasks Done ({totalTopics > 0 ? Math.round((completedTopics / totalTopics) * 100) : 0}%)</span>
               </div>
             </div>
 
             {/* Overall Progress Bar */}
             <div className="overall-progress-card">
               <div className="progress-bar-bg">
-                <div className="progress-bar-fill" style={{ width: `${progressSummary.completionPercent}%` }}></div>
+                <div 
+                  className="progress-bar-fill" 
+                  style={{ width: `${totalTopics > 0 ? Math.round((completedTopics / totalTopics) * 100) : 0}%` }}
+                ></div>
               </div>
               <div className="progress-subtext flex-between">
                 <span>{progressSummary.inProgressItems} in progress</span>
-                <span>{progressSummary.completionPercent}% complete</span>
+                <span>{totalTopics > 0 ? Math.round((completedTopics / totalTopics) * 100) : 0}% overall completed</span>
               </div>
             </div>
 
@@ -422,28 +473,29 @@ const Dashboard = () => {
                               ? topicItem.id 
                               : `p${phaseNum}-t${tIdx + 1}`;
                             const status = progressMap[itemId] || 'not_started';
+                            const isDone = status === 'completed';
                             const topicTitle = typeof topicItem === 'object' ? topicItem.title : topicItem;
                             const resource = typeof topicItem === 'object' ? topicItem.resource : null;
 
                             return (
                               <li key={tIdx} className={`topic-item status-${status}`}>
                                 <div className="topic-main-row flex-between">
-                                  <div className="flex-center gap-sm">
-                                    <button 
-                                      className={`status-toggle-btn status-${status}`}
-                                      onClick={() => handleToggleTopicStatus(itemId)}
-                                      title="Click to cycle: Not Started → In Progress → Completed"
-                                    >
-                                      {status === 'completed' && <CheckCircle2 size={18} className="text-success" />}
-                                      {status === 'in_progress' && <PlayCircle size={18} className="text-amber" />}
-                                      {status === 'not_started' && <Circle size={18} className="text-muted" />}
-                                    </button>
-                                    <span className={`topic-text ${status === 'completed' ? 'text-done' : ''}`}>{topicTitle}</span>
-                                  </div>
+                                  <label className="checkbox-label flex-center gap-sm">
+                                    <input
+                                      type="checkbox"
+                                      checked={isDone}
+                                      onChange={(e) => {
+                                        const newStatus = e.target.checked ? 'completed' : 'not_started';
+                                        handleToggleTopicStatus(itemId, newStatus, idx, m.title, phaseTopics.length);
+                                      }}
+                                    />
+                                    <span className={`topic-text ${isDone ? 'text-done' : ''}`}>{topicTitle}</span>
+                                  </label>
 
                                   <button 
                                     className={`status-pill status-${status}`}
-                                    onClick={() => handleToggleTopicStatus(itemId)}
+                                    onClick={() => handleToggleTopicStatus(itemId, null, idx, m.title, phaseTopics.length)}
+                                    title="Click to switch status (Not Started → In Progress → Completed)"
                                   >
                                     {status === 'completed' ? 'Completed' : status === 'in_progress' ? 'In Progress' : 'Not Started'}
                                   </button>
