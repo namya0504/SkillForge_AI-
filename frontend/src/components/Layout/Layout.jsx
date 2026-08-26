@@ -113,8 +113,8 @@ const Layout = ({ children }) => {
             )}
           </nav>
 
-          {/* Mobile Menu Toggle */}
-          <div className="mobile-header-actions flex-center gap-xs">
+          {/* Mobile Menu Toggle (only on mobile) */}
+          <div className="mobile-header-actions">
             <button
               onClick={toggleTheme}
               className="btn-theme-toggle mobile-theme-btn"

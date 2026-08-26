@@ -478,7 +478,7 @@ const Dashboard = () => {
                             const resource = typeof topicItem === 'object' ? topicItem.resource : null;
 
                             return (
-                              <li key={tIdx} className={`topic-item status-${status}`}>
+                              <li key={tIdx} className={`topic-item ${isDone ? 'completed' : ''}`}>
                                 <div className="topic-main-row flex-between">
                                   <label className="checkbox-label flex-center gap-sm">
                                     <input
@@ -492,26 +492,18 @@ const Dashboard = () => {
                                     <span className={`topic-text ${isDone ? 'text-done' : ''}`}>{topicTitle}</span>
                                   </label>
 
-                                  <button 
-                                    className={`status-pill status-${status}`}
-                                    onClick={() => handleToggleTopicStatus(itemId, null, idx, m.title, phaseTopics.length)}
-                                    title="Click to switch status (Not Started → In Progress → Completed)"
-                                  >
-                                    {status === 'completed' ? 'Completed' : status === 'in_progress' ? 'In Progress' : 'Not Started'}
-                                  </button>
+                                  {resource && resource.url && (
+                                    <a 
+                                      href={resource.url} 
+                                      target="_blank" 
+                                      rel="noreferrer" 
+                                      className="resource-link-chip"
+                                      title={`Open ${resource.title}`}
+                                    >
+                                      <BookOpen size={12} /> {resource.title} <ExternalLink size={10} />
+                                    </a>
+                                  )}
                                 </div>
-
-                                {resource && resource.url && (
-                                  <a 
-                                    href={resource.url} 
-                                    target="_blank" 
-                                    rel="noreferrer" 
-                                    className="resource-link-chip"
-                                    title={`Open ${resource.title}`}
-                                  >
-                                    <BookOpen size={12} /> {resource.title} <ExternalLink size={10} />
-                                  </a>
-                                )}
                               </li>
                             );
                           })}
