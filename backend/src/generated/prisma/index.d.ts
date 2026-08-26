@@ -39,6 +39,11 @@ export type Skill = $Result.DefaultSelection<Prisma.$SkillPayload>
  */
 export type Job = $Result.DefaultSelection<Prisma.$JobPayload>
 /**
+ * Model Progress
+ * 
+ */
+export type Progress = $Result.DefaultSelection<Prisma.$ProgressPayload>
+/**
  * Model Roadmap
  * 
  */
@@ -214,6 +219,16 @@ export class PrismaClient<
     * ```
     */
   get job(): Prisma.JobDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.progress`: Exposes CRUD operations for the **Progress** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Progresses
+    * const progresses = await prisma.progress.findMany()
+    * ```
+    */
+  get progress(): Prisma.ProgressDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.roadmap`: Exposes CRUD operations for the **Roadmap** model.
@@ -676,6 +691,7 @@ export namespace Prisma {
     Resume: 'Resume',
     Skill: 'Skill',
     Job: 'Job',
+    Progress: 'Progress',
     Roadmap: 'Roadmap'
   };
 
@@ -692,7 +708,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "roleReference" | "resume" | "skill" | "job" | "roadmap"
+      modelProps: "user" | "roleReference" | "resume" | "skill" | "job" | "progress" | "roadmap"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1066,6 +1082,80 @@ export namespace Prisma {
           }
         }
       }
+      Progress: {
+        payload: Prisma.$ProgressPayload<ExtArgs>
+        fields: Prisma.ProgressFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProgressFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProgressFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressPayload>
+          }
+          findFirst: {
+            args: Prisma.ProgressFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProgressFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressPayload>
+          }
+          findMany: {
+            args: Prisma.ProgressFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressPayload>[]
+          }
+          create: {
+            args: Prisma.ProgressCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressPayload>
+          }
+          createMany: {
+            args: Prisma.ProgressCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProgressCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressPayload>[]
+          }
+          delete: {
+            args: Prisma.ProgressDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressPayload>
+          }
+          update: {
+            args: Prisma.ProgressUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProgressDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProgressUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProgressUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressPayload>[]
+          }
+          upsert: {
+            args: Prisma.ProgressUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProgressPayload>
+          }
+          aggregate: {
+            args: Prisma.ProgressAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProgress>
+          }
+          groupBy: {
+            args: Prisma.ProgressGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProgressGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProgressCountArgs<ExtArgs>
+            result: $Utils.Optional<ProgressCountAggregateOutputType> | number
+          }
+        }
+      }
       Roadmap: {
         payload: Prisma.$RoadmapPayload<ExtArgs>
         fields: Prisma.RoadmapFieldRefs
@@ -1268,6 +1358,7 @@ export namespace Prisma {
     resume?: ResumeOmit
     skill?: SkillOmit
     job?: JobOmit
+    progress?: ProgressOmit
     roadmap?: RoadmapOmit
   }
 
@@ -1352,12 +1443,14 @@ export namespace Prisma {
     resumes: number
     skills: number
     jobs: number
+    progress: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     resumes?: boolean | UserCountOutputTypeCountResumesArgs
     skills?: boolean | UserCountOutputTypeCountSkillsArgs
     jobs?: boolean | UserCountOutputTypeCountJobsArgs
+    progress?: boolean | UserCountOutputTypeCountProgressArgs
   }
 
   // Custom InputTypes
@@ -1390,6 +1483,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountJobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: JobWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountProgressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProgressWhereInput
   }
 
 
@@ -1611,6 +1711,7 @@ export namespace Prisma {
     resumes?: boolean | User$resumesArgs<ExtArgs>
     skills?: boolean | User$skillsArgs<ExtArgs>
     jobs?: boolean | User$jobsArgs<ExtArgs>
+    progress?: boolean | User$progressArgs<ExtArgs>
     roadmap?: boolean | User$roadmapArgs<ExtArgs>
     targetRole?: boolean | User$targetRoleArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1653,6 +1754,7 @@ export namespace Prisma {
     resumes?: boolean | User$resumesArgs<ExtArgs>
     skills?: boolean | User$skillsArgs<ExtArgs>
     jobs?: boolean | User$jobsArgs<ExtArgs>
+    progress?: boolean | User$progressArgs<ExtArgs>
     roadmap?: boolean | User$roadmapArgs<ExtArgs>
     targetRole?: boolean | User$targetRoleArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1670,6 +1772,7 @@ export namespace Prisma {
       resumes: Prisma.$ResumePayload<ExtArgs>[]
       skills: Prisma.$SkillPayload<ExtArgs>[]
       jobs: Prisma.$JobPayload<ExtArgs>[]
+      progress: Prisma.$ProgressPayload<ExtArgs>[]
       roadmap: Prisma.$RoadmapPayload<ExtArgs> | null
       targetRole: Prisma.$RoleReferencePayload<ExtArgs> | null
     }
@@ -2078,6 +2181,7 @@ export namespace Prisma {
     resumes<T extends User$resumesArgs<ExtArgs> = {}>(args?: Subset<T, User$resumesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResumePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     skills<T extends User$skillsArgs<ExtArgs> = {}>(args?: Subset<T, User$skillsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     jobs<T extends User$jobsArgs<ExtArgs> = {}>(args?: Subset<T, User$jobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    progress<T extends User$progressArgs<ExtArgs> = {}>(args?: Subset<T, User$progressArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     roadmap<T extends User$roadmapArgs<ExtArgs> = {}>(args?: Subset<T, User$roadmapArgs<ExtArgs>>): Prisma__RoadmapClient<$Result.GetResult<Prisma.$RoadmapPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     targetRole<T extends User$targetRoleArgs<ExtArgs> = {}>(args?: Subset<T, User$targetRoleArgs<ExtArgs>>): Prisma__RoleReferenceClient<$Result.GetResult<Prisma.$RoleReferencePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
@@ -2586,6 +2690,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: JobScalarFieldEnum | JobScalarFieldEnum[]
+  }
+
+  /**
+   * User.progress
+   */
+  export type User$progressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Progress
+     */
+    select?: ProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Progress
+     */
+    omit?: ProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressInclude<ExtArgs> | null
+    where?: ProgressWhereInput
+    orderBy?: ProgressOrderByWithRelationInput | ProgressOrderByWithRelationInput[]
+    cursor?: ProgressWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProgressScalarFieldEnum | ProgressScalarFieldEnum[]
   }
 
   /**
@@ -7100,6 +7228,1069 @@ export namespace Prisma {
 
 
   /**
+   * Model Progress
+   */
+
+  export type AggregateProgress = {
+    _count: ProgressCountAggregateOutputType | null
+    _min: ProgressMinAggregateOutputType | null
+    _max: ProgressMaxAggregateOutputType | null
+  }
+
+  export type ProgressMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    itemId: string | null
+    status: string | null
+    updatedAt: Date | null
+  }
+
+  export type ProgressMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    itemId: string | null
+    status: string | null
+    updatedAt: Date | null
+  }
+
+  export type ProgressCountAggregateOutputType = {
+    id: number
+    userId: number
+    itemId: number
+    status: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ProgressMinAggregateInputType = {
+    id?: true
+    userId?: true
+    itemId?: true
+    status?: true
+    updatedAt?: true
+  }
+
+  export type ProgressMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    itemId?: true
+    status?: true
+    updatedAt?: true
+  }
+
+  export type ProgressCountAggregateInputType = {
+    id?: true
+    userId?: true
+    itemId?: true
+    status?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ProgressAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Progress to aggregate.
+     */
+    where?: ProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Progresses to fetch.
+     */
+    orderBy?: ProgressOrderByWithRelationInput | ProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Progresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Progresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Progresses
+    **/
+    _count?: true | ProgressCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProgressMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProgressMaxAggregateInputType
+  }
+
+  export type GetProgressAggregateType<T extends ProgressAggregateArgs> = {
+        [P in keyof T & keyof AggregateProgress]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProgress[P]>
+      : GetScalarType<T[P], AggregateProgress[P]>
+  }
+
+
+
+
+  export type ProgressGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProgressWhereInput
+    orderBy?: ProgressOrderByWithAggregationInput | ProgressOrderByWithAggregationInput[]
+    by: ProgressScalarFieldEnum[] | ProgressScalarFieldEnum
+    having?: ProgressScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProgressCountAggregateInputType | true
+    _min?: ProgressMinAggregateInputType
+    _max?: ProgressMaxAggregateInputType
+  }
+
+  export type ProgressGroupByOutputType = {
+    id: string
+    userId: string
+    itemId: string
+    status: string
+    updatedAt: Date
+    _count: ProgressCountAggregateOutputType | null
+    _min: ProgressMinAggregateOutputType | null
+    _max: ProgressMaxAggregateOutputType | null
+  }
+
+  type GetProgressGroupByPayload<T extends ProgressGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProgressGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProgressGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProgressGroupByOutputType[P]>
+            : GetScalarType<T[P], ProgressGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProgressSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    itemId?: boolean
+    status?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["progress"]>
+
+  export type ProgressSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    itemId?: boolean
+    status?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["progress"]>
+
+  export type ProgressSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    itemId?: boolean
+    status?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["progress"]>
+
+  export type ProgressSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    itemId?: boolean
+    status?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ProgressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "itemId" | "status" | "updatedAt", ExtArgs["result"]["progress"]>
+  export type ProgressInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ProgressIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ProgressIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $ProgressPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Progress"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      itemId: string
+      status: string
+      updatedAt: Date
+    }, ExtArgs["result"]["progress"]>
+    composites: {}
+  }
+
+  type ProgressGetPayload<S extends boolean | null | undefined | ProgressDefaultArgs> = $Result.GetResult<Prisma.$ProgressPayload, S>
+
+  type ProgressCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProgressFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ProgressCountAggregateInputType | true
+    }
+
+  export interface ProgressDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Progress'], meta: { name: 'Progress' } }
+    /**
+     * Find zero or one Progress that matches the filter.
+     * @param {ProgressFindUniqueArgs} args - Arguments to find a Progress
+     * @example
+     * // Get one Progress
+     * const progress = await prisma.progress.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProgressFindUniqueArgs>(args: SelectSubset<T, ProgressFindUniqueArgs<ExtArgs>>): Prisma__ProgressClient<$Result.GetResult<Prisma.$ProgressPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Progress that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProgressFindUniqueOrThrowArgs} args - Arguments to find a Progress
+     * @example
+     * // Get one Progress
+     * const progress = await prisma.progress.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProgressFindUniqueOrThrowArgs>(args: SelectSubset<T, ProgressFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProgressClient<$Result.GetResult<Prisma.$ProgressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Progress that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressFindFirstArgs} args - Arguments to find a Progress
+     * @example
+     * // Get one Progress
+     * const progress = await prisma.progress.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProgressFindFirstArgs>(args?: SelectSubset<T, ProgressFindFirstArgs<ExtArgs>>): Prisma__ProgressClient<$Result.GetResult<Prisma.$ProgressPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Progress that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressFindFirstOrThrowArgs} args - Arguments to find a Progress
+     * @example
+     * // Get one Progress
+     * const progress = await prisma.progress.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProgressFindFirstOrThrowArgs>(args?: SelectSubset<T, ProgressFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProgressClient<$Result.GetResult<Prisma.$ProgressPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Progresses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Progresses
+     * const progresses = await prisma.progress.findMany()
+     * 
+     * // Get first 10 Progresses
+     * const progresses = await prisma.progress.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const progressWithIdOnly = await prisma.progress.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProgressFindManyArgs>(args?: SelectSubset<T, ProgressFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Progress.
+     * @param {ProgressCreateArgs} args - Arguments to create a Progress.
+     * @example
+     * // Create one Progress
+     * const Progress = await prisma.progress.create({
+     *   data: {
+     *     // ... data to create a Progress
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProgressCreateArgs>(args: SelectSubset<T, ProgressCreateArgs<ExtArgs>>): Prisma__ProgressClient<$Result.GetResult<Prisma.$ProgressPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Progresses.
+     * @param {ProgressCreateManyArgs} args - Arguments to create many Progresses.
+     * @example
+     * // Create many Progresses
+     * const progress = await prisma.progress.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProgressCreateManyArgs>(args?: SelectSubset<T, ProgressCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Progresses and returns the data saved in the database.
+     * @param {ProgressCreateManyAndReturnArgs} args - Arguments to create many Progresses.
+     * @example
+     * // Create many Progresses
+     * const progress = await prisma.progress.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Progresses and only return the `id`
+     * const progressWithIdOnly = await prisma.progress.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProgressCreateManyAndReturnArgs>(args?: SelectSubset<T, ProgressCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProgressPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Progress.
+     * @param {ProgressDeleteArgs} args - Arguments to delete one Progress.
+     * @example
+     * // Delete one Progress
+     * const Progress = await prisma.progress.delete({
+     *   where: {
+     *     // ... filter to delete one Progress
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProgressDeleteArgs>(args: SelectSubset<T, ProgressDeleteArgs<ExtArgs>>): Prisma__ProgressClient<$Result.GetResult<Prisma.$ProgressPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Progress.
+     * @param {ProgressUpdateArgs} args - Arguments to update one Progress.
+     * @example
+     * // Update one Progress
+     * const progress = await prisma.progress.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProgressUpdateArgs>(args: SelectSubset<T, ProgressUpdateArgs<ExtArgs>>): Prisma__ProgressClient<$Result.GetResult<Prisma.$ProgressPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Progresses.
+     * @param {ProgressDeleteManyArgs} args - Arguments to filter Progresses to delete.
+     * @example
+     * // Delete a few Progresses
+     * const { count } = await prisma.progress.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProgressDeleteManyArgs>(args?: SelectSubset<T, ProgressDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Progresses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Progresses
+     * const progress = await prisma.progress.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProgressUpdateManyArgs>(args: SelectSubset<T, ProgressUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Progresses and returns the data updated in the database.
+     * @param {ProgressUpdateManyAndReturnArgs} args - Arguments to update many Progresses.
+     * @example
+     * // Update many Progresses
+     * const progress = await prisma.progress.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Progresses and only return the `id`
+     * const progressWithIdOnly = await prisma.progress.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ProgressUpdateManyAndReturnArgs>(args: SelectSubset<T, ProgressUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProgressPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Progress.
+     * @param {ProgressUpsertArgs} args - Arguments to update or create a Progress.
+     * @example
+     * // Update or create a Progress
+     * const progress = await prisma.progress.upsert({
+     *   create: {
+     *     // ... data to create a Progress
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Progress we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProgressUpsertArgs>(args: SelectSubset<T, ProgressUpsertArgs<ExtArgs>>): Prisma__ProgressClient<$Result.GetResult<Prisma.$ProgressPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Progresses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressCountArgs} args - Arguments to filter Progresses to count.
+     * @example
+     * // Count the number of Progresses
+     * const count = await prisma.progress.count({
+     *   where: {
+     *     // ... the filter for the Progresses we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProgressCountArgs>(
+      args?: Subset<T, ProgressCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProgressCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Progress.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProgressAggregateArgs>(args: Subset<T, ProgressAggregateArgs>): Prisma.PrismaPromise<GetProgressAggregateType<T>>
+
+    /**
+     * Group by Progress.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProgressGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProgressGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProgressGroupByArgs['orderBy'] }
+        : { orderBy?: ProgressGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProgressGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProgressGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Progress model
+   */
+  readonly fields: ProgressFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Progress.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProgressClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Progress model
+   */
+  interface ProgressFieldRefs {
+    readonly id: FieldRef<"Progress", 'String'>
+    readonly userId: FieldRef<"Progress", 'String'>
+    readonly itemId: FieldRef<"Progress", 'String'>
+    readonly status: FieldRef<"Progress", 'String'>
+    readonly updatedAt: FieldRef<"Progress", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Progress findUnique
+   */
+  export type ProgressFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Progress
+     */
+    select?: ProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Progress
+     */
+    omit?: ProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which Progress to fetch.
+     */
+    where: ProgressWhereUniqueInput
+  }
+
+  /**
+   * Progress findUniqueOrThrow
+   */
+  export type ProgressFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Progress
+     */
+    select?: ProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Progress
+     */
+    omit?: ProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which Progress to fetch.
+     */
+    where: ProgressWhereUniqueInput
+  }
+
+  /**
+   * Progress findFirst
+   */
+  export type ProgressFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Progress
+     */
+    select?: ProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Progress
+     */
+    omit?: ProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which Progress to fetch.
+     */
+    where?: ProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Progresses to fetch.
+     */
+    orderBy?: ProgressOrderByWithRelationInput | ProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Progresses.
+     */
+    cursor?: ProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Progresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Progresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Progresses.
+     */
+    distinct?: ProgressScalarFieldEnum | ProgressScalarFieldEnum[]
+  }
+
+  /**
+   * Progress findFirstOrThrow
+   */
+  export type ProgressFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Progress
+     */
+    select?: ProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Progress
+     */
+    omit?: ProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which Progress to fetch.
+     */
+    where?: ProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Progresses to fetch.
+     */
+    orderBy?: ProgressOrderByWithRelationInput | ProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Progresses.
+     */
+    cursor?: ProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Progresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Progresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Progresses.
+     */
+    distinct?: ProgressScalarFieldEnum | ProgressScalarFieldEnum[]
+  }
+
+  /**
+   * Progress findMany
+   */
+  export type ProgressFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Progress
+     */
+    select?: ProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Progress
+     */
+    omit?: ProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressInclude<ExtArgs> | null
+    /**
+     * Filter, which Progresses to fetch.
+     */
+    where?: ProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Progresses to fetch.
+     */
+    orderBy?: ProgressOrderByWithRelationInput | ProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Progresses.
+     */
+    cursor?: ProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Progresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Progresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Progresses.
+     */
+    distinct?: ProgressScalarFieldEnum | ProgressScalarFieldEnum[]
+  }
+
+  /**
+   * Progress create
+   */
+  export type ProgressCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Progress
+     */
+    select?: ProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Progress
+     */
+    omit?: ProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Progress.
+     */
+    data: XOR<ProgressCreateInput, ProgressUncheckedCreateInput>
+  }
+
+  /**
+   * Progress createMany
+   */
+  export type ProgressCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Progresses.
+     */
+    data: ProgressCreateManyInput | ProgressCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Progress createManyAndReturn
+   */
+  export type ProgressCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Progress
+     */
+    select?: ProgressSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Progress
+     */
+    omit?: ProgressOmit<ExtArgs> | null
+    /**
+     * The data used to create many Progresses.
+     */
+    data: ProgressCreateManyInput | ProgressCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Progress update
+   */
+  export type ProgressUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Progress
+     */
+    select?: ProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Progress
+     */
+    omit?: ProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Progress.
+     */
+    data: XOR<ProgressUpdateInput, ProgressUncheckedUpdateInput>
+    /**
+     * Choose, which Progress to update.
+     */
+    where: ProgressWhereUniqueInput
+  }
+
+  /**
+   * Progress updateMany
+   */
+  export type ProgressUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Progresses.
+     */
+    data: XOR<ProgressUpdateManyMutationInput, ProgressUncheckedUpdateManyInput>
+    /**
+     * Filter which Progresses to update
+     */
+    where?: ProgressWhereInput
+    /**
+     * Limit how many Progresses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Progress updateManyAndReturn
+   */
+  export type ProgressUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Progress
+     */
+    select?: ProgressSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Progress
+     */
+    omit?: ProgressOmit<ExtArgs> | null
+    /**
+     * The data used to update Progresses.
+     */
+    data: XOR<ProgressUpdateManyMutationInput, ProgressUncheckedUpdateManyInput>
+    /**
+     * Filter which Progresses to update
+     */
+    where?: ProgressWhereInput
+    /**
+     * Limit how many Progresses to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Progress upsert
+   */
+  export type ProgressUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Progress
+     */
+    select?: ProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Progress
+     */
+    omit?: ProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Progress to update in case it exists.
+     */
+    where: ProgressWhereUniqueInput
+    /**
+     * In case the Progress found by the `where` argument doesn't exist, create a new Progress with this data.
+     */
+    create: XOR<ProgressCreateInput, ProgressUncheckedCreateInput>
+    /**
+     * In case the Progress was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProgressUpdateInput, ProgressUncheckedUpdateInput>
+  }
+
+  /**
+   * Progress delete
+   */
+  export type ProgressDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Progress
+     */
+    select?: ProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Progress
+     */
+    omit?: ProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressInclude<ExtArgs> | null
+    /**
+     * Filter which Progress to delete.
+     */
+    where: ProgressWhereUniqueInput
+  }
+
+  /**
+   * Progress deleteMany
+   */
+  export type ProgressDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Progresses to delete
+     */
+    where?: ProgressWhereInput
+    /**
+     * Limit how many Progresses to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Progress without action
+   */
+  export type ProgressDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Progress
+     */
+    select?: ProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Progress
+     */
+    omit?: ProgressOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgressInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Roadmap
    */
 
@@ -8284,6 +9475,17 @@ export namespace Prisma {
   export type JobScalarFieldEnum = (typeof JobScalarFieldEnum)[keyof typeof JobScalarFieldEnum]
 
 
+  export const ProgressScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    itemId: 'itemId',
+    status: 'status',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ProgressScalarFieldEnum = (typeof ProgressScalarFieldEnum)[keyof typeof ProgressScalarFieldEnum]
+
+
   export const RoadmapScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
@@ -8407,6 +9609,7 @@ export namespace Prisma {
     resumes?: ResumeListRelationFilter
     skills?: SkillListRelationFilter
     jobs?: JobListRelationFilter
+    progress?: ProgressListRelationFilter
     roadmap?: XOR<RoadmapNullableScalarRelationFilter, RoadmapWhereInput> | null
     targetRole?: XOR<RoleReferenceNullableScalarRelationFilter, RoleReferenceWhereInput> | null
   }
@@ -8422,6 +9625,7 @@ export namespace Prisma {
     resumes?: ResumeOrderByRelationAggregateInput
     skills?: SkillOrderByRelationAggregateInput
     jobs?: JobOrderByRelationAggregateInput
+    progress?: ProgressOrderByRelationAggregateInput
     roadmap?: RoadmapOrderByWithRelationInput
     targetRole?: RoleReferenceOrderByWithRelationInput
   }
@@ -8440,6 +9644,7 @@ export namespace Prisma {
     resumes?: ResumeListRelationFilter
     skills?: SkillListRelationFilter
     jobs?: JobListRelationFilter
+    progress?: ProgressListRelationFilter
     roadmap?: XOR<RoadmapNullableScalarRelationFilter, RoadmapWhereInput> | null
     targetRole?: XOR<RoleReferenceNullableScalarRelationFilter, RoleReferenceWhereInput> | null
   }, "id" | "email">
@@ -8753,6 +9958,62 @@ export namespace Prisma {
     completedAt?: DateTimeNullableWithAggregatesFilter<"Job"> | Date | string | null
   }
 
+  export type ProgressWhereInput = {
+    AND?: ProgressWhereInput | ProgressWhereInput[]
+    OR?: ProgressWhereInput[]
+    NOT?: ProgressWhereInput | ProgressWhereInput[]
+    id?: StringFilter<"Progress"> | string
+    userId?: StringFilter<"Progress"> | string
+    itemId?: StringFilter<"Progress"> | string
+    status?: StringFilter<"Progress"> | string
+    updatedAt?: DateTimeFilter<"Progress"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type ProgressOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    itemId?: SortOrder
+    status?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type ProgressWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_itemId?: ProgressUserIdItemIdCompoundUniqueInput
+    AND?: ProgressWhereInput | ProgressWhereInput[]
+    OR?: ProgressWhereInput[]
+    NOT?: ProgressWhereInput | ProgressWhereInput[]
+    userId?: StringFilter<"Progress"> | string
+    itemId?: StringFilter<"Progress"> | string
+    status?: StringFilter<"Progress"> | string
+    updatedAt?: DateTimeFilter<"Progress"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId_itemId">
+
+  export type ProgressOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    itemId?: SortOrder
+    status?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ProgressCountOrderByAggregateInput
+    _max?: ProgressMaxOrderByAggregateInput
+    _min?: ProgressMinOrderByAggregateInput
+  }
+
+  export type ProgressScalarWhereWithAggregatesInput = {
+    AND?: ProgressScalarWhereWithAggregatesInput | ProgressScalarWhereWithAggregatesInput[]
+    OR?: ProgressScalarWhereWithAggregatesInput[]
+    NOT?: ProgressScalarWhereWithAggregatesInput | ProgressScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Progress"> | string
+    userId?: StringWithAggregatesFilter<"Progress"> | string
+    itemId?: StringWithAggregatesFilter<"Progress"> | string
+    status?: StringWithAggregatesFilter<"Progress"> | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Progress"> | Date | string
+  }
+
   export type RoadmapWhereInput = {
     AND?: RoadmapWhereInput | RoadmapWhereInput[]
     OR?: RoadmapWhereInput[]
@@ -8833,6 +10094,7 @@ export namespace Prisma {
     resumes?: ResumeCreateNestedManyWithoutUserInput
     skills?: SkillCreateNestedManyWithoutUserInput
     jobs?: JobCreateNestedManyWithoutUserInput
+    progress?: ProgressCreateNestedManyWithoutUserInput
     roadmap?: RoadmapCreateNestedOneWithoutUserInput
     targetRole?: RoleReferenceCreateNestedOneWithoutUsersInput
   }
@@ -8848,6 +10110,7 @@ export namespace Prisma {
     resumes?: ResumeUncheckedCreateNestedManyWithoutUserInput
     skills?: SkillUncheckedCreateNestedManyWithoutUserInput
     jobs?: JobUncheckedCreateNestedManyWithoutUserInput
+    progress?: ProgressUncheckedCreateNestedManyWithoutUserInput
     roadmap?: RoadmapUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -8861,6 +10124,7 @@ export namespace Prisma {
     resumes?: ResumeUpdateManyWithoutUserNestedInput
     skills?: SkillUpdateManyWithoutUserNestedInput
     jobs?: JobUpdateManyWithoutUserNestedInput
+    progress?: ProgressUpdateManyWithoutUserNestedInput
     roadmap?: RoadmapUpdateOneWithoutUserNestedInput
     targetRole?: RoleReferenceUpdateOneWithoutUsersNestedInput
   }
@@ -8876,6 +10140,7 @@ export namespace Prisma {
     resumes?: ResumeUncheckedUpdateManyWithoutUserNestedInput
     skills?: SkillUncheckedUpdateManyWithoutUserNestedInput
     jobs?: JobUncheckedUpdateManyWithoutUserNestedInput
+    progress?: ProgressUncheckedUpdateManyWithoutUserNestedInput
     roadmap?: RoadmapUncheckedUpdateOneWithoutUserNestedInput
   }
 
@@ -9217,6 +10482,61 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type ProgressCreateInput = {
+    id?: string
+    itemId: string
+    status?: string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutProgressInput
+  }
+
+  export type ProgressUncheckedCreateInput = {
+    id?: string
+    userId: string
+    itemId: string
+    status?: string
+    updatedAt?: Date | string
+  }
+
+  export type ProgressUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutProgressNestedInput
+  }
+
+  export type ProgressUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProgressCreateManyInput = {
+    id?: string
+    userId: string
+    itemId: string
+    status?: string
+    updatedAt?: Date | string
+  }
+
+  export type ProgressUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProgressUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type RoadmapCreateInput = {
     id?: string
     targetRoleTitle: string
@@ -9352,6 +10672,12 @@ export namespace Prisma {
     none?: JobWhereInput
   }
 
+  export type ProgressListRelationFilter = {
+    every?: ProgressWhereInput
+    some?: ProgressWhereInput
+    none?: ProgressWhereInput
+  }
+
   export type RoadmapNullableScalarRelationFilter = {
     is?: RoadmapWhereInput | null
     isNot?: RoadmapWhereInput | null
@@ -9376,6 +10702,10 @@ export namespace Prisma {
   }
 
   export type JobOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProgressOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -9684,6 +11014,35 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type ProgressUserIdItemIdCompoundUniqueInput = {
+    userId: string
+    itemId: string
+  }
+
+  export type ProgressCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    itemId?: SortOrder
+    status?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProgressMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    itemId?: SortOrder
+    status?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProgressMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    itemId?: SortOrder
+    status?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type RoadmapCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -9738,6 +11097,13 @@ export namespace Prisma {
     connect?: JobWhereUniqueInput | JobWhereUniqueInput[]
   }
 
+  export type ProgressCreateNestedManyWithoutUserInput = {
+    create?: XOR<ProgressCreateWithoutUserInput, ProgressUncheckedCreateWithoutUserInput> | ProgressCreateWithoutUserInput[] | ProgressUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ProgressCreateOrConnectWithoutUserInput | ProgressCreateOrConnectWithoutUserInput[]
+    createMany?: ProgressCreateManyUserInputEnvelope
+    connect?: ProgressWhereUniqueInput | ProgressWhereUniqueInput[]
+  }
+
   export type RoadmapCreateNestedOneWithoutUserInput = {
     create?: XOR<RoadmapCreateWithoutUserInput, RoadmapUncheckedCreateWithoutUserInput>
     connectOrCreate?: RoadmapCreateOrConnectWithoutUserInput
@@ -9769,6 +11135,13 @@ export namespace Prisma {
     connectOrCreate?: JobCreateOrConnectWithoutUserInput | JobCreateOrConnectWithoutUserInput[]
     createMany?: JobCreateManyUserInputEnvelope
     connect?: JobWhereUniqueInput | JobWhereUniqueInput[]
+  }
+
+  export type ProgressUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ProgressCreateWithoutUserInput, ProgressUncheckedCreateWithoutUserInput> | ProgressCreateWithoutUserInput[] | ProgressUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ProgressCreateOrConnectWithoutUserInput | ProgressCreateOrConnectWithoutUserInput[]
+    createMany?: ProgressCreateManyUserInputEnvelope
+    connect?: ProgressWhereUniqueInput | ProgressWhereUniqueInput[]
   }
 
   export type RoadmapUncheckedCreateNestedOneWithoutUserInput = {
@@ -9831,6 +11204,20 @@ export namespace Prisma {
     deleteMany?: JobScalarWhereInput | JobScalarWhereInput[]
   }
 
+  export type ProgressUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ProgressCreateWithoutUserInput, ProgressUncheckedCreateWithoutUserInput> | ProgressCreateWithoutUserInput[] | ProgressUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ProgressCreateOrConnectWithoutUserInput | ProgressCreateOrConnectWithoutUserInput[]
+    upsert?: ProgressUpsertWithWhereUniqueWithoutUserInput | ProgressUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ProgressCreateManyUserInputEnvelope
+    set?: ProgressWhereUniqueInput | ProgressWhereUniqueInput[]
+    disconnect?: ProgressWhereUniqueInput | ProgressWhereUniqueInput[]
+    delete?: ProgressWhereUniqueInput | ProgressWhereUniqueInput[]
+    connect?: ProgressWhereUniqueInput | ProgressWhereUniqueInput[]
+    update?: ProgressUpdateWithWhereUniqueWithoutUserInput | ProgressUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ProgressUpdateManyWithWhereWithoutUserInput | ProgressUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ProgressScalarWhereInput | ProgressScalarWhereInput[]
+  }
+
   export type RoadmapUpdateOneWithoutUserNestedInput = {
     create?: XOR<RoadmapCreateWithoutUserInput, RoadmapUncheckedCreateWithoutUserInput>
     connectOrCreate?: RoadmapCreateOrConnectWithoutUserInput
@@ -9891,6 +11278,20 @@ export namespace Prisma {
     update?: JobUpdateWithWhereUniqueWithoutUserInput | JobUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: JobUpdateManyWithWhereWithoutUserInput | JobUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: JobScalarWhereInput | JobScalarWhereInput[]
+  }
+
+  export type ProgressUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ProgressCreateWithoutUserInput, ProgressUncheckedCreateWithoutUserInput> | ProgressCreateWithoutUserInput[] | ProgressUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ProgressCreateOrConnectWithoutUserInput | ProgressCreateOrConnectWithoutUserInput[]
+    upsert?: ProgressUpsertWithWhereUniqueWithoutUserInput | ProgressUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ProgressCreateManyUserInputEnvelope
+    set?: ProgressWhereUniqueInput | ProgressWhereUniqueInput[]
+    disconnect?: ProgressWhereUniqueInput | ProgressWhereUniqueInput[]
+    delete?: ProgressWhereUniqueInput | ProgressWhereUniqueInput[]
+    connect?: ProgressWhereUniqueInput | ProgressWhereUniqueInput[]
+    update?: ProgressUpdateWithWhereUniqueWithoutUserInput | ProgressUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ProgressUpdateManyWithWhereWithoutUserInput | ProgressUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ProgressScalarWhereInput | ProgressScalarWhereInput[]
   }
 
   export type RoadmapUncheckedUpdateOneWithoutUserNestedInput = {
@@ -10001,6 +11402,20 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutJobsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutJobsInput, UserUpdateWithoutJobsInput>, UserUncheckedUpdateWithoutJobsInput>
+  }
+
+  export type UserCreateNestedOneWithoutProgressInput = {
+    create?: XOR<UserCreateWithoutProgressInput, UserUncheckedCreateWithoutProgressInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProgressInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutProgressNestedInput = {
+    create?: XOR<UserCreateWithoutProgressInput, UserUncheckedCreateWithoutProgressInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProgressInput
+    upsert?: UserUpsertWithoutProgressInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProgressInput, UserUpdateWithoutProgressInput>, UserUncheckedUpdateWithoutProgressInput>
   }
 
   export type UserCreateNestedOneWithoutRoadmapInput = {
@@ -10283,6 +11698,30 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProgressCreateWithoutUserInput = {
+    id?: string
+    itemId: string
+    status?: string
+    updatedAt?: Date | string
+  }
+
+  export type ProgressUncheckedCreateWithoutUserInput = {
+    id?: string
+    itemId: string
+    status?: string
+    updatedAt?: Date | string
+  }
+
+  export type ProgressCreateOrConnectWithoutUserInput = {
+    where: ProgressWhereUniqueInput
+    create: XOR<ProgressCreateWithoutUserInput, ProgressUncheckedCreateWithoutUserInput>
+  }
+
+  export type ProgressCreateManyUserInputEnvelope = {
+    data: ProgressCreateManyUserInput | ProgressCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type RoadmapCreateWithoutUserInput = {
     id?: string
     targetRoleTitle: string
@@ -10424,6 +11863,33 @@ export namespace Prisma {
     completedAt?: DateTimeNullableFilter<"Job"> | Date | string | null
   }
 
+  export type ProgressUpsertWithWhereUniqueWithoutUserInput = {
+    where: ProgressWhereUniqueInput
+    update: XOR<ProgressUpdateWithoutUserInput, ProgressUncheckedUpdateWithoutUserInput>
+    create: XOR<ProgressCreateWithoutUserInput, ProgressUncheckedCreateWithoutUserInput>
+  }
+
+  export type ProgressUpdateWithWhereUniqueWithoutUserInput = {
+    where: ProgressWhereUniqueInput
+    data: XOR<ProgressUpdateWithoutUserInput, ProgressUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ProgressUpdateManyWithWhereWithoutUserInput = {
+    where: ProgressScalarWhereInput
+    data: XOR<ProgressUpdateManyMutationInput, ProgressUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ProgressScalarWhereInput = {
+    AND?: ProgressScalarWhereInput | ProgressScalarWhereInput[]
+    OR?: ProgressScalarWhereInput[]
+    NOT?: ProgressScalarWhereInput | ProgressScalarWhereInput[]
+    id?: StringFilter<"Progress"> | string
+    userId?: StringFilter<"Progress"> | string
+    itemId?: StringFilter<"Progress"> | string
+    status?: StringFilter<"Progress"> | string
+    updatedAt?: DateTimeFilter<"Progress"> | Date | string
+  }
+
   export type RoadmapUpsertWithoutUserInput = {
     update: XOR<RoadmapUpdateWithoutUserInput, RoadmapUncheckedUpdateWithoutUserInput>
     create: XOR<RoadmapCreateWithoutUserInput, RoadmapUncheckedCreateWithoutUserInput>
@@ -10496,6 +11962,7 @@ export namespace Prisma {
     resumes?: ResumeCreateNestedManyWithoutUserInput
     skills?: SkillCreateNestedManyWithoutUserInput
     jobs?: JobCreateNestedManyWithoutUserInput
+    progress?: ProgressCreateNestedManyWithoutUserInput
     roadmap?: RoadmapCreateNestedOneWithoutUserInput
   }
 
@@ -10509,6 +11976,7 @@ export namespace Prisma {
     resumes?: ResumeUncheckedCreateNestedManyWithoutUserInput
     skills?: SkillUncheckedCreateNestedManyWithoutUserInput
     jobs?: JobUncheckedCreateNestedManyWithoutUserInput
+    progress?: ProgressUncheckedCreateNestedManyWithoutUserInput
     roadmap?: RoadmapUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -10560,6 +12028,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     skills?: SkillCreateNestedManyWithoutUserInput
     jobs?: JobCreateNestedManyWithoutUserInput
+    progress?: ProgressCreateNestedManyWithoutUserInput
     roadmap?: RoadmapCreateNestedOneWithoutUserInput
     targetRole?: RoleReferenceCreateNestedOneWithoutUsersInput
   }
@@ -10574,6 +12043,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     skills?: SkillUncheckedCreateNestedManyWithoutUserInput
     jobs?: JobUncheckedCreateNestedManyWithoutUserInput
+    progress?: ProgressUncheckedCreateNestedManyWithoutUserInput
     roadmap?: RoadmapUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -10602,6 +12072,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     skills?: SkillUpdateManyWithoutUserNestedInput
     jobs?: JobUpdateManyWithoutUserNestedInput
+    progress?: ProgressUpdateManyWithoutUserNestedInput
     roadmap?: RoadmapUpdateOneWithoutUserNestedInput
     targetRole?: RoleReferenceUpdateOneWithoutUsersNestedInput
   }
@@ -10616,6 +12087,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     skills?: SkillUncheckedUpdateManyWithoutUserNestedInput
     jobs?: JobUncheckedUpdateManyWithoutUserNestedInput
+    progress?: ProgressUncheckedUpdateManyWithoutUserNestedInput
     roadmap?: RoadmapUncheckedUpdateOneWithoutUserNestedInput
   }
 
@@ -10628,6 +12100,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     resumes?: ResumeCreateNestedManyWithoutUserInput
     jobs?: JobCreateNestedManyWithoutUserInput
+    progress?: ProgressCreateNestedManyWithoutUserInput
     roadmap?: RoadmapCreateNestedOneWithoutUserInput
     targetRole?: RoleReferenceCreateNestedOneWithoutUsersInput
   }
@@ -10642,6 +12115,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     resumes?: ResumeUncheckedCreateNestedManyWithoutUserInput
     jobs?: JobUncheckedCreateNestedManyWithoutUserInput
+    progress?: ProgressUncheckedCreateNestedManyWithoutUserInput
     roadmap?: RoadmapUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -10670,6 +12144,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resumes?: ResumeUpdateManyWithoutUserNestedInput
     jobs?: JobUpdateManyWithoutUserNestedInput
+    progress?: ProgressUpdateManyWithoutUserNestedInput
     roadmap?: RoadmapUpdateOneWithoutUserNestedInput
     targetRole?: RoleReferenceUpdateOneWithoutUsersNestedInput
   }
@@ -10684,6 +12159,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resumes?: ResumeUncheckedUpdateManyWithoutUserNestedInput
     jobs?: JobUncheckedUpdateManyWithoutUserNestedInput
+    progress?: ProgressUncheckedUpdateManyWithoutUserNestedInput
     roadmap?: RoadmapUncheckedUpdateOneWithoutUserNestedInput
   }
 
@@ -10696,6 +12172,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     resumes?: ResumeCreateNestedManyWithoutUserInput
     skills?: SkillCreateNestedManyWithoutUserInput
+    progress?: ProgressCreateNestedManyWithoutUserInput
     roadmap?: RoadmapCreateNestedOneWithoutUserInput
     targetRole?: RoleReferenceCreateNestedOneWithoutUsersInput
   }
@@ -10710,6 +12187,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     resumes?: ResumeUncheckedCreateNestedManyWithoutUserInput
     skills?: SkillUncheckedCreateNestedManyWithoutUserInput
+    progress?: ProgressUncheckedCreateNestedManyWithoutUserInput
     roadmap?: RoadmapUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -10738,6 +12216,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resumes?: ResumeUpdateManyWithoutUserNestedInput
     skills?: SkillUpdateManyWithoutUserNestedInput
+    progress?: ProgressUpdateManyWithoutUserNestedInput
     roadmap?: RoadmapUpdateOneWithoutUserNestedInput
     targetRole?: RoleReferenceUpdateOneWithoutUsersNestedInput
   }
@@ -10752,6 +12231,79 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resumes?: ResumeUncheckedUpdateManyWithoutUserNestedInput
     skills?: SkillUncheckedUpdateManyWithoutUserNestedInput
+    progress?: ProgressUncheckedUpdateManyWithoutUserNestedInput
+    roadmap?: RoadmapUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutProgressInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    customTargetRole?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    resumes?: ResumeCreateNestedManyWithoutUserInput
+    skills?: SkillCreateNestedManyWithoutUserInput
+    jobs?: JobCreateNestedManyWithoutUserInput
+    roadmap?: RoadmapCreateNestedOneWithoutUserInput
+    targetRole?: RoleReferenceCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutProgressInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    targetRoleId?: string | null
+    customTargetRole?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    resumes?: ResumeUncheckedCreateNestedManyWithoutUserInput
+    skills?: SkillUncheckedCreateNestedManyWithoutUserInput
+    jobs?: JobUncheckedCreateNestedManyWithoutUserInput
+    roadmap?: RoadmapUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutProgressInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutProgressInput, UserUncheckedCreateWithoutProgressInput>
+  }
+
+  export type UserUpsertWithoutProgressInput = {
+    update: XOR<UserUpdateWithoutProgressInput, UserUncheckedUpdateWithoutProgressInput>
+    create: XOR<UserCreateWithoutProgressInput, UserUncheckedCreateWithoutProgressInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutProgressInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutProgressInput, UserUncheckedUpdateWithoutProgressInput>
+  }
+
+  export type UserUpdateWithoutProgressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    customTargetRole?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resumes?: ResumeUpdateManyWithoutUserNestedInput
+    skills?: SkillUpdateManyWithoutUserNestedInput
+    jobs?: JobUpdateManyWithoutUserNestedInput
+    roadmap?: RoadmapUpdateOneWithoutUserNestedInput
+    targetRole?: RoleReferenceUpdateOneWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutProgressInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    targetRoleId?: NullableStringFieldUpdateOperationsInput | string | null
+    customTargetRole?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resumes?: ResumeUncheckedUpdateManyWithoutUserNestedInput
+    skills?: SkillUncheckedUpdateManyWithoutUserNestedInput
+    jobs?: JobUncheckedUpdateManyWithoutUserNestedInput
     roadmap?: RoadmapUncheckedUpdateOneWithoutUserNestedInput
   }
 
@@ -10765,6 +12317,7 @@ export namespace Prisma {
     resumes?: ResumeCreateNestedManyWithoutUserInput
     skills?: SkillCreateNestedManyWithoutUserInput
     jobs?: JobCreateNestedManyWithoutUserInput
+    progress?: ProgressCreateNestedManyWithoutUserInput
     targetRole?: RoleReferenceCreateNestedOneWithoutUsersInput
   }
 
@@ -10779,6 +12332,7 @@ export namespace Prisma {
     resumes?: ResumeUncheckedCreateNestedManyWithoutUserInput
     skills?: SkillUncheckedCreateNestedManyWithoutUserInput
     jobs?: JobUncheckedCreateNestedManyWithoutUserInput
+    progress?: ProgressUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRoadmapInput = {
@@ -10807,6 +12361,7 @@ export namespace Prisma {
     resumes?: ResumeUpdateManyWithoutUserNestedInput
     skills?: SkillUpdateManyWithoutUserNestedInput
     jobs?: JobUpdateManyWithoutUserNestedInput
+    progress?: ProgressUpdateManyWithoutUserNestedInput
     targetRole?: RoleReferenceUpdateOneWithoutUsersNestedInput
   }
 
@@ -10821,6 +12376,7 @@ export namespace Prisma {
     resumes?: ResumeUncheckedUpdateManyWithoutUserNestedInput
     skills?: SkillUncheckedUpdateManyWithoutUserNestedInput
     jobs?: JobUncheckedUpdateManyWithoutUserNestedInput
+    progress?: ProgressUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ResumeCreateManyUserInput = {
@@ -10852,6 +12408,13 @@ export namespace Prisma {
     errorMsg?: string | null
     createdAt?: Date | string
     completedAt?: Date | string | null
+  }
+
+  export type ProgressCreateManyUserInput = {
+    id?: string
+    itemId: string
+    status?: string
+    updatedAt?: Date | string
   }
 
   export type ResumeUpdateWithoutUserInput = {
@@ -10947,6 +12510,27 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type ProgressUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProgressUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProgressUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserCreateManyTargetRoleInput = {
     id?: string
     email: string
@@ -10966,6 +12550,7 @@ export namespace Prisma {
     resumes?: ResumeUpdateManyWithoutUserNestedInput
     skills?: SkillUpdateManyWithoutUserNestedInput
     jobs?: JobUpdateManyWithoutUserNestedInput
+    progress?: ProgressUpdateManyWithoutUserNestedInput
     roadmap?: RoadmapUpdateOneWithoutUserNestedInput
   }
 
@@ -10979,6 +12564,7 @@ export namespace Prisma {
     resumes?: ResumeUncheckedUpdateManyWithoutUserNestedInput
     skills?: SkillUncheckedUpdateManyWithoutUserNestedInput
     jobs?: JobUncheckedUpdateManyWithoutUserNestedInput
+    progress?: ProgressUncheckedUpdateManyWithoutUserNestedInput
     roadmap?: RoadmapUncheckedUpdateOneWithoutUserNestedInput
   }
 

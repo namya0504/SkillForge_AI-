@@ -12,6 +12,8 @@ export const config = {
   dbUrl: process.env.DATABASE_URL,
   jwtSecret: process.env.JWT_SECRET,
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '30m',
+  refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET || (process.env.JWT_SECRET ? process.env.JWT_SECRET + '-refresh' : 'dev-refresh-secret'),
+  refreshTokenExpiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN || '7d',
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
   nodeEnv: process.env.NODE_ENV || 'development',
   llmApiKey: process.env.LLM_API_KEY || '',

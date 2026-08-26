@@ -1,8 +1,9 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import prisma from '../config/database.js';
-import { generateToken, getCookieOptions } from '../utils/token.js';
+import { generateToken, generateRefreshToken, verifyRefreshToken, getCookieOptions, getRefreshCookieOptions } from '../utils/token.js';
 import { config } from '../config/env.js';
+import { deleteFile } from '../config/storage.js';
 
 export const sendOTP = async (req, res) => {
   try {
@@ -96,7 +97,9 @@ export const register = async (req, res) => {
     });
 
     const token = generateToken(newUser.id);
+    const refreshToken = generateRefreshToken(newUser.id);
     res.cookie('token', token, getCookieOptions());
+    res.cookie('refreshToken', refreshToken, getRefreshCookieOptions());
 
     res.status(201).json({
       message: 'Registration successful',
@@ -143,7 +146,9 @@ export const login = async (req, res) => {
     }
 
     const token = generateToken(user.id);
+    const refreshToken = generateRefreshToken(user.id);
     res.cookie('token', token, getCookieOptions());
+    res.cookie('refreshToken', refreshToken, getRefreshCookieOptions());
 
     res.status(200).json({
       message: 'Login successful',
@@ -159,8 +164,45 @@ export const login = async (req, res) => {
   }
 };
 
+export const refreshSession = async (req, res) => {
+  try {
+    const refreshToken = req.cookies?.refreshToken;
+    if (!refreshToken) {
+      return res.status(401).json({ error: 'No refresh token provided' });
+    }
+
+    let decoded;
+    try {
+      decoded = verifyRefreshToken(refreshToken);
+    } catch (err) {
+      res.clearCookie('token', { path: '/' });
+      res.clearCookie('refreshToken', { path: '/' });
+      return res.status(401).json({ error: 'Invalid or expired refresh token' });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.id }
+    });
+
+    if (!user) {
+      res.clearCookie('token', { path: '/' });
+      res.clearCookie('refreshToken', { path: '/' });
+      return res.status(401).json({ error: 'User not found' });
+    }
+
+    const newToken = generateToken(user.id);
+    res.cookie('token', newToken, getCookieOptions());
+
+    res.status(200).json({ message: 'Session refreshed successfully' });
+  } catch (error) {
+    console.error('Refresh token error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 export const logout = (req, res) => {
   res.clearCookie('token', { path: '/' });
+  res.clearCookie('refreshToken', { path: '/' });
   res.status(200).json({ message: 'Logged out successfully' });
 };
 
@@ -259,3 +301,53 @@ export const resetPassword = async (req, res) => {
     res.status(500).json({ error: 'Failed to reset password' });
   }
 };
+
+export const deleteAccount = async (req, res) => {
+  try {
+    const { password } = req.body;
+    if (!password) {
+      return res.status(400).json({ error: 'Current password is required to delete your account.' });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      include: { resumes: true }
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.passwordHash);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Incorrect password. Account deletion cancelled.' });
+    }
+
+    // Delete stored resume files from storage bucket
+    if (user.resumes && user.resumes.length > 0) {
+      for (const resume of user.resumes) {
+        if (resume.storageKey) {
+          try {
+            await deleteFile(resume.storageKey);
+          } catch (storageErr) {
+            console.warn('Failed to delete resume file during account deletion:', storageErr.message);
+          }
+        }
+      }
+    }
+
+    // Cascade delete user in database
+    await prisma.user.delete({
+      where: { id: req.user.id }
+    });
+
+    res.clearCookie('token', { path: '/' });
+    res.clearCookie('refreshToken', { path: '/' });
+
+    res.status(200).json({ message: 'Account and associated data deleted successfully.' });
+  } catch (error) {
+    console.error('Delete account error:', error);
+    res.status(500).json({ error: 'Failed to delete account' });
+  }
+};
+

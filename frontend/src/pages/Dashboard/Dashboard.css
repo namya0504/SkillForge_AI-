@@ -501,37 +501,76 @@
   transition: all 0.2s ease;
 }
 
-.topic-item:hover {
-  background: rgba(15, 76, 92, 0.2);
+.cursor-pointer {
+  cursor: pointer;
 }
 
-.topic-item.completed {
-  opacity: 0.75;
-  background: rgba(15, 76, 92, 0.3);
-  border-color: rgba(15, 76, 92, 0.5);
+.topic-main-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.topic-item.completed .topic-text {
+.status-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease;
+}
+
+.status-toggle-btn:hover {
+  transform: scale(1.15);
+}
+
+.status-pill {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.status-pill.status-not_started {
+  background: rgba(148, 163, 184, 0.1);
+  color: #94a3b8;
+  border-color: rgba(148, 163, 184, 0.2);
+}
+
+.status-pill.status-in_progress {
+  background: rgba(244, 162, 89, 0.15);
+  color: #F4A259;
+  border-color: rgba(244, 162, 89, 0.4);
+}
+
+.status-pill.status-completed {
+  background: rgba(74, 222, 128, 0.15);
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.4);
+}
+
+.topic-text.text-done {
   text-decoration: line-through;
   color: #94a3b8;
 }
 
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  font-size: 0.86rem;
-  color: #e2e8f0;
-  user-select: none;
+.progress-subtext {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 6px;
+  font-weight: 500;
 }
 
-.checkbox-label input[type="checkbox"] {
-  accent-color: #0F4C5C;
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-}
+.text-success { color: #4ade80; }
+.text-muted { color: #94a3b8; }
 
 .resource-link-chip {
   display: inline-flex;

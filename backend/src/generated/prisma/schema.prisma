@@ -18,6 +18,7 @@ model User {
   resumes          Resume[]
   skills           Skill[]
   jobs             Job[]
+  progress         Progress[]
   roadmap          Roadmap?
   targetRole       RoleReference? @relation(fields: [targetRoleId], references: [id], onDelete: SetNull)
 
@@ -34,6 +35,7 @@ model RoleReference {
   createdAt      DateTime @default(now()) @map("created_at")
   users          User[]
 
+  @@index([isPopular])
   @@map("roles_reference")
 }
 
@@ -50,6 +52,7 @@ model Resume {
   updatedAt    DateTime @updatedAt @map("updated_at")
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
   @@map("resumes")
 }
 
@@ -63,6 +66,7 @@ model Skill {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, skillName])
+  @@index([userId])
   @@map("skills")
 }
 
@@ -78,7 +82,22 @@ model Job {
   completedAt DateTime? @map("completed_at")
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
+  @@index([status, createdAt])
   @@map("jobs")
+}
+
+model Progress {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  itemId    String   @map("item_id")
+  status    String   @default("not_started") // not_started | in_progress | completed
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, itemId])
+  @@index([userId])
+  @@map("progress")
 }
 
 model Roadmap {

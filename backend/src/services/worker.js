@@ -9,15 +9,38 @@ class JobWorker {
     this.maxConcurrent = config.maxConcurrentJobs;
     this.activeJobs = 0;
     this.interval = null;
+    this.sweepInterval = null;
   }
 
   start() {
     console.log(`Worker started (max concurrent: ${this.maxConcurrent})`);
     this.interval = setInterval(() => this.poll(), 2000);
+    this.sweepInterval = setInterval(() => this.sweepStalled(), 60000);
   }
 
   stop() {
     if (this.interval) clearInterval(this.interval);
+    if (this.sweepInterval) clearInterval(this.sweepInterval);
+  }
+
+  async sweepStalled() {
+    try {
+      const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+      const stalled = await prisma.job.updateMany({
+        where: {
+          status: 'processing',
+          createdAt: { lt: fiveMinutesAgo }
+        },
+        data: {
+          status: 'pending'
+        }
+      });
+      if (stalled.count > 0) {
+        console.log(`Swept and reset ${stalled.count} stalled job(s) back to pending`);
+      }
+    } catch (err) {
+      console.warn('Worker stalled job sweep error:', err?.message || err);
+    }
   }
 
   async poll() {

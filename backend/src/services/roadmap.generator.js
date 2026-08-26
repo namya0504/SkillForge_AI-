@@ -184,20 +184,41 @@ export async function generateRoadmapForUser(userId) {
     result = generateWithRuleEngine(targetRoleTitle, user.skills, gapAnalysisObj);
   }
 
+  // Ensure every milestone phase & topic has a stable id and valid resource
+  const normalizedMilestones = (result.milestones || []).map((phase, pIdx) => {
+    const phaseNum = phase.phase || (pIdx + 1);
+    const topics = (phase.topics || []).map((topic, tIdx) => {
+      const topicTitle = typeof topic === 'string' ? topic : (topic.title || `Topic ${tIdx + 1}`);
+      const topicResource = (typeof topic === 'object' && topic.resource) 
+        ? topic.resource 
+        : getResourceForSkill(topicTitle);
+      return {
+        id: (typeof topic === 'object' && topic.id) ? topic.id : `p${phaseNum}-t${tIdx + 1}`,
+        title: topicTitle,
+        resource: topicResource
+      };
+    });
+    return {
+      ...phase,
+      phase: phaseNum,
+      topics
+    };
+  });
+
   // 4. Save to Database (Upsert Roadmap for user)
   const savedRoadmap = await prisma.roadmap.upsert({
     where: { userId },
     update: {
       targetRoleTitle,
       gapAnalysis: JSON.stringify(gapAnalysisObj),
-      milestones: JSON.stringify(result.milestones),
+      milestones: JSON.stringify(normalizedMilestones),
       recommendations: JSON.stringify(result.recommendations)
     },
     create: {
       userId,
       targetRoleTitle,
       gapAnalysis: JSON.stringify(gapAnalysisObj),
-      milestones: JSON.stringify(result.milestones),
+      milestones: JSON.stringify(normalizedMilestones),
       recommendations: JSON.stringify(result.recommendations)
     }
   });
@@ -206,7 +227,7 @@ export async function generateRoadmapForUser(userId) {
     id: savedRoadmap.id,
     targetRoleTitle: savedRoadmap.targetRoleTitle,
     gapAnalysis: gapAnalysisObj,
-    milestones: result.milestones,
+    milestones: normalizedMilestones,
     recommendations: result.recommendations,
     updatedAt: savedRoadmap.updatedAt
   };

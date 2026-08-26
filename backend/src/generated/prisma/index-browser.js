@@ -174,6 +174,14 @@ exports.Prisma.JobScalarFieldEnum = {
   completedAt: 'completedAt'
 };
 
+exports.Prisma.ProgressScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  itemId: 'itemId',
+  status: 'status',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.RoadmapScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -207,6 +215,7 @@ exports.Prisma.ModelName = {
   Resume: 'Resume',
   Skill: 'Skill',
   Job: 'Job',
+  Progress: 'Progress',
   Roadmap: 'Roadmap'
 };
 

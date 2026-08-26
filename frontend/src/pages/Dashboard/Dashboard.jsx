@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useOnboardingStatus } from '../../hooks/useOnboardingStatus';
-import { roadmapAPI } from '../../services/api';
+import { roadmapAPI, progressAPI } from '../../services/api';
 import { 
   Target, Sparkles, CheckCircle2, AlertCircle, RefreshCw, 
-  Map, Award, FolderGit2, ExternalLink, Clock, ChevronRight, Edit3, ShieldCheck,
-  Upload, UserCheck, Compass, ArrowRight, BookOpen, CheckSquare
+  Map, Award, FolderGit2, ExternalLink, Clock, ChevronRight, ChevronDown, Edit3, ShieldCheck,
+  Upload, UserCheck, Compass, ArrowRight, BookOpen, CheckSquare, Circle, PlayCircle
 } from 'lucide-react';
 import './Dashboard.css';
 
@@ -16,7 +16,7 @@ import './Dashboard.css';
 const OnboardingEmptyState = ({ hasResume, hasSkills, hasTargetRole, email }) => {
   const steps = [
     {
-      done: hasResume || hasSkills, // either uploaded resume OR manually added skills counts
+      done: hasResume || hasSkills,
       icon: <Upload size={24} />,
       title: 'Upload Your Resume',
       desc: 'Upload a PDF or DOCX resume so we can extract your skills automatically.',
@@ -28,7 +28,7 @@ const OnboardingEmptyState = ({ hasResume, hasSkills, hasTargetRole, email }) =>
       icon: <UserCheck size={24} />,
       title: 'Confirm Your Skills',
       desc: 'Review extracted skills or add them manually to build your profile.',
-      link: '/skills-confirm',
+      link: '/skills',
       btnText: 'Manage Skills',
     },
     {
@@ -41,7 +41,6 @@ const OnboardingEmptyState = ({ hasResume, hasSkills, hasTargetRole, email }) =>
     },
   ];
 
-  // Find the first incomplete step to highlight
   const nextStep = steps.find(s => !s.done);
 
   return (
@@ -101,32 +100,18 @@ const Dashboard = () => {
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('projects');
-  const [completedTopics, setCompletedTopics] = useState(new Set());
+  
+  // Server-synced progress state: { [itemId]: 'not_started' | 'in_progress' | 'completed' }
+  const [progressMap, setProgressMap] = useState({});
+  const [progressSummary, setProgressSummary] = useState({
+    totalItems: 0,
+    completedItems: 0,
+    inProgressItems: 0,
+    completionPercent: 0
+  });
 
-  useEffect(() => {
-    if (user?.id) {
-      try {
-        const saved = localStorage.getItem(`completed_topics_${user.id}`);
-        if (saved) {
-          setCompletedTopics(new Set(JSON.parse(saved)));
-        }
-      } catch (e) {
-        console.warn('Failed to load completed topics', e);
-      }
-    }
-  }, [user?.id]);
-
-  const toggleTopicCompleted = (topicKey) => {
-    setCompletedTopics(prev => {
-      const next = new Set(prev);
-      if (next.has(topicKey)) next.delete(topicKey);
-      else next.add(topicKey);
-      if (user?.id) {
-        localStorage.setItem(`completed_topics_${user.id}`, JSON.stringify(Array.from(next)));
-      }
-      return next;
-    });
-  };
+  // Collapsed phases state: { [phaseIndex]: boolean }
+  const [collapsedPhases, setCollapsedPhases] = useState({});
 
   useEffect(() => {
     // Don't fetch roadmap until onboarding status is loaded
@@ -138,33 +123,77 @@ const Dashboard = () => {
       return;
     }
 
-    fetchRoadmap();
+    fetchRoadmapAndProgress();
   }, [onboarding.isLoading, onboarding.isComplete]);
 
   useEffect(() => {
     const handleDashboardRefresh = () => {
       onboarding.refresh();
-      fetchRoadmap();
+      fetchRoadmapAndProgress();
     };
 
     window.addEventListener('refresh-dashboard', handleDashboardRefresh);
     return () => window.removeEventListener('refresh-dashboard', handleDashboardRefresh);
   }, [onboarding]);
 
-  const fetchRoadmap = async () => {
+  const fetchRoadmapAndProgress = async () => {
     try {
       setLoading(true);
-      const res = await roadmapAPI.getRoadmap();
-      if (res.roadmap) {
-        setRoadmap(res.roadmap);
+      const [roadmapRes, progressRes, summaryRes] = await Promise.allSettled([
+        roadmapAPI.getRoadmap(),
+        progressAPI.getAll(),
+        progressAPI.getSummary()
+      ]);
+
+      if (roadmapRes.status === 'fulfilled' && roadmapRes.value.roadmap) {
+        setRoadmap(roadmapRes.value.roadmap);
+      } else {
+        setRoadmap(null);
       }
-      // Don't auto-generate — let the user click "Generate" explicitly
+
+      if (progressRes.status === 'fulfilled' && progressRes.value.progress) {
+        const map = {};
+        progressRes.value.progress.forEach(p => {
+          map[p.itemId] = p.status;
+        });
+        setProgressMap(map);
+      }
+
+      if (summaryRes.status === 'fulfilled' && summaryRes.value) {
+        setProgressSummary(summaryRes.value);
+      }
     } catch (err) {
-      // Roadmap doesn't exist yet — that's fine, show generate prompt
       setRoadmap(null);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleToggleTopicStatus = async (itemId) => {
+    const currentStatus = progressMap[itemId] || 'not_started';
+    let nextStatus = 'in_progress';
+    if (currentStatus === 'not_started') nextStatus = 'in_progress';
+    else if (currentStatus === 'in_progress') nextStatus = 'completed';
+    else if (currentStatus === 'completed') nextStatus = 'not_started';
+
+    // Optimistic UI update
+    setProgressMap(prev => ({ ...prev, [itemId]: nextStatus }));
+
+    try {
+      await progressAPI.update(itemId, nextStatus);
+      // Refresh summary
+      const summary = await progressAPI.getSummary();
+      setProgressSummary(summary);
+    } catch (err) {
+      console.warn('Failed to sync progress to server:', err);
+    }
+  };
+
+  const togglePhaseCollapse = (phaseIdx) => {
+    setCollapsedPhases(prev => ({
+      ...prev,
+      [phaseIdx]: !prev[phaseIdx]
+    }));
   };
 
   const handleGenerate = async () => {
@@ -173,6 +202,8 @@ const Dashboard = () => {
       setError(null);
       const res = await roadmapAPI.generateRoadmap();
       setRoadmap(res.roadmap);
+      const summary = await progressAPI.getSummary();
+      setProgressSummary(summary);
     } catch (err) {
       setError(err.message || 'Failed to generate roadmap.');
     } finally {
@@ -186,14 +217,14 @@ const Dashboard = () => {
       <div className="dashboard-container center-content">
         <div className="loader-box">
           <RefreshCw size={36} className="spin-icon text-teal" />
-          <h2>Loading Your Dashboard...</h2>
-          <p>Checking your profile and roadmap status.</p>
+          <h2>Loading Your Learning Path...</h2>
+          <p>Analyzing your skills and progress.</p>
         </div>
       </div>
     );
   }
 
-  // ── Onboarding incomplete → show empty state (BUG-01 + BUG-07 fix) ──
+  // ── Onboarding incomplete → show step checklist empty state ──
   if (!onboarding.isComplete) {
     return (
       <OnboardingEmptyState
@@ -215,7 +246,7 @@ const Dashboard = () => {
           </div>
           <h1>Your Profile Is Ready!</h1>
           <p className="empty-state-subtitle">
-            You've completed all onboarding steps. Generate your personalized AI career roadmap now.
+            You've completed all onboarding steps. Generate your personalized step-by-step career path now.
           </p>
           {error && (
             <div className="error-message" style={{ marginBottom: '16px' }}>
@@ -225,7 +256,7 @@ const Dashboard = () => {
           )}
           <button className="btn-primary empty-state-cta" onClick={handleGenerate} disabled={generating}>
             <RefreshCw size={18} className={generating ? 'spin-icon' : ''} />
-            {generating ? 'Generating...' : 'Generate Your Roadmap'}
+            {generating ? 'Building Path...' : 'Generate My Career Path'}
           </button>
         </div>
       </div>
@@ -265,9 +296,9 @@ const Dashboard = () => {
           <button className="btn-secondary flex-center" onClick={() => navigate('/role-selection')}>
             <Edit3 size={16} /> Change Goal Role
           </button>
-          <button className="btn-primary flex-center" onClick={handleGenerate} disabled={generating}>
-            <RefreshCw size={16} className={generating ? 'spin-icon' : ''} />
-            {generating ? 'Regenerating...' : 'Regenerate Roadmap'}
+          <button className="btn-secondary flex-center" onClick={handleGenerate} disabled={generating} title="Regenerate learning path">
+            <RefreshCw size={14} className={generating ? 'spin-icon' : ''} />
+            {generating ? 'Updating...' : 'Regenerate'}
           </button>
         </div>
       </header>
@@ -282,13 +313,13 @@ const Dashboard = () => {
       {/* Main Grid Layout */}
       <div className="dashboard-main-grid">
 
-        {/* Left Column: Skill Gap Analysis & Milestone Timeline (Feature 5) */}
+        {/* Left Column: Skill Benchmark & Learning Path */}
         <div className="roadmap-column">
 
-          {/* Skill Gap Summary Card */}
+          {/* Where You Stand / Skill Benchmark Card */}
           <div className="gap-analysis-card">
             <div className="gap-card-header">
-              <h2><Sparkles size={20} className="text-amber" /> Skill Gap Benchmark Analysis</h2>
+              <h2><Sparkles size={20} className="text-amber" /> Where You Stand</h2>
               <span className="match-score-badge">{matchPercentage}% Match</span>
             </div>
 
@@ -299,15 +330,15 @@ const Dashboard = () => {
             <div className="gap-stats-grid">
               <div className="gap-stat matched">
                 <span className="stat-num">{matchedCount}</span>
-                <span className="stat-label"><CheckCircle2 size={14} /> Matched Skills</span>
+                <span className="stat-label"><CheckCircle2 size={14} /> You Already Know</span>
               </div>
               <div className="gap-stat level-gap">
                 <span className="stat-num">{gapAnalysis.levelGaps?.length || 0}</span>
-                <span className="stat-label"><RefreshCw size={14} /> Level Gaps</span>
+                <span className="stat-label"><RefreshCw size={14} /> Brush Up On</span>
               </div>
               <div className="gap-stat missing">
                 <span className="stat-num">{gapAnalysis.missingSkills?.length || 0}</span>
-                <span className="stat-label"><AlertCircle size={14} /> Missing Skills</span>
+                <span className="stat-label"><AlertCircle size={14} /> New to Learn</span>
               </div>
             </div>
 
@@ -331,225 +362,227 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Milestone Learning Timeline (Feature 5) */}
+          {/* Step-by-Step Learning Path */}
           <div className="milestones-section">
-            {(() => {
-              let totalTopicsCount = 0;
-              milestones.forEach((m) => {
-                (m.topics || []).forEach(() => totalTopicsCount++);
-              });
+            <div className="section-title flex-between">
+              <div className="flex-center gap-sm">
+                <Map size={22} className="text-teal" />
+                <h2>Step-by-Step Learning Path</h2>
+              </div>
+              <div className="progress-badge flex-center gap-xs">
+                <CheckSquare size={16} className="text-teal" />
+                <span>{progressSummary.completedItems} of {progressSummary.totalItems} Done ({progressSummary.completionPercent}%)</span>
+              </div>
+            </div>
 
-              let completedCount = 0;
-              completedTopics.forEach(k => {
-                if (k.startsWith('m-')) completedCount++;
-              });
+            {/* Overall Progress Bar */}
+            <div className="overall-progress-card">
+              <div className="progress-bar-bg">
+                <div className="progress-bar-fill" style={{ width: `${progressSummary.completionPercent}%` }}></div>
+              </div>
+              <div className="progress-subtext flex-between">
+                <span>{progressSummary.inProgressItems} in progress</span>
+                <span>{progressSummary.completionPercent}% complete</span>
+              </div>
+            </div>
 
-              const overallProgress = totalTopicsCount > 0 
-                ? Math.min(100, Math.round((completedCount / totalTopicsCount) * 100)) 
-                : 0;
+            <div className="milestones-timeline">
+              {milestones.map((m, idx) => {
+                const phaseTopics = m.topics || [];
+                const phaseNum = m.phase || idx + 1;
+                const phaseCompleted = phaseTopics.filter((t, tIdx) => {
+                  const itemId = (typeof t === 'object' && t.id) ? t.id : `p${phaseNum}-t${tIdx + 1}`;
+                  return progressMap[itemId] === 'completed';
+                }).length;
+                const phaseProgressPercent = phaseTopics.length > 0 ? Math.round((phaseCompleted / phaseTopics.length) * 100) : 0;
+                const isCollapsed = !!collapsedPhases[idx];
 
-              return (
-                <>
-                  <div className="section-title flex-between">
-                    <div className="flex-center gap-sm">
-                      <Map size={22} className="text-teal" />
-                      <h2>Personalized Learning Path</h2>
+                return (
+                  <div key={idx} className="milestone-card">
+                    <div className="milestone-badge flex-between cursor-pointer" onClick={() => togglePhaseCollapse(idx)}>
+                      <div className="flex-center gap-xs">
+                        <span className="phase-num">Phase {phaseNum}</span>
+                        <span className="phase-duration"><Clock size={13} /> {m.duration}</span>
+                      </div>
+                      <div className="flex-center gap-sm">
+                        <span className="phase-progress-text">{phaseCompleted}/{phaseTopics.length} Done ({phaseProgressPercent}%)</span>
+                        {isCollapsed ? <ChevronRight size={18} /> : <ChevronDown size={18} />}
+                      </div>
                     </div>
-                    <div className="progress-badge flex-center gap-xs">
-                      <CheckSquare size={16} className="text-teal" />
-                      <span>{completedCount} / {totalTopicsCount} Tasks Done ({overallProgress}%)</span>
-                    </div>
+
+                    <h3 onClick={() => togglePhaseCollapse(idx)} className="cursor-pointer">{m.title}</h3>
+                    <p className="milestone-desc">{m.description}</p>
+
+                    {!isCollapsed && (
+                      <div className="milestone-topics">
+                        <h4>Key Focus Topics & Learning Resources:</h4>
+                        <ul className="topics-checklist">
+                          {phaseTopics.map((topicItem, tIdx) => {
+                            const itemId = (typeof topicItem === 'object' && topicItem.id) 
+                              ? topicItem.id 
+                              : `p${phaseNum}-t${tIdx + 1}`;
+                            const status = progressMap[itemId] || 'not_started';
+                            const topicTitle = typeof topicItem === 'object' ? topicItem.title : topicItem;
+                            const resource = typeof topicItem === 'object' ? topicItem.resource : null;
+
+                            return (
+                              <li key={tIdx} className={`topic-item status-${status}`}>
+                                <div className="topic-main-row flex-between">
+                                  <div className="flex-center gap-sm">
+                                    <button 
+                                      className={`status-toggle-btn status-${status}`}
+                                      onClick={() => handleToggleTopicStatus(itemId)}
+                                      title="Click to cycle: Not Started → In Progress → Completed"
+                                    >
+                                      {status === 'completed' && <CheckCircle2 size={18} className="text-success" />}
+                                      {status === 'in_progress' && <PlayCircle size={18} className="text-amber" />}
+                                      {status === 'not_started' && <Circle size={18} className="text-muted" />}
+                                    </button>
+                                    <span className={`topic-text ${status === 'completed' ? 'text-done' : ''}`}>{topicTitle}</span>
+                                  </div>
+
+                                  <button 
+                                    className={`status-pill status-${status}`}
+                                    onClick={() => handleToggleTopicStatus(itemId)}
+                                  >
+                                    {status === 'completed' ? 'Completed' : status === 'in_progress' ? 'In Progress' : 'Not Started'}
+                                  </button>
+                                </div>
+
+                                {resource && resource.url && (
+                                  <a 
+                                    href={resource.url} 
+                                    target="_blank" 
+                                    rel="noreferrer" 
+                                    className="resource-link-chip"
+                                    title={`Open ${resource.title}`}
+                                  >
+                                    <BookOpen size={12} /> {resource.title} <ExternalLink size={10} />
+                                  </a>
+                                )}
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    )}
+
+                    {m.targetSkills && (
+                      <div className="milestone-skills">
+                        {m.targetSkills.map((sk, skIdx) => (
+                          <span key={skIdx} className="milestone-skill-chip">{sk}</span>
+                        ))}
+                      </div>
+                    )}
                   </div>
-
-                  {/* Overall Progress Bar */}
-                  <div className="overall-progress-card">
-                    <div className="progress-bar-bg">
-                      <div className="progress-bar-fill" style={{ width: `${overallProgress}%` }}></div>
-                    </div>
-                  </div>
-
-                  <div className="milestones-timeline">
-                    {milestones.map((m, idx) => {
-                      const phaseTopics = m.topics || [];
-                      const phaseCompleted = phaseTopics.filter((_, tIdx) => completedTopics.has(`m-${idx}-t-${tIdx}`)).length;
-                      const phaseProgressPercent = phaseTopics.length > 0 ? Math.round((phaseCompleted / phaseTopics.length) * 100) : 0;
-
-                      return (
-                        <div key={idx} className="milestone-card">
-                          <div className="milestone-badge flex-between">
-                            <div className="flex-center gap-xs">
-                              <span className="phase-num">Phase {m.phase || idx + 1}</span>
-                              <span className="phase-duration"><Clock size={13} /> {m.duration}</span>
-                            </div>
-                            <span className="phase-progress-text">{phaseCompleted}/{phaseTopics.length} Done ({phaseProgressPercent}%)</span>
-                          </div>
-
-                          <h3>{m.title}</h3>
-                          <p className="milestone-desc">{m.description}</p>
-
-                          <div className="milestone-topics">
-                            <h4>Key Focus Topics & Learning Resources:</h4>
-                            <ul className="topics-checklist">
-                              {phaseTopics.map((topicItem, tIdx) => {
-                                const topicKey = `m-${idx}-t-${tIdx}`;
-                                const isDone = completedTopics.has(topicKey);
-                                const topicTitle = typeof topicItem === 'object' ? topicItem.title : topicItem;
-                                const resource = typeof topicItem === 'object' ? topicItem.resource : null;
-
-                                return (
-                                  <li key={tIdx} className={`topic-item ${isDone ? 'completed' : ''}`}>
-                                    <label className="checkbox-label">
-                                      <input
-                                        type="checkbox"
-                                        checked={isDone}
-                                        onChange={() => toggleTopicCompleted(topicKey)}
-                                      />
-                                      <span className="topic-text">{topicTitle}</span>
-                                    </label>
-
-                                    {resource && resource.url && (
-                                      <a 
-                                        href={resource.url} 
-                                        target="_blank" 
-                                        rel="noreferrer" 
-                                        className="resource-link-chip"
-                                        title={`Open ${resource.title}`}
-                                      >
-                                        <BookOpen size={12} /> {resource.title} <ExternalLink size={10} />
-                                      </a>
-                                    )}
-                                  </li>
-                                );
-                              })}
-                            </ul>
-                          </div>
-
-                          {m.targetSkills && (
-                            <div className="milestone-skills">
-                              {m.targetSkills.map((sk, skIdx) => (
-                                <span key={skIdx} className="milestone-skill-chip">{sk}</span>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </>
-              );
-            })()}
+                );
+              })}
+            </div>
           </div>
 
         </div>
 
-        {/* Right Column: Project & Certification Recommendations Panel (Feature 6) */}
+        {/* Right Column: Projects & Certifications */}
         <div className="recommendations-column">
           
           <div className="recommendations-card">
             
             <div className="recs-header">
-              <h2><Award size={22} className="text-amber" /> Recommendations</h2>
-              <div className="recs-tabs">
+              <div className="tab-buttons flex-center">
                 <button 
                   className={`tab-btn ${activeTab === 'projects' ? 'active' : ''}`}
                   onClick={() => setActiveTab('projects')}
                 >
-                  <FolderGit2 size={16} /> Projects ({recommendations.projects?.length || 0})
+                  <FolderGit2 size={16} /> Hands-on Projects ({recommendations.projects?.length || 0})
                 </button>
                 <button 
-                  className={`tab-btn ${activeTab === 'certifications' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('certifications')}
+                  className={`tab-btn ${activeTab === 'certs' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('certs')}
                 >
-                  <ShieldCheck size={16} /> Certifications ({recommendations.certifications?.length || 0})
+                  <Award size={16} /> Certifications ({recommendations.certifications?.length || 0})
                 </button>
               </div>
             </div>
 
-            {/* Projects Tab Panel (Feature 6) */}
-            {activeTab === 'projects' && (
-              <div className="recs-list">
-                {recommendations.projects?.length === 0 ? (
-                  <p className="no-recs">No project recommendations available.</p>
-                ) : (
-                  recommendations.projects?.map((proj) => (
-                    <div key={proj.id} className="rec-item project-item">
-                      <div className="rec-item-top">
-                        <h3>{proj.title}</h3>
-                        <div className="rec-badges">
-                          <span className={`badge diff-${proj.difficulty?.toLowerCase()}`}>
-                            {proj.difficulty}
-                          </span>
-                          {proj.estimatedHours && (
-                            <span className="badge hours-badge"><Clock size={12} /> {proj.estimatedHours}</span>
-                          )}
-                        </div>
+            <div className="recs-body">
+              
+              {/* Projects Tab */}
+              {activeTab === 'projects' && (
+                <div className="projects-list">
+                  {recommendations.projects?.map((proj, i) => (
+                    <div key={proj.id || i} className="project-card">
+                      <div className="project-card-header flex-between">
+                        <h4>{proj.title}</h4>
+                        <span className={`diff-badge diff-${proj.difficulty?.toLowerCase()}`}>{proj.difficulty}</span>
                       </div>
-
-                      <p className="rec-desc">{proj.description}</p>
-
-                      {/* Traceable Rationale Requirement (FR-6) */}
-                      <div className="rationale-box">
-                        <strong>Why this project?</strong> {proj.rationale}
-                      </div>
-
-                      <div className="rec-skills">
-                        {proj.targetSkills?.map((sk, i) => (
-                          <span key={i} className="rec-skill-tag">{sk}</span>
-                        ))}
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            )}
-
-            {/* Certifications Tab Panel (Feature 6) */}
-            {activeTab === 'certifications' && (
-              <div className="recs-list">
-                {recommendations.certifications?.length === 0 ? (
-                  <p className="no-recs">No certification recommendations available.</p>
-                ) : (
-                  recommendations.certifications?.map((cert) => (
-                    <div key={cert.id} className="rec-item cert-item">
-                      <div className="rec-item-top">
-                        <div>
-                          <h3>{cert.title}</h3>
-                          <span className="cert-issuer">Issued by {cert.issuer}</span>
-                        </div>
-                        <div className="rec-badges">
-                          <span className={`badge cost-${cert.costType?.toLowerCase() || 'paid'}`}>
-                            {cert.costType || 'Paid'}
-                          </span>
-                          <span className={`badge diff-${cert.difficulty?.toLowerCase()}`}>
-                            {cert.difficulty}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Traceable Rationale Requirement (FR-6) */}
-                      <div className="rationale-box">
-                        <strong>Why this certification?</strong> {cert.rationale}
-                      </div>
-
-                      <div className="cert-footer">
-                        <div className="rec-skills">
-                          {cert.targetSkills?.map((sk, i) => (
-                            <span key={i} className="rec-skill-tag">{sk}</span>
+                      <p className="proj-desc">{proj.description}</p>
+                      
+                      <div className="proj-meta flex-between">
+                        <span className="est-hours"><Clock size={13} /> {proj.estimatedHours}</span>
+                        <div className="proj-skills flex-center gap-xs">
+                          {proj.targetSkills?.map((s, idx) => (
+                            <span key={idx} className="proj-skill-tag">{s}</span>
                           ))}
                         </div>
+                      </div>
 
+                      {proj.rationale && (
+                        <div className="proj-rationale">
+                          <strong>Why build this:</strong> {proj.rationale}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+
+                  {(!recommendations.projects || recommendations.projects.length === 0) && (
+                    <div className="empty-tab-state">
+                      <FolderGit2 size={32} />
+                      <p>Projects will be suggested based on your skill gaps.</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Certifications Tab */}
+              {activeTab === 'certs' && (
+                <div className="certs-list">
+                  {recommendations.certifications?.map((cert, i) => (
+                    <div key={cert.id || i} className="cert-card">
+                      <div className="cert-card-header flex-between">
+                        <div>
+                          <h4>{cert.title}</h4>
+                          <span className="cert-issuer">{cert.issuer}</span>
+                        </div>
+                        <span className={`cost-badge cost-${cert.costType?.toLowerCase() || 'paid'}`}>
+                          {cert.costType || 'Paid'}
+                        </span>
+                      </div>
+
+                      {cert.rationale && (
+                        <p className="cert-rationale">{cert.rationale}</p>
+                      )}
+
+                      <div className="cert-card-footer flex-between">
+                        <span className={`diff-badge diff-${cert.difficulty?.toLowerCase()}`}>{cert.difficulty}</span>
                         {cert.url && (
-                          <a href={cert.url} target="_blank" rel="noopener noreferrer" className="cert-link">
-                            View Cert <ExternalLink size={14} />
+                          <a href={cert.url} target="_blank" rel="noreferrer" className="cert-link flex-center gap-xs">
+                            View Details <ExternalLink size={13} />
                           </a>
                         )}
                       </div>
                     </div>
-                  ))
-                )}
-              </div>
-            )}
+                  ))}
 
+                  {(!recommendations.certifications || recommendations.certifications.length === 0) && (
+                    <div className="empty-tab-state">
+                      <Award size={32} />
+                      <p>Certifications will be recommended based on your role target.</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+            </div>
           </div>
 
         </div>

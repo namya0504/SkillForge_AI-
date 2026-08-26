@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, Menu, X, Rocket, Upload, Target, Map } from 'lucide-react';
+import { LogOut, Menu, X, Rocket, Upload, Target, Map, Trash2, Shield, AlertTriangle } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
+import { authAPI } from '../../services/api';
 import './Layout.css';
 
 const Layout = ({ children }) => {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deletePassword, setDeletePassword] = useState('');
+  const [deleteError, setDeleteError] = useState('');
+  const [deleting, setDeleting] = useState(false);
 
   const handleLogout = async () => {
     await logout();
@@ -24,6 +29,26 @@ const Layout = ({ children }) => {
     if (window.location.pathname === '/dashboard') {
       e.preventDefault();
       window.dispatchEvent(new CustomEvent('refresh-dashboard'));
+    }
+  };
+
+  const handleDeleteAccount = async (e) => {
+    e.preventDefault();
+    if (!deletePassword) {
+      setDeleteError('Please enter your password to confirm deletion.');
+      return;
+    }
+    setDeleting(true);
+    setDeleteError('');
+    try {
+      await authAPI.deleteAccount(deletePassword);
+      setDeleteModalOpen(false);
+      await logout();
+      navigate('/');
+    } catch (err) {
+      setDeleteError(err.message || 'Failed to delete account. Please check your password.');
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -44,6 +69,14 @@ const Layout = ({ children }) => {
                 <Link to="/upload" className="nav-link"><Upload size={16} /> Update Resume</Link>
                 <Link to="/role-selection" className="nav-link"><Target size={16} /> Target Role</Link>
                 <span className="user-email">{user?.email}</span>
+                <button 
+                  onClick={() => setDeleteModalOpen(true)} 
+                  className="btn-link-icon" 
+                  title="Account Settings & Data Privacy"
+                  aria-label="Account Settings"
+                >
+                  <Shield size={16} />
+                </button>
                 <button onClick={handleLogout} className="btn-logout">
                   <LogOut size={18} />
                   <span>Logout</span>
@@ -73,6 +106,12 @@ const Layout = ({ children }) => {
               <Link to="/dashboard" className="mobile-nav-link" onClick={handleDashboardClick}><Map size={16} /> Dashboard</Link>
               <Link to="/upload" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}><Upload size={16} /> Update Resume</Link>
               <Link to="/role-selection" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}><Target size={16} /> Target Role</Link>
+              <button 
+                onClick={() => { setMobileMenuOpen(false); setDeleteModalOpen(true); }}
+                className="mobile-nav-link text-danger"
+              >
+                <Trash2 size={16} /> Delete Account & Data
+              </button>
               <button onClick={handleLogout} className="btn-mobile-logout">
                 <LogOut size={18} />
                 Logout
@@ -84,6 +123,52 @@ const Layout = ({ children }) => {
               <Link to="/register" className="btn-mobile-register" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Account Deletion / Data Privacy Confirmation Modal */}
+      {deleteModalOpen && (
+        <div className="modal-overlay" onClick={() => setDeleteModalOpen(false)}>
+          <div className="modal-content danger-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div className="flex-center gap-xs text-danger">
+                <AlertTriangle size={24} />
+                <h3>Delete Account & Data</h3>
+              </div>
+              <button className="close-btn" onClick={() => setDeleteModalOpen(false)}><X size={18} /></button>
+            </div>
+            <p className="modal-desc">
+              This action is permanent. All your resumes, extracted skills, progress, and career roadmap will be completely deleted from our database and cloud storage.
+            </p>
+            {deleteError && (
+              <div className="error-message" style={{ marginBottom: '12px' }}>
+                <span>{deleteError}</span>
+              </div>
+            )}
+            <form onSubmit={handleDeleteAccount}>
+              <div className="form-group" style={{ marginBottom: '16px' }}>
+                <label style={{ fontSize: '0.875rem', fontWeight: 600, display: 'block', marginBottom: '6px' }}>
+                  Enter your password to confirm:
+                </label>
+                <input
+                  type="password"
+                  value={deletePassword}
+                  onChange={(e) => setDeletePassword(e.target.value)}
+                  placeholder="Your current password"
+                  className="modal-input"
+                  required
+                />
+              </div>
+              <div className="modal-actions flex-between">
+                <button type="button" className="btn-secondary" onClick={() => setDeleteModalOpen(false)}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn-danger" disabled={deleting}>
+                  {deleting ? 'Deleting...' : 'Delete Everything'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 

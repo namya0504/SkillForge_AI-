@@ -2,26 +2,49 @@
 
 [![Live Application](https://img.shields.io/badge/Live_App-skill--forge--ai--rose.vercel.app-0F4C5C?style=for-the-badge&logo=vercel)](https://skill-forge-ai-rose.vercel.app/)
 [![Frontend](https://img.shields.io/badge/Frontend-React_%7C_Vite-61DAFB?style=for-the-badge&logo=react)](https://vitejs.dev/)
-[![Backend](https://img.shields.io/badge/Backend-Node.js_%7C_Express_5-339933?style=for-the-badge&logo=node.js)](https://expressjs.com/)
+[![Backend](https://img.shields.io/badge/Backend-Node.js_%7C_Express-339933?style=for-the-badge&logo=node.js)](https://expressjs.com/)
 [![Database](https://img.shields.io/badge/Database-PostgreSQL_%7C_Supabase-336791?style=for-the-badge&logo=postgresql)](https://supabase.com/)
 [![ORM](https://img.shields.io/badge/ORM-Prisma_7.9.1-2D3748?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
 [![AI Provider](https://img.shields.io/badge/AI_Engine-Groq_Qwen_3.6_27B-F4A259?style=for-the-badge)](https://groq.com/)
 
 > **🌐 Live Frontend:** [https://skill-forge-ai-rose.vercel.app/](https://skill-forge-ai-rose.vercel.app/)  
-> **⚡ Live Backend API:** [https://skillforge-backend.onrender.com/api/v1](https://skillforge-backend.onrender.com/api/v1)
+> **⚡ Live Backend API:** [https://skillforge-ai-fwep.onrender.com/api/v1](https://skillforge-ai-fwep.onrender.com/api/v1)
 
-SkillForge AI is a production-ready, full-stack web application designed to help tech professionals and job seekers analyze their current skill set, benchmark themselves against target industry roles, and receive personalized 3-phase milestone learning roadmaps complete with traceable project and certification recommendations.
+SkillForge AI is a student-first, production-grade career intelligence platform that transforms resumes into clear, actionable, personalized learning roadmaps. It extracts technical skills, benchmarks candidates against target industry roles, generates curated 3-phase milestone roadmaps, and provides interactive progress tracking.
 
 ---
 
-## ✨ Core Features
+## ✨ Key Capabilities & Features
 
-- 📄 **AI Resume Extraction**: Upload PDF or DOCX resumes to automatically extract technical skills, proficiency levels, education, and experience using Groq's high-speed LLM (`qwen/qwen3.6-27b`) with automatic fallback to context-aware rule extraction.
-- 🎯 **Target Career Track & Grounding Benchmark**: Choose from a curated grounding dataset of 15+ career tracks (*Full Stack, Frontend, Backend, AI/Prompt Engineer, Cloud Architect, DevOps, etc.*) or specify custom career goals.
-- 📊 **Skill Gap Benchmark Matrix**: Calculates real-time match percentages, categorizing skills into **Matched**, **Level Gaps** (e.g., *Beginner → Advanced*), and **Missing Skills**.
-- 🗺️ **Personalized Milestone Roadmaps**: Generates a structured 3-phase learning timeline (`Foundation & Gap Remediation`, `Intermediate Implementation`, `Production Systems & Deployment`).
-- 🎓 **Traceable Project & Certification Recommendations**: Suggests hands-on capstone project ideas and curated industry certifications (*AWS, Azure, Docker, Kubernetes, Python, React, Node.js, Security, Git*) with cost badges (`Free`, `Paid`, `Freemium`) traceable directly to identified skill gaps.
-- 🛡️ **Guided First-Time Onboarding Flow**: Smooth multi-step onboarding guard (`useOnboardingStatus`) with visual progress indicators preventing new users from seeing empty or broken dashboard states.
+### 📄 1. Intelligent Resume Parsing & Extraction
+- **PDF & DOCX Support**: Extract skills from multi-page PDFs (`pdf-parse`) and DOCX documents (`mammoth` + raw buffer fallback).
+- **Special-Character Skill Matching**: Accurate lookahead/lookbehind regex matching for skills containing punctuation like `C++`, `C#`, `.NET`, `Node.js`, `UI/UX`, `CI/CD`.
+- **Zero-Disk-Dependency Worker**: File buffer embedded in PostgreSQL job payload for 100% cloud reliability on Render.
+- **Resume Re-Upload**: Update resume anytime from navbar or dashboard; skills are automatically upserted without duplication.
+- **Direct Skill Entry**: Permanent "Skip & Enter Skills Manually" link for users who don't have a resume file on hand.
+
+### 🎯 2. Career Grounding & Gap Benchmark
+- **20+ Curated Roles**: Full Stack, Frontend, Backend, AI/ML Engineer, DevOps, Android, Product Manager, Cloud Architect, UI/UX, etc.
+- **Skill Gap Matrix**: Categorizes user skills into **Matched**, **Level Gaps** (*Beginner → Advanced*), and **Missing Skills**.
+- **Normalization Engine**: Auto-aliases skills (`js → javascript`, `mongo → mongodb`, `k8s → kubernetes`, `postgres → postgresql`).
+
+### 🗺️ 3. Dynamic 3-Phase Roadmap Generation
+- **Phase 1**: *Foundation & Gap Remediation*
+- **Phase 2**: *Intermediate Implementation & Feature Architecture*
+- **Phase 3**: *Production Delivery, Performance & Deployment*
+- **Curated Learning Links**: Direct links to official docs, MDN, and freeCodeCamp for every focus topic.
+- **Capstone Project Ideas**: Hands-on project recommendations with difficulty levels and estimated hours.
+- **Industry Certifications**: Verified industry certifications (*AWS, Azure, Docker, Kubernetes, GCP*) with direct links and cost badges.
+
+### 📈 4. Server-Synced Progress Tracking
+- **Interactive 3-State Toggle**: Cycle between ⚪ *Not Started* → ⏳ *In Progress* → ✅ *Completed* for every milestone topic.
+- **Live Summary Cards**: Server-computed task progress (`GET /api/v1/progress/summary`), completion percentage, and active tasks count.
+- **Collapsible Phases**: Clean accordion interface for distraction-free, focused study.
+
+### 🔐 5. Security, Long Sessions & Privacy
+- **Long-Lived Refresh Tokens**: 7-day refresh token in HTTP-only cookie with silent 401 interception and recovery.
+- **Account Deletion & Data Privacy**: `DELETE /api/v1/auth/account` with bcrypt password verification, cascading PostgreSQL deletion, and Supabase Storage bucket cleanup.
+- **Robustness**: Rate limiting, strict CORS allowlist with wildcard `*.vercel.app` support, and 60-second stalled job recovery worker sweep.
 
 ---
 
@@ -31,31 +54,34 @@ SkillForge AI is a production-ready, full-stack web application designed to help
 flowchart TD
     subgraph Frontend ["Frontend (Vercel)"]
         UI["React 18 + Vite SPA"]
-        AC["AuthContext (JWT Cookie Session)"]
-        HOOK["useOnboardingStatus Hook"]
+        AC["AuthContext (JWT + Refresh Token)"]
+        PROG["Progress Tracker (3-State Toggles)"]
     end
 
-    subgraph Backend ["Backend (Render Web Service)"]
-        API["Express 5 REST API"]
-        AUTH["JWT Middleware (sameSite: none, secure: true)"]
-        SEC["Helmet + CORS Security"]
-        PARSER["Resume Parser (pdf-parse / mammoth)"]
-        WORKER["Background Job Worker (Polling Engine)"]
-        GEN["Unified Roadmap & Recs Generator"]
+    subgraph Backend ["Backend (Render)"]
+        API["Express REST API"]
+        AUTH["JWT Auth & Refresh Controller"]
+        WORKER["Background Job Worker (Atomic CAS)"]
+        GEN["Roadmap & Recs Engine"]
+        SEC["Helmet + Rate Limiter + CORS"]
     end
 
-    subgraph External ["External Services"]
-        GROQ["Groq AI API (qwen/qwen3.6-27b)"]
-        SUPABASE["Supabase PostgreSQL (PgBouncer port 6543)"]
+    subgraph Storage_Database ["Data Layer (Supabase)"]
+        DB[(PostgreSQL Database via Prisma 7)]
+        BUCKET[(Supabase Storage - Resumes)]
     end
 
-    UI -->|HTTPS Requests + Auth Cookie| API
+    subgraph AI ["AI Services"]
+        GROQ["Groq LLM (qwen/qwen3.6-27b)"]
+    end
+
+    UI -->|HTTPS + Cookies| API
     API --> AUTH --> SEC
-    API -->|Job Queue| WORKER
-    WORKER --> PARSER
+    API -->|Async Job Queue| WORKER
     WORKER --> GROQ
     GEN --> GROQ
-    API -->|Prisma 7 ORM| SUPABASE
+    API -->|Prisma 7 ORM| DB
+    WORKER -->|Store Resumes| BUCKET
 ```
 
 ---
@@ -64,115 +90,96 @@ flowchart TD
 
 ```
 SkillForge AI/
-├── DEPLOYMENT_GUIDE.md          # Full production deployment guide
-├── DATABASE_SCHEMA.md           # Database ER diagram & table documentation
-├── BACKEND_ARCHITECTURE.md      # Detailed backend architecture & API reference
-├── prisma.config.ts             # Prisma 7 configuration file
-│
 ├── backend/
 │   ├── prisma/
-│   │   ├── schema.prisma        # Prisma ORM Database Models
-│   │   ├── seedRoles.js         # Curated Grounding Dataset Seeder (15+ roles)
-│   │   └── migrateFeature5.js   # Roadmaps table DDL migration
+│   │   ├── schema.prisma        # Prisma ORM Models (User, Resume, Skill, Job, Progress, Roadmap)
+│   │   └── seedRoles.js         # Curated 20+ Career Role Seeder
 │   ├── src/
-│   │   ├── config/              # Environment & Database Configuration
-│   │   ├── controllers/         # Auth, Resume, Job Controllers
+│   │   ├── config/              # Environment, Database, Supabase Storage
+│   │   ├── controllers/         # Auth, Resume, Job, Progress Controllers
 │   │   ├── middleware/          # Auth, Security, Rate Limiter, File Validator
-│   │   ├── routes/              # Auth, Resume, Skills, Roles, Roadmap Routes
-│   │   ├── services/            # Parser, Worker, Extractor, Roadmap Generator
+│   │   ├── routes/              # Auth, Resume, Skills, Roles, Roadmap, Progress
+│   │   ├── services/            # Extractor, Parser, Worker, Roadmap Generator
 │   │   ├── utils/               # JWT Token & Cookie Helpers
-│   │   ├── app.js               # Express 5 App Configuration
-│   │   └── server.js            # Server Entry Point & Worker Startup
-│   ├── .env.example
+│   │   ├── app.js               # Express Application
+│   │   └── server.js            # Server Entry & Background Worker
 │   └── package.json
 │
 └── frontend/
-    ├── vercel.json              # Vercel Single-Page Application Rewrites
-    ├── vite.config.js
     ├── src/
-    │   ├── components/          # Navigation, Layout, Step Indicator
+    │   ├── components/          # Layout, Navigation, ProtectedRoute
     │   ├── context/             # AuthContext Provider
     │   ├── hooks/               # useAuth, useOnboardingStatus
     │   ├── pages/
     │   │   ├── Landing/         # Public Hero & Feature Highlights
-    │   │   ├── Login/           # Login Authentication
-    │   │   ├── Register/        # Account Registration (Redirects to /upload)
-    │   │   ├── Upload/          # Resume Drag-and-Drop Upload
-    │   │   ├── SkillsConfirm/   # Skills Review & Manual Management
-    │   │   ├── RoleSelection/   # Target Role Picker & Grounding Preview
-    │   │   └── Dashboard/       # Interactive Roadmap & Recommendations
-    │   ├── services/            # API Fetch Service (Auto-formats VITE_API_BASE_URL)
-    │   ├── App.jsx              # React Router Configuration
+    │   │   ├── Login/           # Login & Password Recovery
+    │   │   ├── Register/        # 6-Digit Email OTP Registration
+    │   │   ├── Upload/          # Resume Drag-and-Drop & Manual Skip
+    │   │   ├── SkillsConfirm/   # Skills Confirmation & Manual Entry
+    │   │   ├── RoleSelection/   # Target Role Selector
+    │   │   └── Dashboard/       # Progress Dashboard & Roadmaps
+    │   ├── services/            # API Fetch Client with Silent Token Refresh
+    │   ├── App.jsx              # React Router Navigation
     │   └── main.jsx
-    ├── .env.example
     └── package.json
 ```
 
 ---
 
-## 🗃️ Database Schema Summary
+## 🗃️ Database Models (Prisma 7)
 
-The database uses PostgreSQL managed via Supabase and Prisma ORM:
-
-| Model | Table | Description |
-|-------|-------|-------------|
-| `User` | `users` | User accounts, credentials hash, target role reference |
-| `RoleReference` | `roles_reference` | Curated grounding dataset of 15+ target career roles |
-| `Resume` | `resumes` | Uploaded resume metadata, storage keys, and parsed JSON output |
-| `Skill` | `skills` | User technical skills (`source: extracted/manual`, proficiency level) |
-| `Job` | `jobs` | Background job processing queue (`status: pending/processing/completed`) |
-| `Roadmap` | `roadmaps` | User gap matrix, 3-phase milestones, project & cert recommendations |
-
-> For full table definitions, constraints, and data flows, view [`DATABASE_SCHEMA.md`](./DATABASE_SCHEMA.md).
+| Model | Table | Purpose |
+|---|---|---|
+| `User` | `users` | User credentials, email, target role reference |
+| `Resume` | `resumes` | Uploaded resume metadata, storage keys, parsed status |
+| `Skill` | `skills` | User technical skills (`source: extracted/manual`, proficiency) |
+| `Job` | `jobs` | Background parsing queue with atomic CAS status |
+| `Progress` | `progress` | Per-topic learning status (`not_started`, `in_progress`, `completed`) |
+| `Roadmap` | `roadmaps` | Benchmarks, 3-phase milestones, projects, and certifications |
+| `RoleReference` | `roles_reference` | Curated grounding dataset of 20+ career paths |
 
 ---
 
 ## 💻 Local Development Setup
 
 ### 1. Prerequisites
-- Node.js v18+ (tested on Node v24)
-- PostgreSQL / Supabase Database URL
+- Node.js v18+
+- PostgreSQL database (or Supabase connection string)
 
 ### 2. Backend Setup
 ```bash
 cd backend
 npm install
-```
+cp .env.example .env
 
-Seed the grounding dataset & run migrations:
-```bash
+# Run database push and seed grounding roles
+npx prisma db push
 node prisma/seedRoles.js
+
+# Start backend development server
 npm run dev
 ```
 
 ### 3. Frontend Setup
-In a separate terminal:
 ```bash
 cd frontend
 npm install
-```
 
-Create `frontend/.env`:
-```env
-VITE_API_BASE_URL=http://localhost:3001/api/v1
-```
-
-Start Vite dev server:
-```bash
+# Start Vite development server
 npm run dev
 ```
 
-Open `http://localhost:5173` in your browser.
+Visit `http://localhost:5173` in your browser.
 
 ---
 
-## 🌐 Production Deployment
+## 🧪 Running Tests
 
-- **Frontend**: Deployed on [Vercel](https://vercel.com) with root directory set to `frontend` and `VITE_API_BASE_URL` pointed to Render.
-- **Backend**: Deployed on [Render](https://render.com) as a Node.js Web Service with root directory set to `backend`.
-- **Database**: Hosted on [Supabase](https://supabase.com) using PgBouncer.
-
-> For complete deployment instructions, view [`DEPLOYMENT_GUIDE.md`](./DEPLOYMENT_GUIDE.md).
+```bash
+cd backend
+npm test
+```
+Runs 18 unit tests across skill extractors, boundary regex matchers, and token validators using Jest.
 
 ---
 

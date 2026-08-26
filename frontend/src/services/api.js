@@ -8,11 +8,24 @@ const formatApiBase = (url) => {
 };
 const API_BASE = rawApiBase.startsWith('http') ? formatApiBase(rawApiBase) : rawApiBase;
 
+let isRefreshing = false;
+let refreshSubscribers = [];
+
+function subscribeTokenRefresh(cb) {
+  refreshSubscribers.push(cb);
+}
+
+function onRefreshed(success) {
+  refreshSubscribers.forEach((cb) => cb(success));
+  refreshSubscribers = [];
+}
+
 async function request(endpoint, options = {}) {
+  const { _isRetry, ...customOptions } = options;
   const config = {
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include', // IMPORTANT: sends cookies
-    ...options,
+    ...customOptions,
   };
 
   const response = await fetch(`${API_BASE}${endpoint}`, config);
@@ -20,13 +33,54 @@ async function request(endpoint, options = {}) {
   const data = text ? JSON.parse(text) : {};
 
   if (response.status === 401) {
-    const isExcluded = endpoint === '/auth/login' || endpoint === '/auth/me';
-    if (!isExcluded) {
+    const isExcluded = endpoint === '/auth/login' || endpoint === '/auth/me' || endpoint === '/auth/refresh';
+    if (!isExcluded && !_isRetry) {
+      if (!isRefreshing) {
+        isRefreshing = true;
+        try {
+          const refreshRes = await fetch(`${API_BASE}/auth/refresh`, {
+            method: 'POST',
+            credentials: 'include',
+          });
+          if (refreshRes.ok) {
+            isRefreshing = false;
+            onRefreshed(true);
+            return request(endpoint, { ...options, _isRetry: true });
+          } else {
+            isRefreshing = false;
+            onRefreshed(false);
+          }
+        } catch (e) {
+          isRefreshing = false;
+          onRefreshed(false);
+        }
+      } else {
+        // Wait for active refresh
+        return new Promise((resolve, reject) => {
+          subscribeTokenRefresh((success) => {
+            if (success) {
+              resolve(request(endpoint, { ...options, _isRetry: true }));
+            } else {
+              try {
+                localStorage.removeItem('user');
+              } catch (e) {}
+              window.location.href = '/login';
+              reject(new Error(data.error || data.message || 'Session expired. Redirecting to login.'));
+            }
+          });
+        });
+      }
+
+      // If refresh failed
       try {
         localStorage.removeItem('user');
-      } catch (e) {
-        // ignore storage errors
-      }
+      } catch (e) {}
+      window.location.href = '/login';
+      throw new Error(data.error || data.message || 'Session expired. Redirecting to login.');
+    } else if (!isExcluded && _isRetry) {
+      try {
+        localStorage.removeItem('user');
+      } catch (e) {}
       window.location.href = '/login';
       throw new Error(data.error || data.message || 'Session expired. Redirecting to login.');
     }
@@ -60,6 +114,8 @@ export const authAPI = {
       method: 'POST',
       body: JSON.stringify({ email, password, otpToken, otpCode }),
     }),
+  refresh: () =>
+    request('/auth/refresh', { method: 'POST' }),
   logout: () =>
     request('/auth/logout', { method: 'POST' }),
   getMe: () =>
@@ -73,6 +129,11 @@ export const authAPI = {
     request('/auth/reset-password', {
       method: 'POST',
       body: JSON.stringify({ token, newPassword }),
+    }),
+  deleteAccount: (password) =>
+    request('/auth/account', {
+      method: 'DELETE',
+      body: JSON.stringify({ password }),
     }),
 };
 
@@ -93,10 +154,27 @@ export const resumeAPI = {
       const data = text ? JSON.parse(text) : {};
       if (res.status === 401) {
         try {
+          const refreshRes = await fetch(`${API_BASE}/auth/refresh`, {
+            method: 'POST',
+            credentials: 'include',
+          });
+          if (refreshRes.ok) {
+            // Retry upload
+            const retryRes = await fetch(`${API_BASE}/resume/upload`, {
+              method: 'POST',
+              credentials: 'include',
+              body: formData,
+            });
+            const retryText = await retryRes.text();
+            const retryData = retryText ? JSON.parse(retryText) : {};
+            if (!retryRes.ok) throw new Error(retryData.error || retryData.message || 'Upload failed');
+            return retryData;
+          }
+        } catch (e) {}
+
+        try {
           localStorage.removeItem('user');
-        } catch (e) {
-          // ignore storage errors
-        }
+        } catch (e) {}
         window.location.href = '/login';
         throw new Error(data.error || data.message || 'Session expired. Redirecting to login.');
       }
@@ -137,3 +215,13 @@ export const roadmapAPI = {
   getRoadmap: () => request('/roadmap'),
   generateRoadmap: () => request('/roadmap/generate', { method: 'POST' }),
 };
+
+export const progressAPI = {
+  getAll: () => request('/progress'),
+  getSummary: () => request('/progress/summary'),
+  update: (itemId, status) => request(`/progress/${itemId}`, {
+    method: 'PUT',
+    body: JSON.stringify({ status }),
+  }),
+};
+
