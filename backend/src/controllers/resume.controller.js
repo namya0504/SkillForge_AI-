@@ -1,5 +1,6 @@
 import prisma from '../config/database.js';
 import { saveFile } from '../config/storage.js';
+import { worker } from '../services/worker.js';
 import crypto from 'crypto';
 
 export const uploadResume = async (req, res) => {
@@ -54,6 +55,11 @@ export const uploadResume = async (req, res) => {
       message: 'Resume uploaded. Parsing started.',
       jobId: job.id,
       resumeId: resume.id
+    });
+
+    // Instantly trigger job processing without waiting for interval polling
+    worker.processJob(job).catch((err) => {
+      console.warn('Direct job trigger error (worker fallback will poll):', err?.message || err);
     });
   } catch (error) {
     console.error('Upload error:', error);

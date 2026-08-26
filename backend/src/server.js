@@ -11,11 +11,11 @@ const startServer = async () => {
 
   const server = app.listen(config.port, () => {
     console.log(`Server running in ${config.nodeEnv} mode on port ${config.port}`);
-    if (process.env.RUN_WORKER === 'true') {
+    if (process.env.RUN_WORKER !== 'false') {
       worker.start();
-      console.log('Worker started inside web server process.');
+      console.log('Worker automatically started inside server process.');
     } else {
-      console.log('Worker NOT started in this process (RUN_WORKER not set to true).');
+      console.log('Worker disabled via RUN_WORKER=false.');
     }
   });
 

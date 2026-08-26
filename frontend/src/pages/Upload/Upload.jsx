@@ -96,7 +96,7 @@ const Upload = () => {
           clearInterval(timerIntervalRef.current);
           let friendlyMsg = job.errorMsg || 'Failed to process resume.';
           if (friendlyMsg.includes('ENOENT') || friendlyMsg.includes('zip file')) {
-            friendlyMsg = 'Could not read the uploaded resume file. Please ensure it is a valid text-based PDF or DOCX file and try uploading again.';
+            friendlyMsg = 'Could not read the uploaded resume file. Please ensure it is a valid file and try again.';
           }
           setError(friendlyMsg);
           setStatus('error');
@@ -107,7 +107,7 @@ const Upload = () => {
         setError(err.message || 'Error checking status.');
         setStatus('error');
       }
-    }, 2000);
+    }, 1000);
   };
 
   const handleUpload = async (uploadFile) => {

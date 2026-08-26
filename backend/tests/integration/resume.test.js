@@ -19,7 +19,7 @@ describe('Resume Endpoints', () => {
 
   beforeAll(async () => {
     // Create test files
-    fs.writeFileSync(testPdfPath, '%PDF-1.4\n%Fake PDF content for test'); // Has valid magic bytes roughly
+    fs.writeFileSync(testPdfPath, '%PDF-1.4\n%Fake PDF content for test\nSoftware Engineer with JavaScript, React, Node.js, and SQL experience.');
     fs.writeFileSync(fakePdfPath, 'This is just a text file');
 
     // Register user
@@ -28,6 +28,7 @@ describe('Resume Endpoints', () => {
   });
 
   afterAll(async () => {
+    await new Promise(r => setTimeout(r, 600)); // Allow in-flight processing to wrap up
     await prisma.user.deleteMany({ where: { email: testUser.email } });
     if (fs.existsSync(testPdfPath)) fs.unlinkSync(testPdfPath);
     if (fs.existsSync(fakePdfPath)) fs.unlinkSync(fakePdfPath);
