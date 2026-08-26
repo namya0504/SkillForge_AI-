@@ -4,6 +4,7 @@ import { LogOut, Menu, X, Rocket, Upload, Target, Map, Trash2, Shield, AlertTria
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme';
 import { authAPI } from '../../services/api';
+import { ChatWidget } from '../Chat/ChatWidget';
 import './Layout.css';
 
 const Layout = ({ children }) => {
@@ -224,6 +225,9 @@ const Layout = ({ children }) => {
       <main className="main-content">
         {children}
       </main>
+
+      {/* Floating Dynamic Career Mentor Chat */}
+      <ChatWidget />
     </div>
   );
 };

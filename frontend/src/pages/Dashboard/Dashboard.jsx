@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useOnboardingStatus } from '../../hooks/useOnboardingStatus';
-import { roadmapAPI, progressAPI } from '../../services/api';
+import { roadmapAPI, progressAPI, certificationAPI } from '../../services/api';
 import { 
   Target, Sparkles, CheckCircle2, AlertCircle, RefreshCw, 
   Map, Award, FolderGit2, ExternalLink, Clock, ChevronRight, ChevronDown, Edit3, ShieldCheck,
-  Upload, UserCheck, Compass, ArrowRight, BookOpen, CheckSquare, Trophy, Zap, TrendingUp
+  Upload, UserCheck, Compass, ArrowRight, BookOpen, CheckSquare, Trophy, Zap, TrendingUp, Check
 } from 'lucide-react';
 import './Dashboard.css';
 
@@ -103,6 +103,7 @@ const Dashboard = () => {
   
   // Server-synced progress state: { [itemId]: 'not_started' | 'in_progress' | 'completed' }
   const [progressMap, setProgressMap] = useState({});
+  const [certProgressMap, setCertProgressMap] = useState({});
   const [progressSummary, setProgressSummary] = useState({
     totalItems: 0,
     completedItems: 0,
@@ -140,10 +141,11 @@ const Dashboard = () => {
   const fetchRoadmapAndProgress = async () => {
     try {
       setLoading(true);
-      const [roadmapRes, progressRes, summaryRes] = await Promise.allSettled([
+      const [roadmapRes, progressRes, summaryRes, certRes] = await Promise.allSettled([
         roadmapAPI.getRoadmap(),
         progressAPI.getAll(),
-        progressAPI.getSummary()
+        progressAPI.getSummary(),
+        certificationAPI.getProgress()
       ]);
 
       if (roadmapRes.status === 'fulfilled' && roadmapRes.value.roadmap) {
@@ -160,6 +162,14 @@ const Dashboard = () => {
         setProgressMap(map);
       }
 
+      if (certRes.status === 'fulfilled' && certRes.value.certifications) {
+        const certMap = {};
+        certRes.value.certifications.forEach(c => {
+          certMap[c.certIdentifier] = c.status;
+        });
+        setCertProgressMap(certMap);
+      }
+
       if (summaryRes.status === 'fulfilled' && summaryRes.value) {
         setProgressSummary(summaryRes.value);
       }
@@ -167,6 +177,22 @@ const Dashboard = () => {
       setRoadmap(null);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleToggleCertStatus = async (certTitle) => {
+    const current = certProgressMap[certTitle] || 'recommended';
+    let nextStatus = 'in_progress';
+    if (current === 'recommended') nextStatus = 'in_progress';
+    else if (current === 'in_progress') nextStatus = 'completed';
+    else if (current === 'completed') nextStatus = 'recommended';
+
+    setCertProgressMap(prev => ({ ...prev, [certTitle]: nextStatus }));
+
+    try {
+      await certificationAPI.updateStatus(certTitle, nextStatus);
+    } catch (err) {
+      console.warn('Failed to update certification progress:', err.message);
     }
   };
 
@@ -590,32 +616,47 @@ const Dashboard = () => {
               {/* Certifications Tab */}
               {activeTab === 'certs' && (
                 <div className="certs-list">
-                  {recommendations.certifications?.map((cert, i) => (
-                    <div key={cert.id || i} className="cert-card">
-                      <div className="cert-card-header flex-between">
-                        <div>
-                          <h4>{cert.title}</h4>
-                          <span className="cert-issuer">{cert.issuer}</span>
+                  {recommendations.certifications?.map((cert, i) => {
+                    const certStatus = certProgressMap[cert.title] || 'recommended';
+                    const isDone = certStatus === 'completed';
+                    const isInProgress = certStatus === 'in_progress';
+
+                    return (
+                      <div key={cert.id || i} className={`cert-card ${isDone ? 'cert-completed' : ''}`}>
+                        <div className="cert-card-header flex-between">
+                          <div>
+                            <h4>{cert.title}</h4>
+                            <span className="cert-issuer">{cert.issuer}</span>
+                          </div>
+                          <span className={`cost-badge cost-${cert.costType?.toLowerCase() || 'paid'}`}>
+                            {cert.costType || 'Paid'}
+                          </span>
                         </div>
-                        <span className={`cost-badge cost-${cert.costType?.toLowerCase() || 'paid'}`}>
-                          {cert.costType || 'Paid'}
-                        </span>
-                      </div>
 
-                      {cert.rationale && (
-                        <p className="cert-rationale">{cert.rationale}</p>
-                      )}
-
-                      <div className="cert-card-footer flex-between">
-                        <span className={`diff-badge diff-${cert.difficulty?.toLowerCase()}`}>{cert.difficulty}</span>
-                        {cert.url && (
-                          <a href={cert.url} target="_blank" rel="noreferrer" className="cert-link flex-center gap-xs">
-                            View Details <ExternalLink size={13} />
-                          </a>
+                        {cert.rationale && (
+                          <p className="cert-rationale">{cert.rationale}</p>
                         )}
+
+                        <div className="cert-card-footer flex-between">
+                          <div className="flex-center gap-xs">
+                            <span className={`diff-badge diff-${cert.difficulty?.toLowerCase()}`}>{cert.difficulty}</span>
+                            <button
+                              className={`cert-status-pill status-${certStatus}`}
+                              onClick={() => handleToggleCertStatus(cert.title)}
+                              title="Click to cycle status (Recommended → In Progress → Completed)"
+                            >
+                              {isDone ? <span className="flex-center gap-xs"><Check size={11} /> Done</span> : isInProgress ? 'In Progress' : 'Recommended'}
+                            </button>
+                          </div>
+                          {cert.url && (
+                            <a href={cert.url} target="_blank" rel="noreferrer" className="cert-link flex-center gap-xs">
+                              View Details <ExternalLink size={13} />
+                            </a>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
 
                   {(!recommendations.certifications || recommendations.certifications.length === 0) && (
                     <div className="empty-tab-state">

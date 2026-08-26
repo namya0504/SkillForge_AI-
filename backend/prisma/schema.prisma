@@ -15,14 +15,18 @@ model User {
   emailVerifiedAt  DateTime?      @map("email_verified_at")
   targetRoleId     String?        @map("target_role_id")
   customTargetRole String?        @map("custom_target_role")
+  interests        String[]       @default([])
   createdAt        DateTime       @default(now()) @map("created_at")
   updatedAt        DateTime       @updatedAt @map("updated_at")
-  resumes          Resume[]
-  skills           Skill[]
-  jobs             Job[]
-  progress         Progress[]
-  roadmap          Roadmap?
-  targetRole       RoleReference? @relation(fields: [targetRoleId], references: [id], onDelete: SetNull)
+
+  resumes               Resume[]
+  skills                Skill[]
+  jobs                  Job[]
+  progress              Progress[]
+  roadmap               Roadmap?
+  chatSessions          ChatSession[]
+  certificationProgress CertificationProgress[]
+  targetRole            RoleReference? @relation(fields: [targetRoleId], references: [id], onDelete: SetNull)
 
   @@map("users")
 }
@@ -114,4 +118,45 @@ model Roadmap {
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("roadmaps")
+}
+
+model ChatSession {
+  id        String        @id @default(uuid())
+  userId    String        @map("user_id")
+  title     String?       @default("Career Mentor Chat")
+  createdAt DateTime      @default(now()) @map("created_at")
+  updatedAt DateTime      @updatedAt @map("updated_at")
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  ChatMessage[]
+
+  @@index([userId])
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id          String      @id @default(uuid())
+  sessionId   String      @map("session_id")
+  role        String      // 'user' | 'assistant'
+  content     String
+  intent      String?     @default("personal") // 'personal' | 'general' | 'hybrid'
+  contextUsed String?     @map("context_used") // JSON string snapshot of injected profile data
+  citations   String?     // JSON string array of { title, url, snippet } from search grounding
+  createdAt   DateTime    @default(now()) @map("created_at")
+  session     ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("chat_messages")
+}
+
+model CertificationProgress {
+  id             String   @id @default(uuid())
+  userId         String   @map("user_id")
+  certIdentifier String   @map("cert_identifier") // Title or slug matching curated database
+  status         String   @default("recommended") // 'recommended' | 'in_progress' | 'completed'
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, certIdentifier])
+  @@index([userId])
+  @@map("certification_progress")
 }

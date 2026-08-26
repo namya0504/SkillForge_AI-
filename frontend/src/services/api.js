@@ -225,3 +225,77 @@ export const progressAPI = {
   }),
 };
 
+export const chatAPI = {
+  createSession: (title) => request('/chat/sessions', {
+    method: 'POST',
+    body: JSON.stringify({ title }),
+  }),
+  getSessions: () => request('/chat/sessions'),
+  getSessionMessages: (sessionId) => request(`/chat/sessions/${sessionId}/messages`),
+  deleteSession: (sessionId) => request(`/chat/sessions/${sessionId}`, { method: 'DELETE' }),
+  streamMessage: async (sessionId, message, onChunk, onCitations, onMetadata, onDone, onError) => {
+    try {
+      const response = await fetch(`${API_BASE}/chat/sessions/${sessionId}/message`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ message }),
+      });
+
+      if (!response.ok) {
+        const errJson = await response.json().catch(() => ({}));
+        throw new Error(errJson.error || `Chat error: ${response.status}`);
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder('utf-8');
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n\n');
+        buffer = lines.pop() || '';
+
+        for (const block of lines) {
+          const trimmed = block.trim();
+          if (!trimmed) continue;
+
+          let eventType = 'chunk';
+          let dataStr = '';
+
+          const eventMatch = trimmed.match(/^event:\s*(\w+)/m);
+          if (eventMatch) eventType = eventMatch[1];
+
+          const dataMatch = trimmed.match(/^data:\s*(.+)$/ms);
+          if (dataMatch) dataStr = dataMatch[1];
+
+          try {
+            const parsed = JSON.parse(dataStr);
+            if (eventType === 'chunk' && onChunk) onChunk(parsed.text);
+            if (eventType === 'citations' && onCitations) onCitations(parsed.citations);
+            if (eventType === 'metadata' && onMetadata) onMetadata(parsed);
+            if (eventType === 'done' && onDone) onDone(parsed);
+            if (eventType === 'error' && onError) onError(parsed.error);
+          } catch (e) {
+            // Buffer parsing
+          }
+        }
+      }
+    } catch (err) {
+      if (onError) onError(err.message);
+    }
+  },
+};
+
+export const certificationAPI = {
+  getProgress: () => request('/certifications/progress'),
+  updateStatus: (certIdentifier, status) => request(`/certifications/progress/${encodeURIComponent(certIdentifier)}`, {
+    method: 'PUT',
+    body: JSON.stringify({ status }),
+  }),
+};
+
+

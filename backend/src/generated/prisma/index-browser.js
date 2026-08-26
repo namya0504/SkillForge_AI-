@@ -128,6 +128,7 @@ exports.Prisma.UserScalarFieldEnum = {
   emailVerifiedAt: 'emailVerifiedAt',
   targetRoleId: 'targetRoleId',
   customTargetRole: 'customTargetRole',
+  interests: 'interests',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -195,6 +196,33 @@ exports.Prisma.RoadmapScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ChatSessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ChatMessageScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  role: 'role',
+  content: 'content',
+  intent: 'intent',
+  contextUsed: 'contextUsed',
+  citations: 'citations',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CertificationProgressScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  certIdentifier: 'certIdentifier',
+  status: 'status',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -218,7 +246,10 @@ exports.Prisma.ModelName = {
   Skill: 'Skill',
   Job: 'Job',
   Progress: 'Progress',
-  Roadmap: 'Roadmap'
+  Roadmap: 'Roadmap',
+  ChatSession: 'ChatSession',
+  ChatMessage: 'ChatMessage',
+  CertificationProgress: 'CertificationProgress'
 };
 
 /**

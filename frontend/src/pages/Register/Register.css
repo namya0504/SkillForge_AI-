@@ -34,8 +34,8 @@
 }
 
 .otp-info-box {
-  background: rgba(15, 76, 92, 0.15);
-  border: 1px solid rgba(15, 76, 92, 0.4);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 14px 16px;
   display: flex;
@@ -47,13 +47,13 @@
 .otp-info-box h4 {
   font-size: 0.95rem;
   font-weight: 700;
-  color: #f8fafc;
+  color: var(--color-text);
   margin-bottom: 4px;
 }
 
 .otp-info-box p {
   font-size: 0.85rem;
-  color: #cbd5e1;
+  color: var(--color-text-secondary);
   margin-bottom: 8px;
 }
 

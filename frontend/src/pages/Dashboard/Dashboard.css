@@ -758,9 +758,34 @@
   border-radius: 8px;
 }
 
-.cost-badge.cost-free { background: var(--color-success-light); color: var(--color-success); }
-.cost-badge.cost-freemium { background: rgba(244, 162, 89, 0.15); color: var(--color-accent); }
-.cost-badge.cost-paid { background: var(--color-bg-card); color: var(--color-text-muted); border: 1px solid var(--color-border); }
+.cert-status-pill {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cert-status-pill.status-in_progress {
+  background: rgba(244, 162, 89, 0.15);
+  color: var(--color-accent);
+  border-color: rgba(244, 162, 89, 0.4);
+}
+
+.cert-status-pill.status-completed {
+  background: var(--color-success-light);
+  color: var(--color-success);
+  border-color: rgba(76, 149, 108, 0.4);
+}
+
+.cert-card.cert-completed {
+  border-color: rgba(76, 149, 108, 0.4);
+  background: var(--color-bg-card);
+}
 
 .empty-tab-state {
   text-align: center;

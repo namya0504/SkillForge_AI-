@@ -9,6 +9,8 @@ import skillRoutes from './routes/skills.js';
 import roleRoutes from './routes/roles.routes.js';
 import roadmapRoutes from './routes/roadmap.routes.js';
 import progressRoutes from './routes/progress.routes.js';
+import chatRoutes from './routes/chat.routes.js';
+import certificationsRoutes from './routes/certifications.routes.js';
 import { authenticate } from './middleware/auth.js';
 import { config } from './config/env.js';
 
@@ -37,6 +39,8 @@ app.use('/api/v1/skills', authenticate, skillRoutes);
 app.use('/api/v1/roles', roleRoutes);
 app.use('/api/v1/roadmap', roadmapRoutes);
 app.use('/api/v1/progress', progressRoutes);
+app.use('/api/v1/chat', chatRoutes);
+app.use('/api/v1/certifications', certificationsRoutes);
 
 // Health check endpoint
 app.get('/api/v1/health', (req, res) => {
