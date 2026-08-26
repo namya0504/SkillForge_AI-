@@ -801,3 +801,208 @@
 
 .text-teal { color: var(--color-primary); }
 .text-amber { color: var(--color-accent); }
+
+/* ── Mobile Responsive Breakpoints ── */
+@media (max-width: 1024px) {
+  .dashboard-main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 16px 12px;
+  }
+
+  .dashboard-banner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  .banner-left {
+    align-items: center;
+    gap: 12px;
+  }
+
+  .role-icon-badge {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+  }
+
+  .target-role-heading {
+    font-size: 1.25rem;
+    line-height: 1.3;
+    word-break: break-word;
+  }
+
+  .user-greeting {
+    font-size: 0.8rem;
+  }
+
+  .banner-actions {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .banner-actions button {
+    flex: 1 1 calc(50% - 6px);
+    padding: 10px 12px;
+    font-size: 0.82rem;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .gap-analysis-card,
+  .milestone-card,
+  .recommendations-card {
+    padding: 16px 14px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+  }
+
+  .gap-card-header {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .gap-card-header h2 {
+    font-size: 1rem;
+  }
+
+  .gap-stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .gap-stat {
+    padding: 8px 4px;
+  }
+
+  .stat-num {
+    font-size: 1.15rem;
+  }
+
+  .stat-label {
+    font-size: 0.68rem;
+    flex-direction: column;
+    gap: 2px;
+    text-align: center;
+  }
+
+  .milestone-badge {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .milestone-card h3 {
+    font-size: 0.98rem;
+  }
+
+  .milestone-desc {
+    font-size: 0.82rem;
+  }
+
+  .topic-item {
+    padding: 10px 12px;
+  }
+
+  .topic-main-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .checkbox-label {
+    font-size: 0.85rem;
+    width: 100%;
+  }
+
+  .resource-link-chip {
+    font-size: 0.72rem;
+    padding: 3px 8px;
+    margin-left: 28px;
+    align-self: flex-start;
+  }
+
+  .tab-buttons {
+    gap: 4px;
+  }
+
+  .tab-btn {
+    font-size: 0.76rem;
+    padding: 8px 6px;
+  }
+
+  .project-card, .cert-card {
+    padding: 12px;
+  }
+
+  .achievement-toast {
+    padding: 12px 14px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: 12px 8px;
+  }
+
+  .banner-actions button {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .gap-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .gap-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    text-align: left;
+  }
+
+  .gap-stat .stat-label {
+    flex-direction: row;
+    gap: 6px;
+    font-size: 0.8rem;
+    margin-top: 0;
+  }
+
+  .gap-stat .stat-num {
+    font-size: 1.2rem;
+  }
+
+  .section-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .progress-badge {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+  }
+
+  .tab-buttons {
+    flex-direction: column;
+  }
+
+  .tab-btn {
+    width: 100%;
+  }
+}
+
