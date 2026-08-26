@@ -11,6 +11,8 @@ model User {
   id               String         @id @default(uuid())
   email            String         @unique
   passwordHash     String         @map("password_hash")
+  isEmailVerified  Boolean        @default(false) @map("is_email_verified")
+  emailVerifiedAt  DateTime?      @map("email_verified_at")
   targetRoleId     String?        @map("target_role_id")
   customTargetRole String?        @map("custom_target_role")
   createdAt        DateTime       @default(now()) @map("created_at")

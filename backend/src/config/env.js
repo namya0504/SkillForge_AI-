@@ -19,5 +19,11 @@ export const config = {
   llmApiKey: process.env.LLM_API_KEY || '',
   maxConcurrentJobs: parseInt(process.env.MAX_CONCURRENT_JOBS || '3', 10),
   supabaseUrl: process.env.SUPABASE_URL || 'https://jrikbhexexnmrbtsxikh.supabase.co',
-  supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+  supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
+  smtpHost: process.env.SMTP_HOST || '',
+  smtpPort: parseInt(process.env.SMTP_PORT || '587', 10),
+  smtpUser: process.env.SMTP_USER || '',
+  smtpPass: process.env.SMTP_PASS || '',
+  smtpSecure: process.env.SMTP_SECURE === 'true',
+  emailFrom: process.env.EMAIL_FROM || 'SkillForge AI <noreply@skillforge.ai>'
 };

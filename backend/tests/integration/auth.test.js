@@ -78,4 +78,22 @@ describe('Auth Endpoints', () => {
     
     expect(res.body.message).toBe('Logged out successfully');
   });
+
+  it('should send an OTP verification code via email service', async () => {
+    const res = await request(app)
+      .post('/api/v1/auth/send-otp')
+      .send({ email: testUser.email })
+      .expect(200);
+
+    expect(res.body.otpToken).toBeDefined();
+  });
+
+  it('should process forgot password request', async () => {
+    const res = await request(app)
+      .post('/api/v1/auth/forgot-password')
+      .send({ email: testUser.email })
+      .expect(200);
+
+    expect(res.body.message).toBeDefined();
+  });
 });

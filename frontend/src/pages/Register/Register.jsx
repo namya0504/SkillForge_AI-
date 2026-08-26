@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Mail, Lock, CheckCircle, ShieldCheck, KeyRound, ArrowLeft } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, CheckCircle, ShieldCheck, KeyRound, ArrowLeft, RefreshCw } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { authAPI } from '../../services/api';
 import '../Login/Login.css';
@@ -18,6 +18,7 @@ const Register = () => {
   const [otpCode, setOtpCode] = useState('');
   const [otpToken, setOtpToken] = useState('');
   const [simulatedCode, setSimulatedCode] = useState('');
+  const [resendCooldown, setResendCooldown] = useState(0);
 
   const [pwdReqs, setPwdReqs] = useState({ length: false, number: false });
   const [pwdStrength, setPwdStrength] = useState(0);
@@ -36,8 +37,17 @@ const Register = () => {
     setPwdStrength(strength);
   }, [password]);
 
+  // Resend cooldown timer
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const timer = setInterval(() => {
+      setResendCooldown((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [resendCooldown]);
+
   const handleSendOTP = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (!pwdReqs.length || !pwdReqs.number) {
       setErrorMsg('Please meet all password requirements.');
       return;
@@ -49,7 +59,10 @@ const Register = () => {
     try {
       const res = await authAPI.sendOTP(email);
       setOtpToken(res.otpToken);
-      setSimulatedCode(res.otpCode);
+      if (res.otpCode) {
+        setSimulatedCode(res.otpCode);
+      }
+      setResendCooldown(60);
       setStep(2);
     } catch (err) {
       setErrorMsg(err.message || 'Failed to send email verification code');
@@ -163,8 +176,8 @@ const Register = () => {
             <div className="otp-info-box">
               <ShieldCheck size={28} className="text-teal" />
               <div>
-                <h4>Email Authentication Code Sent</h4>
-                <p>Enter the 6-digit security code sent to <strong>{email}</strong>.</p>
+                <h4>Verification Code Sent</h4>
+                <p>We've sent a 6-digit verification code to <strong>{email}</strong>. Check your inbox and spam folder.</p>
                 {simulatedCode && (
                   <div className="simulated-otp-badge" onClick={() => setOtpCode(simulatedCode)}>
                     Code: <strong>{simulatedCode}</strong> <span className="click-to-fill">(Click to Auto-fill)</span>
@@ -195,9 +208,18 @@ const Register = () => {
               {isSubmitting ? <span className="btn-spinner"></span> : 'Verify Email & Create Account'}
             </button>
 
-            <div className="auth-footer">
+            <div className="flex-between" style={{ marginTop: '14px', fontSize: '0.85rem' }}>
+              <button 
+                type="button" 
+                className="btn-link"
+                disabled={resendCooldown > 0 || isSubmitting}
+                onClick={handleSendOTP}
+              >
+                {resendCooldown > 0 ? `Resend code in ${resendCooldown}s` : 'Resend Code'}
+              </button>
+
               <button type="button" className="btn-link flex-center gap-xs" onClick={() => setStep(1)}>
-                <ArrowLeft size={16} /> Back to Sign Up Details
+                <ArrowLeft size={14} /> Change Email
               </button>
             </div>
           </form>
