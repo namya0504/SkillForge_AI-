@@ -170,7 +170,7 @@ const Upload = () => {
                 <input 
                   ref={fileInputRef}
                   type="file" 
-                  accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  accept=".pdf,.docx,.doc,.png,.jpg,.jpeg,.webp,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/png,image/jpeg,image/webp"
                   onChange={handleChange} 
                   style={{ display: 'none' }}
                 />
@@ -179,7 +179,7 @@ const Upload = () => {
                     <UploadIcon size={48} />
                   </div>
                   <h2>Drag & drop your resume here</h2>
-                  <p>or click to browse &bull; PDF or DOCX &bull; Max 5MB</p>
+                  <p>or click to browse &bull; PDF, DOCX, PNG, JPG &bull; Max 8MB (OCR Vision Enabled)</p>
                 </div>
               </div>
 

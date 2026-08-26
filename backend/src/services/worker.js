@@ -122,11 +122,11 @@ class JobWorker {
       buffer = await readFile(storageKey);
     }
 
-    // Step 2: Extract raw text (throws if scanned/empty/unreadable)
-    const rawText = await extractText(buffer, mimeType);
+    // Step 2: Extract text or mark scanned
+    const parseResult = await extractText(buffer, mimeType);
 
-    // Step 3: Extract structured data
-    const structured = await extractStructuredData(rawText);
+    // Step 3: Extract structured data with multimodal OCR support
+    const structured = await extractStructuredData(parseResult, { buffer, mimeType });
 
     // Step 4: Save parsed data to resume
     await prisma.resume.update({
