@@ -32,14 +32,15 @@ model User {
 }
 
 model RoleReference {
-  id             String   @id @default(uuid())
-  title          String   @unique
-  category       String   @default("Software Development")
-  isPopular      Boolean  @default(false) @map("is_popular")
-  description    String?
-  requiredSkills String   @map("required_skills") // JSON string array of required skills with baseline proficiencies
-  createdAt      DateTime @default(now()) @map("created_at")
-  users          User[]
+  id               String   @id @default(uuid())
+  title            String   @unique
+  category         String   @default("Software Development")
+  isPopular        Boolean  @default(false) @map("is_popular")
+  description      String?
+  requiredSkills   String   @map("required_skills") // JSON string array
+  capstoneProjects String?  @map("capstone_projects") // JSON string array of curated templates
+  createdAt        DateTime @default(now()) @map("created_at")
+  users            User[]
 
   @@index([isPopular])
   @@map("roles_reference")
@@ -107,15 +108,16 @@ model Progress {
 }
 
 model Roadmap {
-  id              String   @id @default(uuid())
-  userId          String   @unique @map("user_id")
-  targetRoleTitle String   @map("target_role_title")
-  gapAnalysis     String   @map("gap_analysis") // JSON string: { matchedSkills, missingSkills, levelGaps }
-  milestones      String // JSON string array of learning phases
-  recommendations String // JSON string object: { projects, certifications }
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id               String   @id @default(uuid())
+  userId           String   @unique @map("user_id")
+  targetRoleTitle  String   @map("target_role_title")
+  gapAnalysis      String   @map("gap_analysis") // JSON string: { matchedSkills, missingSkills, levelGaps }
+  milestones       String // JSON string array of learning phases
+  recommendations  String // JSON string object: { projects, certifications }
+  selectedCapstone String?  @map("selected_capstone") // JSON string object of chosen capstone
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("roadmaps")
 }

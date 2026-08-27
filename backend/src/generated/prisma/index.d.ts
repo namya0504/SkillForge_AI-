@@ -3203,6 +3203,7 @@ export namespace Prisma {
     isPopular: boolean | null
     description: string | null
     requiredSkills: string | null
+    capstoneProjects: string | null
     createdAt: Date | null
   }
 
@@ -3213,6 +3214,7 @@ export namespace Prisma {
     isPopular: boolean | null
     description: string | null
     requiredSkills: string | null
+    capstoneProjects: string | null
     createdAt: Date | null
   }
 
@@ -3223,6 +3225,7 @@ export namespace Prisma {
     isPopular: number
     description: number
     requiredSkills: number
+    capstoneProjects: number
     createdAt: number
     _all: number
   }
@@ -3235,6 +3238,7 @@ export namespace Prisma {
     isPopular?: true
     description?: true
     requiredSkills?: true
+    capstoneProjects?: true
     createdAt?: true
   }
 
@@ -3245,6 +3249,7 @@ export namespace Prisma {
     isPopular?: true
     description?: true
     requiredSkills?: true
+    capstoneProjects?: true
     createdAt?: true
   }
 
@@ -3255,6 +3260,7 @@ export namespace Prisma {
     isPopular?: true
     description?: true
     requiredSkills?: true
+    capstoneProjects?: true
     createdAt?: true
     _all?: true
   }
@@ -3338,6 +3344,7 @@ export namespace Prisma {
     isPopular: boolean
     description: string | null
     requiredSkills: string
+    capstoneProjects: string | null
     createdAt: Date
     _count: RoleReferenceCountAggregateOutputType | null
     _min: RoleReferenceMinAggregateOutputType | null
@@ -3365,6 +3372,7 @@ export namespace Prisma {
     isPopular?: boolean
     description?: boolean
     requiredSkills?: boolean
+    capstoneProjects?: boolean
     createdAt?: boolean
     users?: boolean | RoleReference$usersArgs<ExtArgs>
     _count?: boolean | RoleReferenceCountOutputTypeDefaultArgs<ExtArgs>
@@ -3377,6 +3385,7 @@ export namespace Prisma {
     isPopular?: boolean
     description?: boolean
     requiredSkills?: boolean
+    capstoneProjects?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["roleReference"]>
 
@@ -3387,6 +3396,7 @@ export namespace Prisma {
     isPopular?: boolean
     description?: boolean
     requiredSkills?: boolean
+    capstoneProjects?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["roleReference"]>
 
@@ -3397,10 +3407,11 @@ export namespace Prisma {
     isPopular?: boolean
     description?: boolean
     requiredSkills?: boolean
+    capstoneProjects?: boolean
     createdAt?: boolean
   }
 
-  export type RoleReferenceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "category" | "isPopular" | "description" | "requiredSkills" | "createdAt", ExtArgs["result"]["roleReference"]>
+  export type RoleReferenceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "category" | "isPopular" | "description" | "requiredSkills" | "capstoneProjects" | "createdAt", ExtArgs["result"]["roleReference"]>
   export type RoleReferenceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | RoleReference$usersArgs<ExtArgs>
     _count?: boolean | RoleReferenceCountOutputTypeDefaultArgs<ExtArgs>
@@ -3420,6 +3431,7 @@ export namespace Prisma {
       isPopular: boolean
       description: string | null
       requiredSkills: string
+      capstoneProjects: string | null
       createdAt: Date
     }, ExtArgs["result"]["roleReference"]>
     composites: {}
@@ -3851,6 +3863,7 @@ export namespace Prisma {
     readonly isPopular: FieldRef<"RoleReference", 'Boolean'>
     readonly description: FieldRef<"RoleReference", 'String'>
     readonly requiredSkills: FieldRef<"RoleReference", 'String'>
+    readonly capstoneProjects: FieldRef<"RoleReference", 'String'>
     readonly createdAt: FieldRef<"RoleReference", 'DateTime'>
   }
     
@@ -8720,6 +8733,7 @@ export namespace Prisma {
     gapAnalysis: string | null
     milestones: string | null
     recommendations: string | null
+    selectedCapstone: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8731,6 +8745,7 @@ export namespace Prisma {
     gapAnalysis: string | null
     milestones: string | null
     recommendations: string | null
+    selectedCapstone: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8742,6 +8757,7 @@ export namespace Prisma {
     gapAnalysis: number
     milestones: number
     recommendations: number
+    selectedCapstone: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -8755,6 +8771,7 @@ export namespace Prisma {
     gapAnalysis?: true
     milestones?: true
     recommendations?: true
+    selectedCapstone?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8766,6 +8783,7 @@ export namespace Prisma {
     gapAnalysis?: true
     milestones?: true
     recommendations?: true
+    selectedCapstone?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8777,6 +8795,7 @@ export namespace Prisma {
     gapAnalysis?: true
     milestones?: true
     recommendations?: true
+    selectedCapstone?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -8861,6 +8880,7 @@ export namespace Prisma {
     gapAnalysis: string
     milestones: string
     recommendations: string
+    selectedCapstone: string | null
     createdAt: Date
     updatedAt: Date
     _count: RoadmapCountAggregateOutputType | null
@@ -8889,6 +8909,7 @@ export namespace Prisma {
     gapAnalysis?: boolean
     milestones?: boolean
     recommendations?: boolean
+    selectedCapstone?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -8901,6 +8922,7 @@ export namespace Prisma {
     gapAnalysis?: boolean
     milestones?: boolean
     recommendations?: boolean
+    selectedCapstone?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -8913,6 +8935,7 @@ export namespace Prisma {
     gapAnalysis?: boolean
     milestones?: boolean
     recommendations?: boolean
+    selectedCapstone?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -8925,11 +8948,12 @@ export namespace Prisma {
     gapAnalysis?: boolean
     milestones?: boolean
     recommendations?: boolean
+    selectedCapstone?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type RoadmapOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "targetRoleTitle" | "gapAnalysis" | "milestones" | "recommendations" | "createdAt" | "updatedAt", ExtArgs["result"]["roadmap"]>
+  export type RoadmapOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "targetRoleTitle" | "gapAnalysis" | "milestones" | "recommendations" | "selectedCapstone" | "createdAt" | "updatedAt", ExtArgs["result"]["roadmap"]>
   export type RoadmapInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -8952,6 +8976,7 @@ export namespace Prisma {
       gapAnalysis: string
       milestones: string
       recommendations: string
+      selectedCapstone: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["roadmap"]>
@@ -9384,6 +9409,7 @@ export namespace Prisma {
     readonly gapAnalysis: FieldRef<"Roadmap", 'String'>
     readonly milestones: FieldRef<"Roadmap", 'String'>
     readonly recommendations: FieldRef<"Roadmap", 'String'>
+    readonly selectedCapstone: FieldRef<"Roadmap", 'String'>
     readonly createdAt: FieldRef<"Roadmap", 'DateTime'>
     readonly updatedAt: FieldRef<"Roadmap", 'DateTime'>
   }
@@ -13100,6 +13126,7 @@ export namespace Prisma {
     isPopular: 'isPopular',
     description: 'description',
     requiredSkills: 'requiredSkills',
+    capstoneProjects: 'capstoneProjects',
     createdAt: 'createdAt'
   };
 
@@ -13167,6 +13194,7 @@ export namespace Prisma {
     gapAnalysis: 'gapAnalysis',
     milestones: 'milestones',
     recommendations: 'recommendations',
+    selectedCapstone: 'selectedCapstone',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -13416,6 +13444,7 @@ export namespace Prisma {
     isPopular?: BoolFilter<"RoleReference"> | boolean
     description?: StringNullableFilter<"RoleReference"> | string | null
     requiredSkills?: StringFilter<"RoleReference"> | string
+    capstoneProjects?: StringNullableFilter<"RoleReference"> | string | null
     createdAt?: DateTimeFilter<"RoleReference"> | Date | string
     users?: UserListRelationFilter
   }
@@ -13427,6 +13456,7 @@ export namespace Prisma {
     isPopular?: SortOrder
     description?: SortOrderInput | SortOrder
     requiredSkills?: SortOrder
+    capstoneProjects?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     users?: UserOrderByRelationAggregateInput
   }
@@ -13441,6 +13471,7 @@ export namespace Prisma {
     isPopular?: BoolFilter<"RoleReference"> | boolean
     description?: StringNullableFilter<"RoleReference"> | string | null
     requiredSkills?: StringFilter<"RoleReference"> | string
+    capstoneProjects?: StringNullableFilter<"RoleReference"> | string | null
     createdAt?: DateTimeFilter<"RoleReference"> | Date | string
     users?: UserListRelationFilter
   }, "id" | "title">
@@ -13452,6 +13483,7 @@ export namespace Prisma {
     isPopular?: SortOrder
     description?: SortOrderInput | SortOrder
     requiredSkills?: SortOrder
+    capstoneProjects?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: RoleReferenceCountOrderByAggregateInput
     _max?: RoleReferenceMaxOrderByAggregateInput
@@ -13468,6 +13500,7 @@ export namespace Prisma {
     isPopular?: BoolWithAggregatesFilter<"RoleReference"> | boolean
     description?: StringNullableWithAggregatesFilter<"RoleReference"> | string | null
     requiredSkills?: StringWithAggregatesFilter<"RoleReference"> | string
+    capstoneProjects?: StringNullableWithAggregatesFilter<"RoleReference"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"RoleReference"> | Date | string
   }
 
@@ -13755,6 +13788,7 @@ export namespace Prisma {
     gapAnalysis?: StringFilter<"Roadmap"> | string
     milestones?: StringFilter<"Roadmap"> | string
     recommendations?: StringFilter<"Roadmap"> | string
+    selectedCapstone?: StringNullableFilter<"Roadmap"> | string | null
     createdAt?: DateTimeFilter<"Roadmap"> | Date | string
     updatedAt?: DateTimeFilter<"Roadmap"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -13767,6 +13801,7 @@ export namespace Prisma {
     gapAnalysis?: SortOrder
     milestones?: SortOrder
     recommendations?: SortOrder
+    selectedCapstone?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -13782,6 +13817,7 @@ export namespace Prisma {
     gapAnalysis?: StringFilter<"Roadmap"> | string
     milestones?: StringFilter<"Roadmap"> | string
     recommendations?: StringFilter<"Roadmap"> | string
+    selectedCapstone?: StringNullableFilter<"Roadmap"> | string | null
     createdAt?: DateTimeFilter<"Roadmap"> | Date | string
     updatedAt?: DateTimeFilter<"Roadmap"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -13794,6 +13830,7 @@ export namespace Prisma {
     gapAnalysis?: SortOrder
     milestones?: SortOrder
     recommendations?: SortOrder
+    selectedCapstone?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: RoadmapCountOrderByAggregateInput
@@ -13811,6 +13848,7 @@ export namespace Prisma {
     gapAnalysis?: StringWithAggregatesFilter<"Roadmap"> | string
     milestones?: StringWithAggregatesFilter<"Roadmap"> | string
     recommendations?: StringWithAggregatesFilter<"Roadmap"> | string
+    selectedCapstone?: StringNullableWithAggregatesFilter<"Roadmap"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Roadmap"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Roadmap"> | Date | string
   }
@@ -14124,6 +14162,7 @@ export namespace Prisma {
     isPopular?: boolean
     description?: string | null
     requiredSkills: string
+    capstoneProjects?: string | null
     createdAt?: Date | string
     users?: UserCreateNestedManyWithoutTargetRoleInput
   }
@@ -14135,6 +14174,7 @@ export namespace Prisma {
     isPopular?: boolean
     description?: string | null
     requiredSkills: string
+    capstoneProjects?: string | null
     createdAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutTargetRoleInput
   }
@@ -14146,6 +14186,7 @@ export namespace Prisma {
     isPopular?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requiredSkills?: StringFieldUpdateOperationsInput | string
+    capstoneProjects?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutTargetRoleNestedInput
   }
@@ -14157,6 +14198,7 @@ export namespace Prisma {
     isPopular?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requiredSkills?: StringFieldUpdateOperationsInput | string
+    capstoneProjects?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutTargetRoleNestedInput
   }
@@ -14168,6 +14210,7 @@ export namespace Prisma {
     isPopular?: boolean
     description?: string | null
     requiredSkills: string
+    capstoneProjects?: string | null
     createdAt?: Date | string
   }
 
@@ -14178,6 +14221,7 @@ export namespace Prisma {
     isPopular?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requiredSkills?: StringFieldUpdateOperationsInput | string
+    capstoneProjects?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -14188,6 +14232,7 @@ export namespace Prisma {
     isPopular?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requiredSkills?: StringFieldUpdateOperationsInput | string
+    capstoneProjects?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -14487,6 +14532,7 @@ export namespace Prisma {
     gapAnalysis: string
     milestones: string
     recommendations: string
+    selectedCapstone?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutRoadmapInput
@@ -14499,6 +14545,7 @@ export namespace Prisma {
     gapAnalysis: string
     milestones: string
     recommendations: string
+    selectedCapstone?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14509,6 +14556,7 @@ export namespace Prisma {
     gapAnalysis?: StringFieldUpdateOperationsInput | string
     milestones?: StringFieldUpdateOperationsInput | string
     recommendations?: StringFieldUpdateOperationsInput | string
+    selectedCapstone?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutRoadmapNestedInput
@@ -14521,6 +14569,7 @@ export namespace Prisma {
     gapAnalysis?: StringFieldUpdateOperationsInput | string
     milestones?: StringFieldUpdateOperationsInput | string
     recommendations?: StringFieldUpdateOperationsInput | string
+    selectedCapstone?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14532,6 +14581,7 @@ export namespace Prisma {
     gapAnalysis: string
     milestones: string
     recommendations: string
+    selectedCapstone?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14542,6 +14592,7 @@ export namespace Prisma {
     gapAnalysis?: StringFieldUpdateOperationsInput | string
     milestones?: StringFieldUpdateOperationsInput | string
     recommendations?: StringFieldUpdateOperationsInput | string
+    selectedCapstone?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14553,6 +14604,7 @@ export namespace Prisma {
     gapAnalysis?: StringFieldUpdateOperationsInput | string
     milestones?: StringFieldUpdateOperationsInput | string
     recommendations?: StringFieldUpdateOperationsInput | string
+    selectedCapstone?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15013,6 +15065,7 @@ export namespace Prisma {
     isPopular?: SortOrder
     description?: SortOrder
     requiredSkills?: SortOrder
+    capstoneProjects?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -15023,6 +15076,7 @@ export namespace Prisma {
     isPopular?: SortOrder
     description?: SortOrder
     requiredSkills?: SortOrder
+    capstoneProjects?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -15033,6 +15087,7 @@ export namespace Prisma {
     isPopular?: SortOrder
     description?: SortOrder
     requiredSkills?: SortOrder
+    capstoneProjects?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -15219,6 +15274,7 @@ export namespace Prisma {
     gapAnalysis?: SortOrder
     milestones?: SortOrder
     recommendations?: SortOrder
+    selectedCapstone?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -15230,6 +15286,7 @@ export namespace Prisma {
     gapAnalysis?: SortOrder
     milestones?: SortOrder
     recommendations?: SortOrder
+    selectedCapstone?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -15241,6 +15298,7 @@ export namespace Prisma {
     gapAnalysis?: SortOrder
     milestones?: SortOrder
     recommendations?: SortOrder
+    selectedCapstone?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -16175,6 +16233,7 @@ export namespace Prisma {
     gapAnalysis: string
     milestones: string
     recommendations: string
+    selectedCapstone?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -16185,6 +16244,7 @@ export namespace Prisma {
     gapAnalysis: string
     milestones: string
     recommendations: string
+    selectedCapstone?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -16251,6 +16311,7 @@ export namespace Prisma {
     isPopular?: boolean
     description?: string | null
     requiredSkills: string
+    capstoneProjects?: string | null
     createdAt?: Date | string
   }
 
@@ -16261,6 +16322,7 @@ export namespace Prisma {
     isPopular?: boolean
     description?: string | null
     requiredSkills: string
+    capstoneProjects?: string | null
     createdAt?: Date | string
   }
 
@@ -16404,6 +16466,7 @@ export namespace Prisma {
     gapAnalysis?: StringFieldUpdateOperationsInput | string
     milestones?: StringFieldUpdateOperationsInput | string
     recommendations?: StringFieldUpdateOperationsInput | string
+    selectedCapstone?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16414,6 +16477,7 @@ export namespace Prisma {
     gapAnalysis?: StringFieldUpdateOperationsInput | string
     milestones?: StringFieldUpdateOperationsInput | string
     recommendations?: StringFieldUpdateOperationsInput | string
+    selectedCapstone?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16490,6 +16554,7 @@ export namespace Prisma {
     isPopular?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requiredSkills?: StringFieldUpdateOperationsInput | string
+    capstoneProjects?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -16500,6 +16565,7 @@ export namespace Prisma {
     isPopular?: BoolFieldUpdateOperationsInput | boolean
     description?: NullableStringFieldUpdateOperationsInput | string | null
     requiredSkills?: StringFieldUpdateOperationsInput | string
+    capstoneProjects?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

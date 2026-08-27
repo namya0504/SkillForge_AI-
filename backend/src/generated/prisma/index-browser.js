@@ -140,6 +140,7 @@ exports.Prisma.RoleReferenceScalarFieldEnum = {
   isPopular: 'isPopular',
   description: 'description',
   requiredSkills: 'requiredSkills',
+  capstoneProjects: 'capstoneProjects',
   createdAt: 'createdAt'
 };
 
@@ -192,6 +193,7 @@ exports.Prisma.RoadmapScalarFieldEnum = {
   gapAnalysis: 'gapAnalysis',
   milestones: 'milestones',
   recommendations: 'recommendations',
+  selectedCapstone: 'selectedCapstone',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
