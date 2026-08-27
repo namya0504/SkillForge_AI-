@@ -387,15 +387,20 @@ function generateWithRuleEngine(roleTitle, userSkills, gapAnalysis) {
 async function generateWithLLM(roleTitle, userSkills, gapAnalysis) {
   // Single-pass LLM invocation generating milestones AND recommendations
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 25000);
+  const timeoutId = setTimeout(() => controller.abort(), 35000); // Increased timeout for deep research
 
-  const prompt = `You are a career development AI coach for SkillForge AI.
-Generate a structured learning roadmap and recommendations for a candidate targeting the role: "${roleTitle}".
+  const prompt = `You are an elite Senior Technical Architect and Career Development Coach for SkillForge AI.
+Your task is to generate a highly accurate, deeply researched, and comprehensive learning roadmap for a candidate targeting the role: "${roleTitle}".
 
 Candidate Skills Matrix:
 - Matched Skills: ${JSON.stringify(gapAnalysis.matchedSkills)}
 - Level Gaps: ${JSON.stringify(gapAnalysis.levelGaps)}
 - Missing Skills: ${JSON.stringify(gapAnalysis.missingSkills)}
+
+REQUIREMENTS:
+1. Deep Research: The roadmap MUST be highly specific to "${roleTitle}". Do not give generic advice. Tailor the milestones directly to the gaps.
+2. Real Links: For every topic and certification, provide ACTUAL, REAL, and highly respected URLs (e.g., official docs, Coursera, Udemy, AWS/Azure cert pages, MDN). DO NOT use generic links.
+3. Certifications: Generate 3-4 highly recognized industry certifications specifically relevant to "${roleTitle}".
 
 Return ONLY valid JSON matching this exact structure:
 {
@@ -405,7 +410,15 @@ Return ONLY valid JSON matching this exact structure:
       "title": "Phase 1 Title",
       "duration": "3 Weeks",
       "description": "Short phase summary",
-      "topics": ["Topic 1", "Topic 2"],
+      "topics": [
+        {
+          "title": "Topic 1: Specific Concept",
+          "resource": {
+            "title": "Name of the resource (e.g., Official Docs)",
+            "url": "https://..."
+          }
+        }
+      ],
       "targetSkills": ["Skill 1", "Skill 2"]
     }
   ],
@@ -424,8 +437,8 @@ Return ONLY valid JSON matching this exact structure:
     "certifications": [
       {
         "id": "cert-1",
-        "title": "Cert Name",
-        "issuer": "Issuer",
+        "title": "Exact Name of Certification",
+        "issuer": "Issuing Organization",
         "costType": "Free/Paid/Freemium",
         "difficulty": "Intermediate",
         "url": "https://...",
@@ -440,7 +453,9 @@ Return ONLY valid JSON matching this exact structure:
   const apiUrl = isGroq 
     ? 'https://api.groq.com/openai/v1/chat/completions' 
     : 'https://api.openai.com/v1/chat/completions';
-  const model = isGroq ? 'qwen/qwen3.6-27b' : 'gpt-3.5-turbo';
+  
+  // Upgrade model to llama-3.3-70b-versatile for high accuracy and JSON structure
+  const model = isGroq ? 'llama-3.3-70b-versatile' : 'gpt-3.5-turbo';
 
   const response = await fetch(apiUrl, {
     method: 'POST',
@@ -450,7 +465,8 @@ Return ONLY valid JSON matching this exact structure:
     },
     body: JSON.stringify({
       model,
-      messages: [{ role: 'user', content: prompt }]
+      messages: [{ role: 'user', content: prompt }],
+      response_format: { type: "json_object" } // Force JSON output if supported
     }),
     signal: controller.signal
   });
