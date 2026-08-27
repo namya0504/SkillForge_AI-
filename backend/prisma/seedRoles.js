@@ -18,6 +18,24 @@ const CURATED_ROLES = [
       { name: 'REST API', proficiency: 'Advanced' },
       { name: 'Git', proficiency: 'Intermediate' },
       { name: 'Docker', proficiency: 'Beginner' }
+    ]),
+    capstoneProjects: JSON.stringify([
+      {
+        id: 'fs-taskmanager',
+        title: 'Full-Featured Task Management Platform',
+        difficulty: 'Intermediate',
+        description: 'A production-grade task/project management app with auth, real-time updates, and team collaboration features.',
+        whyThisProject: 'Covers the core skills required for this role end-to-end: data modeling, API design, frontend state management, and deployment.',
+        coreSkillsCovered: ['React', 'Node.js', 'PostgreSQL', 'REST API', 'Docker']
+      },
+      {
+        id: 'fs-ecommerce',
+        title: 'E-Commerce Marketplace with Payments',
+        difficulty: 'Advanced',
+        description: 'A comprehensive multi-vendor marketplace featuring shopping cart, Stripe payment integration, and order management.',
+        whyThisProject: 'Demonstrates ability to handle complex state, third-party integrations, and robust database transactions.',
+        coreSkillsCovered: ['React', 'Next.js', 'Express', 'PostgreSQL', 'Stripe API']
+      }
     ])
   },
   {
@@ -35,6 +53,16 @@ const CURATED_ROLES = [
       { name: 'UI/UX', proficiency: 'Intermediate' },
       { name: 'REST API', proficiency: 'Intermediate' },
       { name: 'Figma', proficiency: 'Beginner' }
+    ]),
+    capstoneProjects: JSON.stringify([
+      {
+        id: 'fe-dashboard',
+        title: 'Interactive Analytics Dashboard',
+        difficulty: 'Intermediate',
+        description: 'A responsive, high-performance data dashboard using charting libraries and complex state management.',
+        whyThisProject: 'Shows mastery of UI/UX implementation, component lifecycle, and handling async data streams.',
+        coreSkillsCovered: ['React', 'TypeScript', 'Tailwind CSS', 'Recharts', 'Redux/Zustand']
+      }
     ])
   },
   {
@@ -52,6 +80,16 @@ const CURATED_ROLES = [
       { name: 'GraphQL', proficiency: 'Intermediate' },
       { name: 'Docker', proficiency: 'Intermediate' },
       { name: 'System Design', proficiency: 'Advanced' }
+    ]),
+    capstoneProjects: JSON.stringify([
+      {
+        id: 'be-microservices',
+        title: 'Microservices E-Commerce Backend',
+        difficulty: 'Advanced',
+        description: 'A scalable backend architecture split into user, order, and product microservices communicating via message queues.',
+        whyThisProject: 'Proves deep knowledge of distributed systems, message brokers, and robust API design.',
+        coreSkillsCovered: ['Node.js', 'PostgreSQL', 'Redis', 'RabbitMQ/Kafka', 'Docker']
+      }
     ])
   },
   {

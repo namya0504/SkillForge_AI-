@@ -37,6 +37,25 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET /api/v1/roles/:id/capstones - Get curated capstones for a role
+router.get('/:id/capstones', async (req, res) => {
+  try {
+    const role = await prisma.roleReference.findUnique({
+      where: { id: req.params.id }
+    });
+
+    if (!role) {
+      return res.status(404).json({ error: 'Role not found' });
+    }
+
+    const capstones = JSON.parse(role.capstoneProjects || '[]');
+    res.json({ capstones });
+  } catch (error) {
+    console.error('Error fetching role capstones:', error);
+    res.status(500).json({ error: 'Failed to fetch capstones' });
+  }
+});
+
 // GET /api/v1/roles/target - Get current user's target role
 router.get('/target', authenticate, async (req, res) => {
   try {
@@ -101,13 +120,6 @@ router.post('/target',
         },
         include: { targetRole: true }
       });
-
-      // Automatically regenerate roadmap for the updated target role
-      try {
-        await generateRoadmapForUser(req.user.id);
-      } catch (genErr) {
-        console.warn('Roadmap auto-regeneration on target role change notice:', genErr.message);
-      }
 
       let parsedTargetRole = null;
       if (updatedUser.targetRole) {

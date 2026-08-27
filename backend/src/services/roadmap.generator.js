@@ -82,8 +82,7 @@ const CERTIFICATION_DATABASE = {
   ]
 };
 
-export async function generateRoadmapForUser(userId) {
-  // 1. Fetch user data
+export async function generateRoadmapForUser(userId, capstone = null) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
     include: {
@@ -92,11 +91,12 @@ export async function generateRoadmapForUser(userId) {
     }
   });
 
-  if (!user) {
-    throw new Error('User not found');
+  if (!user) throw new Error('User not found');
+  if (!user.skills || user.skills.length === 0) {
+    throw new Error('User has no skills. Please extract skills from a resume first.');
   }
 
-  // Determine target role title and required skills benchmark
+  // 1. Determine Target Role
   let targetRoleTitle = 'Full Stack Web Developer';
   let requiredRoleSkills = [];
 
@@ -105,7 +105,6 @@ export async function generateRoadmapForUser(userId) {
     requiredRoleSkills = JSON.parse(user.targetRole.requiredSkills || '[]');
   } else if (user.customTargetRole) {
     targetRoleTitle = user.customTargetRole;
-    // Default fallback baseline for custom roles
     requiredRoleSkills = [
       { name: 'Core Technology Stack', proficiency: 'Advanced' },
       { name: 'API Design & Integration', proficiency: 'Intermediate' },
@@ -113,7 +112,6 @@ export async function generateRoadmapForUser(userId) {
       { name: 'System Architecture', proficiency: 'Intermediate' }
     ];
   } else {
-    // Default reference role
     const defaultRole = await prisma.roleReference.findFirst({ where: { isPopular: true } });
     if (defaultRole) {
       targetRoleTitle = defaultRole.title;
@@ -177,16 +175,16 @@ export async function generateRoadmapForUser(userId) {
   
   if (config.llmApiKey) {
     try {
-      result = await generateWithLLM(targetRoleTitle, user.skills, gapAnalysisObj, !!user.customTargetRole);
+      result = await generateWithLLM(targetRoleTitle, user.skills, gapAnalysisObj, !!user.customTargetRole, capstone);
       if (user.customTargetRole && result.gapAnalysis) {
         finalGapAnalysis = result.gapAnalysis;
       }
     } catch (err) {
       console.warn('LLM roadmap generation failed, falling back to rule engine:', err.message);
-      result = generateWithRuleEngine(targetRoleTitle, user.skills, gapAnalysisObj);
+      result = generateWithRuleEngine(targetRoleTitle, user.skills, gapAnalysisObj, capstone);
     }
   } else {
-    result = generateWithRuleEngine(targetRoleTitle, user.skills, gapAnalysisObj);
+    result = generateWithRuleEngine(targetRoleTitle, user.skills, gapAnalysisObj, capstone);
   }
 
   // Ensure every milestone phase & topic has a stable id and valid resource
@@ -217,14 +215,16 @@ export async function generateRoadmapForUser(userId) {
       targetRoleTitle,
       gapAnalysis: JSON.stringify(finalGapAnalysis),
       milestones: JSON.stringify(normalizedMilestones),
-      recommendations: JSON.stringify(result.recommendations)
+      recommendations: JSON.stringify(result.recommendations),
+      selectedCapstone: capstone ? JSON.stringify(capstone) : (result.capstone ? JSON.stringify(result.capstone) : null)
     },
     create: {
       userId,
       targetRoleTitle,
       gapAnalysis: JSON.stringify(finalGapAnalysis),
       milestones: JSON.stringify(normalizedMilestones),
-      recommendations: JSON.stringify(result.recommendations)
+      recommendations: JSON.stringify(result.recommendations),
+      selectedCapstone: capstone ? JSON.stringify(capstone) : (result.capstone ? JSON.stringify(result.capstone) : null)
     }
   });
 
@@ -234,6 +234,7 @@ export async function generateRoadmapForUser(userId) {
     gapAnalysis: finalGapAnalysis,
     milestones: normalizedMilestones,
     recommendations: result.recommendations,
+    selectedCapstone: capstone || result.capstone || null,
     updatedAt: savedRoadmap.updatedAt
   };
 }
@@ -269,7 +270,7 @@ function getResourceForSkill(skillName) {
   return { title: 'FreeCodeCamp Interactive Tech Learning', url: 'https://www.freecodecamp.org/learn' };
 }
 
-function generateWithRuleEngine(roleTitle, userSkills, gapAnalysis) {
+function generateWithRuleEngine(roleTitle, userSkills, gapAnalysis, capstone = null) {
   const allGaps = [...gapAnalysis.missingSkills.map(s => s.name), ...gapAnalysis.levelGaps.map(s => s.name)];
   const primaryGap = allGaps[0] || 'Core Development';
   const secondaryGap = allGaps[1] || allGaps[0] || 'System Architecture';
@@ -279,7 +280,19 @@ function generateWithRuleEngine(roleTitle, userSkills, gapAnalysis) {
   const phase2Skills = allGaps.slice(3, 6).length > 0 ? allGaps.slice(3, 6) : allGaps.slice(1, 4);
   const phase3Skills = allGaps.slice(6, 9).length > 0 ? allGaps.slice(6, 9) : [primaryGap, 'Performance Optimization', 'CI/CD Deployment'];
 
-  // 1. Build Dynamic Milestones with Learning Resource Links
+  let finalCapstone = capstone;
+  if (!finalCapstone) {
+    finalCapstone = {
+      id: `capstone-${crypto.randomUUID().slice(0, 8)}`,
+      title: `${roleTitle} Enterprise Portfolio Capstone`,
+      difficulty: 'Advanced',
+      description: `Construct an end-to-end production system demonstrating expertise in ${primaryGap} and ${secondaryGap} tailored for ${roleTitle} positions.`,
+      whyThisProject: `Demonstrates end-to-end domain expertise for ${roleTitle} hiring managers by synthesizing key skill gaps.`,
+      coreSkillsCovered: [primaryGap, secondaryGap, 'Git']
+    };
+  }
+
+  // 1. Build Dynamic Milestones with Learning Resource Links & Mini-Projects
   const milestones = [
     {
       phase: 1,
@@ -295,6 +308,11 @@ function generateWithRuleEngine(roleTitle, userSkills, gapAnalysis) {
             { title: 'Advanced Syntax & Language Fundamentals', resource: { title: 'MDN Web Docs', url: 'https://developer.mozilla.org' } },
             { title: 'Core Data Structures & Algorithms', resource: { title: 'GeeksforGeeks Data Structures', url: 'https://www.geeksforgeeks.org' } }
           ],
+      miniProject: {
+        title: `Architect the core foundation for ${finalCapstone.title}`,
+        description: `Set up the foundational structure, basic data models, and simple UI components addressing ${primaryGap}.`,
+        buildsToward: `This serves as the core layer for your final capstone.`
+      },
       targetSkills: phase1Skills
     },
     {
@@ -306,6 +324,11 @@ function generateWithRuleEngine(roleTitle, userSkills, gapAnalysis) {
         title: `Building production features with ${g} & component integration`,
         resource: getResourceForSkill(g)
       })),
+      miniProject: {
+        title: `Implement complex business logic for ${finalCapstone.title}`,
+        description: `Integrate state management, complex APIs, and key features using ${secondaryGap}.`,
+        buildsToward: `This connects the frontend and backend of your capstone.`
+      },
       targetSkills: phase2Skills
     },
     {
@@ -318,29 +341,12 @@ function generateWithRuleEngine(roleTitle, userSkills, gapAnalysis) {
         { title: `Automated Integration & Unit Testing`, resource: getResourceForSkill('testing') },
         { title: `Production CI/CD Deployment for ${roleTitle}`, resource: getResourceForSkill('docker') }
       ],
+      miniProject: {
+        title: `Deploy and polish ${finalCapstone.title}`,
+        description: `Write automated tests, optimize performance, and deploy the application to a production environment.`,
+        buildsToward: `This finalizes your capstone for your portfolio.`
+      },
       targetSkills: phase3Skills
-    }
-  ];
-
-  // 2. Build Dynamic Project Recommendations (Feature 6)
-  const projects = [
-    {
-      id: `proj-${crypto.randomUUID().slice(0, 8)}`,
-      title: `Full-Featured ${primaryGap} Application Platform`,
-      description: `Build a production-grade application featuring state management, UI component architecture, and API integration emphasizing ${primaryGap}.`,
-      rationale: `Directly addresses your primary skill gap in ${primaryGap} to build resume-worthy hands-on proof of competence.`,
-      difficulty: 'Intermediate',
-      estimatedHours: '25 - 30 hrs',
-      targetSkills: [primaryGap, secondaryGap, 'Git'].filter(Boolean)
-    },
-    {
-      id: `proj-${crypto.randomUUID().slice(0, 8)}`,
-      title: `${roleTitle} Enterprise Portfolio Capstone`,
-      description: `Construct an end-to-end production system demonstrating expertise in ${secondaryGap} and ${tertiaryGap} tailored for ${roleTitle} positions.`,
-      rationale: `Demonstrates end-to-end domain expertise for ${roleTitle} hiring managers by synthesizing key skill gaps.`,
-      difficulty: 'Advanced',
-      estimatedHours: '40 - 50 hrs',
-      targetSkills: [secondaryGap, tertiaryGap, 'Testing'].filter(Boolean)
     }
   ];
 
@@ -372,24 +378,24 @@ function generateWithRuleEngine(roleTitle, userSkills, gapAnalysis) {
       id: `cert-${crypto.randomUUID().slice(0, 8)}`,
       title: 'Meta Front-End / Back-End Professional Certificate',
       issuer: 'Meta / Coursera',
-      costType: 'Freemium',
+      costType: 'Paid (Subscription)',
       difficulty: 'Intermediate',
-      url: 'https://www.coursera.org',
-      rationale: `Provides structured industry recognition for ${roleTitle} competencies covering core application development workflows.`,
+      url: 'https://www.coursera.org/meta',
+      rationale: `Provides a comprehensive overview of ${roleTitle} fundamentals missing from your profile.`,
       targetSkills: [primaryGap]
     });
   }
 
   return {
+    capstone: finalCapstone,
     milestones,
     recommendations: {
-      projects,
       certifications: certifications.slice(0, 4) // Return top 4 relevant certs
     }
   };
 }
 
-async function generateWithLLM(roleTitle, userSkills, gapAnalysis, isCustomRole) {
+async function generateWithLLM(roleTitle, userSkills, gapAnalysis, isCustomRole, capstone = null) {
   // Single-pass LLM invocation generating milestones AND recommendations
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 35000); // Increased timeout for deep research
@@ -400,6 +406,19 @@ async function generateWithLLM(roleTitle, userSkills, gapAnalysis, isCustomRole)
 You MUST generate a NEW, highly accurate gapAnalysis object tailored specifically to "${roleTitle}". Evaluate the user's actual skills: ${JSON.stringify(userSkills.map(s => s.skillName))} against what a real ${roleTitle} needs, and output a detailed "gapAnalysis" object (missingSkills, levelGaps, matchedSkills) in your JSON response. DO NOT use the generic fallback skills provided.`;
   }
 
+  let capstoneInstruction = '';
+  if (capstone) {
+    capstoneInstruction = `\nThe user has selected this capstone project as their end goal:
+TITLE: ${capstone.title}
+DESCRIPTION: ${capstone.description}
+CORE SKILLS: ${capstone.coreSkillsCovered.join(', ')}
+
+For each of the 3 phases, in addition to the topic list, generate a "miniProject" that is an explicit, concrete building block toward the final capstone above — not a generic unrelated exercise. Phase 1's mini-project should be the simplest possible piece (e.g. basic data model / static UI shell). Phase 3's mini-project should represent a genuinely production-ready piece. Ensure clear difficulty escalation.`;
+  } else {
+    capstoneInstruction = `\nSince there is no curated capstone for this role, YOU MUST GENERATE ONE. Provide a "capstone" object in the root of your JSON with title, difficulty, description, whyThisProject, and coreSkillsCovered.
+Then, for each of the 3 phases, generate a "miniProject" that acts as a concrete building block toward this capstone.`;
+  }
+
   const prompt = `You are an elite Senior Technical Architect and Career Development Coach for SkillForge AI.
 Your task is to generate a highly accurate, deeply researched, and comprehensive learning roadmap for a candidate targeting the role: "${roleTitle}".
 
@@ -408,16 +427,17 @@ Candidate Skills Matrix (Fallback Input):
 - Level Gaps: ${JSON.stringify(gapAnalysis.levelGaps)}
 - Missing Skills: ${JSON.stringify(gapAnalysis.missingSkills)}
 ${customRoleInstruction}
+${capstoneInstruction}
 
 REQUIREMENTS:
 1. Deep Research: The roadmap MUST be highly specific to "${roleTitle}". Do not give generic advice. Tailor the milestones directly to the gaps.
 2. Real Links: For every topic and certification, provide ACTUAL, REAL, and highly respected URLs (e.g., official docs, Coursera, Udemy, AWS/Azure cert pages, MDN). DO NOT use generic links.
-3. High-Quality Projects: Projects must NOT be generic ("Build a core tech app"). Give them catchy, professional names (e.g., "Real-time Distributed Chat Platform" or "E-commerce Microservices Backend"). Specify the EXACT tech stack they should use to build it, and highlight why it stands out on a resume.
-4. Certifications: Generate 3-4 highly recognized industry certifications specifically relevant to "${roleTitle}".
+3. Certifications: Generate 3-4 highly recognized industry certifications specifically relevant to "${roleTitle}".
 
 Return ONLY valid JSON matching this exact structure:
 {
   ${isCustomRole ? `"gapAnalysis": { "missingSkills": [{"name": "Skill Name", "targetProficiency": "Intermediate", "priority": "High"}], "levelGaps": [], "matchedSkills": [] },` : ''}
+  ${!capstone ? `"capstone": { "id": "generated-capstone", "title": "Catchy Name", "difficulty": "Advanced", "description": "...", "whyThisProject": "...", "coreSkillsCovered": ["Tech1"] },` : ''}
   "milestones": [
     {
       "phase": 1,
@@ -433,21 +453,15 @@ Return ONLY valid JSON matching this exact structure:
           }
         }
       ],
+      "miniProject": {
+        "title": "Build the data model & basic CRUD screens",
+        "description": "...",
+        "buildsToward": "This forms the core data layer of your final capstone"
+      },
       "targetSkills": ["Skill 1", "Skill 2"]
     }
   ],
   "recommendations": {
-    "projects": [
-      {
-        "id": "proj-1",
-        "title": "Catchy, Professional Project Name",
-        "description": "Detailed project description including the specific tech stack and architecture",
-        "rationale": "1-2 line rationale directly traceable to skill gap",
-        "difficulty": "Intermediate",
-        "estimatedHours": "20 hrs",
-        "targetSkills": ["Specific Tech 1", "Specific Tech 2"]
-      }
-    ],
     "certifications": [
       {
         "id": "cert-1",

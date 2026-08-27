@@ -12,6 +12,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import Upload from './pages/Upload/Upload';
 import SkillsConfirm from './pages/SkillsConfirm/SkillsConfirm';
 import RoleSelection from './pages/RoleSelection/RoleSelection';
+import CapstoneSelection from './pages/CapstoneSelection/CapstoneSelection';
 import './App.css';
 
 function App() {
@@ -47,6 +48,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <RoleSelection />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/capstone-selection" 
+                element={
+                  <ProtectedRoute>
+                    <CapstoneSelection />
                   </ProtectedRoute>
                 } 
               />

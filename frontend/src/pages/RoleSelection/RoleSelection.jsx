@@ -109,15 +109,8 @@ const RoleSelection = () => {
 
       await roleAPI.saveTargetRole(roleIdToSend, customRoleToSend);
       
-      // Auto-regenerate roadmap for the newly selected target role
-      try {
-        await roadmapAPI.generateRoadmap();
-      } catch (genErr) {
-        console.warn('Roadmap auto-regen notice:', genErr.message);
-      }
-
       setShowRegenModal(false);
-      navigate('/dashboard');
+      navigate('/capstone-selection');
     } catch (err) {
       setError(err.message || 'Failed to save target role.');
     } finally {

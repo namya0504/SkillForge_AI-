@@ -1,0 +1,190 @@
+.capstone-selection-page {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  padding: 40px 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.capstone-container {
+  max-width: 900px;
+  width: 100%;
+}
+
+.role-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.role-header h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: 12px;
+}
+
+.role-header p {
+  color: var(--color-text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.role-header strong {
+  color: var(--color-primary);
+}
+
+.capstones-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.capstone-card {
+  background: var(--color-bg-card);
+  border: 2px solid var(--color-border);
+  border-radius: 16px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.capstone-card:hover {
+  border-color: var(--color-accent-light);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.capstone-card.selected {
+  border-color: var(--color-primary);
+  background: rgba(15, 76, 92, 0.03);
+  box-shadow: var(--shadow-md), 0 0 0 2px rgba(15, 76, 92, 0.2);
+}
+
+.selected-badge {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.capstone-diff-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+}
+
+.capstone-diff-badge.diff-advanced { background: var(--color-error-light); color: var(--color-error); }
+.capstone-diff-badge.diff-intermediate { background: rgba(244, 162, 89, 0.15); color: var(--color-accent); }
+.capstone-diff-badge.diff-beginner { background: rgba(56, 189, 248, 0.15); color: var(--color-primary-light); }
+
+.capstone-card h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+  color: var(--color-text);
+  padding-right: 80px;
+}
+
+.cap-desc {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.cap-rationale {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-elevated);
+  padding: 12px 14px;
+  border-radius: 10px;
+  border-left: 4px solid var(--color-accent);
+  margin-bottom: 20px;
+}
+.cap-rationale .label {
+  font-weight: 700;
+  color: var(--color-text);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.cap-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.cap-skill-tag {
+  background: linear-gradient(135deg, rgba(15, 76, 92, 0.1), rgba(15, 76, 92, 0.05));
+  border: 1px solid rgba(15, 76, 92, 0.2);
+  color: var(--color-primary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.capstone-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border);
+}
+
+.ai-capstone-state {
+  text-align: center;
+  background: var(--color-bg-card);
+  border: 1px dashed var(--color-border);
+  border-radius: 16px;
+  padding: 48px 32px;
+  max-width: 600px;
+  margin: 0 auto 40px auto;
+}
+
+.ai-icon-wrapper {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  color: white;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px auto;
+  box-shadow: var(--shadow-md);
+}
+
+.ai-capstone-state h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.ai-capstone-state p {
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}

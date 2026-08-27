@@ -23,6 +23,7 @@ router.get('/', authenticate, async (req, res) => {
         gapAnalysis: JSON.parse(roadmap.gapAnalysis || '{}'),
         milestones: JSON.parse(roadmap.milestones || '[]'),
         recommendations: JSON.parse(roadmap.recommendations || '{}'),
+        selectedCapstone: roadmap.selectedCapstone ? JSON.parse(roadmap.selectedCapstone) : null,
         updatedAt: roadmap.updatedAt
       }
     });
@@ -35,7 +36,8 @@ router.get('/', authenticate, async (req, res) => {
 // POST /api/v1/roadmap/generate - Generate / Regenerate user's roadmap & recommendations
 router.post('/generate', authenticate, async (req, res) => {
   try {
-    const generated = await generateRoadmapForUser(req.user.id);
+    const { capstone } = req.body || {};
+    const generated = await generateRoadmapForUser(req.user.id, capstone);
     res.json({
       message: 'Roadmap and recommendations generated successfully',
       roadmap: generated

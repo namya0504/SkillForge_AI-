@@ -6,7 +6,7 @@ import { roadmapAPI, progressAPI, certificationAPI } from '../../services/api';
 import { 
   Target, Sparkles, CheckCircle2, AlertCircle, RefreshCw, 
   Map, Award, FolderGit2, ExternalLink, Clock, ChevronRight, ChevronDown, Edit3, ShieldCheck,
-  Upload, UserCheck, Compass, ArrowRight, BookOpen, CheckSquare, Trophy, Zap, TrendingUp, Check, Download
+  Upload, UserCheck, Compass, ArrowRight, ArrowLeft, Code, BookOpen, CheckSquare, Trophy, Zap, TrendingUp, Check, Download
 } from 'lucide-react';
 import './Dashboard.css';
 
@@ -99,6 +99,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState(null);
+  const [currentPhaseIndex, setCurrentPhaseIndex] = useState(0);
   const [activeTab, setActiveTab] = useState('projects');
   
   // Server-synced progress state: { [itemId]: 'not_started' | 'in_progress' | 'completed' }
@@ -475,237 +476,228 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Step-by-Step Learning Path */}
           <div className="milestones-section">
-            <div className="section-title flex-between">
-              <div className="flex-center gap-sm">
-                <Map size={22} className="text-teal" />
-                <h2>Step-by-Step Learning Path</h2>
-              </div>
-              <div className="progress-badge flex-center gap-xs">
-                <CheckSquare size={16} className="text-teal" />
-                <span>{completedTopics} of {totalTopics} Tasks Done ({totalTopics > 0 ? Math.round((completedTopics / totalTopics) * 100) : 0}%)</span>
+            <div className="section-title">
+              <h2><BookOpen size={20} className="text-teal" /> Personalized Learning Path</h2>
+              <div className="progress-badge">
+                <CheckCircle size={14} /> 
+                {completedTopics} / {totalTopics} Tasks Done ({totalTopics > 0 ? Math.round((completedTopics / totalTopics) * 100) : 0}%)
               </div>
             </div>
 
-            {/* Overall Progress Bar */}
-            <div className="overall-progress-card">
-              <div className="progress-bar-bg">
-                <div 
-                  className="progress-bar-fill" 
-                  style={{ width: `${totalTopics > 0 ? Math.round((completedTopics / totalTopics) * 100) : 0}%` }}
-                ></div>
+            {roadmap.selectedCapstone && (
+              <div className="capstone-persistent-header">
+                <div className="cap-header-top flex-between">
+                  <h3><Target size={18} /> Capstone Goal: {roadmap.selectedCapstone.title}</h3>
+                  <span className={`diff-badge diff-${roadmap.selectedCapstone.difficulty?.toLowerCase()}`}>{roadmap.selectedCapstone.difficulty}</span>
+                </div>
+                <p>{roadmap.selectedCapstone.description}</p>
               </div>
-              <div className="progress-subtext flex-between">
-                <span>{progressSummary.inProgressItems} in progress</span>
-                <span>{totalTopics > 0 ? Math.round((completedTopics / totalTopics) * 100) : 0}% overall completed</span>
-              </div>
+            )}
+
+            <div className="gap-progress-bar-container">
+              <div 
+                className="gap-progress-bar" 
+                style={{ width: `${totalTopics > 0 ? (completedTopics / totalTopics) * 100 : 0}%` }}
+              ></div>
             </div>
 
-            <div className="milestones-timeline">
-              {milestones.map((m, idx) => {
-                const phaseTopics = m.topics || [];
-                const phaseNum = m.phase || idx + 1;
-                const phaseCompleted = phaseTopics.filter((t, tIdx) => {
-                  const itemId = (typeof t === 'object' && t.id) ? t.id : `p${phaseNum}-t${tIdx + 1}`;
-                  return progressMap[itemId] === 'completed';
-                }).length;
-                const phaseProgressPercent = phaseTopics.length > 0 ? Math.round((phaseCompleted / phaseTopics.length) * 100) : 0;
-                const isCollapsed = !!collapsedPhases[idx];
+            <div className="milestones-stepper">
+              {milestones.length > 0 && (
+                <div className="milestone-card active-phase">
+                  {(() => {
+                    const m = milestones[currentPhaseIndex];
+                    const phaseTopics = m.topics || [];
+                    const phaseNum = m.phase || currentPhaseIndex + 1;
+                    const phaseCompleted = phaseTopics.filter((t, tIdx) => {
+                      const itemId = (typeof t === 'object' && t.id) ? t.id : `p${phaseNum}-t${tIdx + 1}`;
+                      return progressMap[itemId] === 'completed';
+                    }).length;
+                    const phaseProgressPercent = phaseTopics.length > 0 ? Math.round((phaseCompleted / phaseTopics.length) * 100) : 0;
 
-                return (
-                  <div key={idx} className="milestone-card">
-                    <div className="milestone-badge flex-between cursor-pointer" onClick={() => togglePhaseCollapse(idx)}>
-                      <div className="flex-center gap-xs">
-                        <span className="phase-num">Phase {phaseNum}</span>
-                        <span className="phase-duration"><Clock size={13} /> {m.duration}</span>
-                      </div>
-                      <div className="flex-center gap-sm">
-                        <span className="phase-progress-text">{phaseCompleted}/{phaseTopics.length} Done ({phaseProgressPercent}%)</span>
-                        {isCollapsed ? <ChevronRight size={18} /> : <ChevronDown size={18} />}
-                      </div>
-                    </div>
+                    return (
+                      <>
+                        <div className="milestone-badge flex-between">
+                          <div className="flex-center gap-xs">
+                            <span className="phase-num">Phase {phaseNum} of {milestones.length}</span>
+                            <span className="phase-duration"><Clock size={13} /> {m.duration}</span>
+                          </div>
+                          <span className="phase-progress-text">{phaseCompleted}/{phaseTopics.length} Done ({phaseProgressPercent}%)</span>
+                        </div>
 
-                    <h3 onClick={() => togglePhaseCollapse(idx)} className="cursor-pointer">{m.title}</h3>
-                    <p className="milestone-desc">{m.description}</p>
+                        <h3>{m.title}</h3>
+                        <p className="milestone-desc">{m.description}</p>
 
-                    {!isCollapsed && (
-                      <div className="milestone-topics">
-                        <h4>Key Focus Topics & Learning Resources:</h4>
-                        <ul className="topics-checklist">
-                          {phaseTopics.map((topicItem, tIdx) => {
-                            const itemId = (typeof topicItem === 'object' && topicItem.id) 
-                              ? topicItem.id 
-                              : `p${phaseNum}-t${tIdx + 1}`;
-                            const status = progressMap[itemId] || 'not_started';
-                            const isDone = status === 'completed';
-                            const topicTitle = typeof topicItem === 'object' ? topicItem.title : topicItem;
-                            const resource = typeof topicItem === 'object' ? topicItem.resource : null;
+                        <div className="milestone-topics">
+                          <h4>Key Focus Topics & Learning Resources:</h4>
+                          <ul className="topics-checklist">
+                            {phaseTopics.map((topicItem, tIdx) => {
+                              const itemId = (typeof topicItem === 'object' && topicItem.id) 
+                                ? topicItem.id 
+                                : `p${phaseNum}-t${tIdx + 1}`;
+                              const status = progressMap[itemId] || 'not_started';
+                              const isDone = status === 'completed';
+                              const topicTitle = typeof topicItem === 'object' ? topicItem.title : topicItem;
+                              const resource = typeof topicItem === 'object' ? topicItem.resource : null;
 
-                            return (
-                              <li key={tIdx} className={`topic-item ${isDone ? 'completed' : ''}`}>
-                                <div className="topic-main-row flex-between">
-                                  <label className="checkbox-label flex-center gap-sm">
-                                    <input
-                                      type="checkbox"
-                                      checked={isDone}
-                                      onChange={(e) => {
-                                        const newStatus = e.target.checked ? 'completed' : 'not_started';
-                                        handleToggleTopicStatus(itemId, newStatus, idx, m.title, phaseTopics.length);
-                                      }}
-                                    />
-                                    <span className={`topic-text ${isDone ? 'text-done' : ''}`}>{topicTitle}</span>
-                                  </label>
+                              return (
+                                <li key={tIdx} className={`topic-item ${isDone ? 'completed' : ''}`}>
+                                  <div className="topic-main-row flex-between">
+                                    <label className="checkbox-label flex-center gap-sm">
+                                      <input
+                                        type="checkbox"
+                                        checked={isDone}
+                                        onChange={(e) => {
+                                          const newStatus = e.target.checked ? 'completed' : 'not_started';
+                                          handleToggleTopicStatus(itemId, newStatus, currentPhaseIndex, m.title, phaseTopics.length);
+                                        }}
+                                      />
+                                      <span className={`topic-text ${isDone ? 'text-done' : ''}`}>{topicTitle}</span>
+                                    </label>
 
-                                  {resource && resource.url && (
-                                    <a 
-                                      href={resource.url} 
-                                      target="_blank" 
-                                      rel="noreferrer" 
-                                      className="resource-link-chip"
-                                      title={`Open ${resource.title}`}
-                                    >
-                                      <BookOpen size={12} /> {resource.title} <ExternalLink size={10} />
-                                    </a>
-                                  )}
-                                </div>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </div>
-                    )}
+                                    {resource && resource.url && (
+                                      <a 
+                                        href={resource.url} 
+                                        target="_blank" 
+                                        rel="noreferrer" 
+                                        className="resource-link-chip"
+                                        title={`Open ${resource.title}`}
+                                      >
+                                        <BookOpen size={12} /> {resource.title} <ExternalLink size={10} />
+                                      </a>
+                                    )}
+                                  </div>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </div>
 
-                    {m.targetSkills && (
-                      <div className="milestone-skills">
-                        {m.targetSkills.map((sk, skIdx) => (
-                          <span key={skIdx} className="milestone-skill-chip">{sk}</span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+                        {m.miniProject && (
+                          <div className="mini-project-section">
+                            <div className="mini-proj-header flex-center gap-sm">
+                              <Code size={18} className="text-amber" />
+                              <h4>Capstone Building Block</h4>
+                            </div>
+                            <div className="mini-proj-content">
+                              <h5>{m.miniProject.title}</h5>
+                              <p>{m.miniProject.description}</p>
+                              <div className="builds-toward">
+                                <strong>Builds Toward:</strong> {m.miniProject.buildsToward}
+                              </div>
+                              <label className="checkbox-label flex-center gap-sm mt-10">
+                                <input
+                                  type="checkbox"
+                                  checked={progressMap[`mini-${phaseNum}`] === 'completed'}
+                                  onChange={(e) => {
+                                    const newStatus = e.target.checked ? 'completed' : 'not_started';
+                                    handleToggleTopicStatus(`mini-${phaseNum}`, newStatus, currentPhaseIndex, 'Mini Project', 1);
+                                  }}
+                                />
+                                <span className={`topic-text font-bold ${progressMap[`mini-${phaseNum}`] === 'completed' ? 'text-done' : ''}`}>
+                                  Mark building block complete
+                                </span>
+                              </label>
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="stepper-actions flex-between mt-20">
+                          <button 
+                            className="btn-secondary flex-center gap-xs"
+                            onClick={() => setCurrentPhaseIndex(prev => Math.max(0, prev - 1))}
+                            disabled={currentPhaseIndex === 0}
+                          >
+                            <ArrowLeft size={16} /> Previous Phase
+                          </button>
+                          
+                          {currentPhaseIndex < milestones.length - 1 ? (
+                            <button 
+                              className="btn-primary flex-center gap-xs"
+                              onClick={() => setCurrentPhaseIndex(prev => Math.min(milestones.length - 1, prev + 1))}
+                            >
+                              Next Phase <ArrowRight size={16} />
+                            </button>
+                          ) : (
+                            <div className="capstone-complete-state flex-center gap-xs">
+                              <Award size={16} /> Capstone Journey Complete
+                            </div>
+                          )}
+                        </div>
+                      </>
+                    );
+                  })()}
+                </div>
+              )}
             </div>
           </div>
 
         </div>
 
-        {/* Right Column: Projects & Certifications */}
+        {/* Right Column: Certifications */}
         <div className="recommendations-column">
           
           <div className="recommendations-card">
             
             <div className="recs-header">
               <div className="tab-buttons flex-center">
-                <button 
-                  className={`tab-btn ${activeTab === 'projects' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('projects')}
-                >
-                  <FolderGit2 size={16} /> Hands-on Projects ({recommendations.projects?.length || 0})
-                </button>
-                <button 
-                  className={`tab-btn ${activeTab === 'certs' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('certs')}
-                >
-                  <Award size={16} /> Certifications ({recommendations.certifications?.length || 0})
+                <button className="tab-btn active" style={{ width: '100%', cursor: 'default' }}>
+                  <Award size={16} /> Recommended Certifications ({recommendations.certifications?.length || 0})
                 </button>
               </div>
             </div>
 
             <div className="recs-body">
-              
-              {/* Projects Tab */}
-              {activeTab === 'projects' && (
-                <div className="projects-list">
-                  {recommendations.projects?.map((proj, i) => (
-                    <div key={proj.id || i} className="project-card">
-                      <div className="project-card-header flex-between">
-                        <h4>{proj.title}</h4>
-                        <span className={`diff-badge diff-${proj.difficulty?.toLowerCase()}`}>{proj.difficulty}</span>
-                      </div>
-                      <p className="proj-desc">{proj.description}</p>
-                      
-                      <div className="proj-meta flex-between">
-                        <span className="est-hours"><Clock size={13} /> {proj.estimatedHours}</span>
-                        <div className="proj-skills flex-center gap-xs">
-                          {proj.targetSkills?.map((s, idx) => (
-                            <span key={idx} className="proj-skill-tag">{s}</span>
-                          ))}
+              <div className="certs-list">
+                {recommendations.certifications?.map((cert, i) => {
+                  const certStatus = certProgressMap[cert.title] || 'recommended';
+                  const isDone = certStatus === 'completed';
+                  const isInProgress = certStatus === 'in_progress';
+
+                  return (
+                    <div key={cert.id || i} className={`cert-card ${isDone ? 'cert-completed' : ''}`}>
+                      <div className="cert-card-header flex-between">
+                        <div>
+                          <h4>{cert.title}</h4>
+                          <span className="cert-issuer">{cert.issuer}</span>
                         </div>
+                        <span className={`cost-badge cost-${cert.costType?.toLowerCase() || 'paid'}`}>
+                          {cert.costType || 'Paid'}
+                        </span>
                       </div>
 
-                      {proj.rationale && (
-                        <div className="proj-rationale">
-                          <strong>Why build this:</strong> {proj.rationale}
-                        </div>
+                      {cert.rationale && (
+                        <p className="cert-rationale">{cert.rationale}</p>
                       )}
-                    </div>
-                  ))}
 
-                  {(!recommendations.projects || recommendations.projects.length === 0) && (
-                    <div className="empty-tab-state">
-                      <FolderGit2 size={32} />
-                      <p>Projects will be suggested based on your skill gaps.</p>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Certifications Tab */}
-              {activeTab === 'certs' && (
-                <div className="certs-list">
-                  {recommendations.certifications?.map((cert, i) => {
-                    const certStatus = certProgressMap[cert.title] || 'recommended';
-                    const isDone = certStatus === 'completed';
-                    const isInProgress = certStatus === 'in_progress';
-
-                    return (
-                      <div key={cert.id || i} className={`cert-card ${isDone ? 'cert-completed' : ''}`}>
-                        <div className="cert-card-header flex-between">
-                          <div>
-                            <h4>{cert.title}</h4>
-                            <span className="cert-issuer">{cert.issuer}</span>
-                          </div>
-                          <span className={`cost-badge cost-${cert.costType?.toLowerCase() || 'paid'}`}>
-                            {cert.costType || 'Paid'}
-                          </span>
+                      <div className="cert-card-footer flex-between">
+                        <div className="flex-center gap-xs">
+                          <span className={`diff-badge diff-${cert.difficulty?.toLowerCase()}`}>{cert.difficulty}</span>
+                          <button
+                            className={`cert-status-pill status-${certStatus}`}
+                            onClick={() => handleToggleCertStatus(cert.title)}
+                            title="Click to cycle status (Recommended → In Progress → Completed)"
+                          >
+                            {isDone ? <span className="flex-center gap-xs"><Check size={11} /> Done</span> : isInProgress ? 'In Progress' : 'Recommended'}
+                          </button>
                         </div>
-
-                        {cert.rationale && (
-                          <p className="cert-rationale">{cert.rationale}</p>
+                        {cert.url && (
+                          <a href={cert.url} target="_blank" rel="noreferrer" className="cert-link flex-center gap-xs">
+                            View Details <ExternalLink size={13} />
+                          </a>
                         )}
-
-                        <div className="cert-card-footer flex-between">
-                          <div className="flex-center gap-xs">
-                            <span className={`diff-badge diff-${cert.difficulty?.toLowerCase()}`}>{cert.difficulty}</span>
-                            <button
-                              className={`cert-status-pill status-${certStatus}`}
-                              onClick={() => handleToggleCertStatus(cert.title)}
-                              title="Click to cycle status (Recommended → In Progress → Completed)"
-                            >
-                              {isDone ? <span className="flex-center gap-xs"><Check size={11} /> Done</span> : isInProgress ? 'In Progress' : 'Recommended'}
-                            </button>
-                          </div>
-                          {cert.url && (
-                            <a href={cert.url} target="_blank" rel="noreferrer" className="cert-link flex-center gap-xs">
-                              View Details <ExternalLink size={13} />
-                            </a>
-                          )}
-                        </div>
                       </div>
-                    );
-                  })}
-
-                  {(!recommendations.certifications || recommendations.certifications.length === 0) && (
-                    <div className="empty-tab-state">
-                      <Award size={32} />
-                      <p>Certifications will be recommended based on your role target.</p>
                     </div>
-                  )}
-                </div>
-              )}
+                  );
+                })}
 
+                {(!recommendations.certifications || recommendations.certifications.length === 0) && (
+                  <div className="empty-tab-state">
+                    <Award size={32} />
+                    <p>Certifications will be recommended based on your role target.</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 

@@ -205,6 +205,7 @@ export const skillAPI = {
 export const roleAPI = {
   getRoles: () => request('/roles'),
   getUserTargetRole: () => request('/roles/target'),
+  getCapstones: (roleId) => request(`/roles/${roleId}/capstones`),
   saveTargetRole: (roleId, customRole) => request('/roles/target', {
     method: 'POST',
     body: JSON.stringify({ roleId, customRole }),
@@ -213,7 +214,10 @@ export const roleAPI = {
 
 export const roadmapAPI = {
   getRoadmap: () => request('/roadmap'),
-  generateRoadmap: () => request('/roadmap/generate', { method: 'POST' }),
+  generateRoadmap: (capstone = null) => request('/roadmap/generate', { 
+    method: 'POST',
+    body: JSON.stringify({ capstone })
+  }),
 };
 
 export const progressAPI = {
