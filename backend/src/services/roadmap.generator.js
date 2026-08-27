@@ -173,9 +173,14 @@ export async function generateRoadmapForUser(userId) {
 
   // 3. Generate Unified Milestones & Recommendations in a Single Pass
   let result;
+  let finalGapAnalysis = gapAnalysisObj;
+  
   if (config.llmApiKey) {
     try {
-      result = await generateWithLLM(targetRoleTitle, user.skills, gapAnalysisObj);
+      result = await generateWithLLM(targetRoleTitle, user.skills, gapAnalysisObj, !!user.customTargetRole);
+      if (user.customTargetRole && result.gapAnalysis) {
+        finalGapAnalysis = result.gapAnalysis;
+      }
     } catch (err) {
       console.warn('LLM roadmap generation failed, falling back to rule engine:', err.message);
       result = generateWithRuleEngine(targetRoleTitle, user.skills, gapAnalysisObj);
@@ -210,14 +215,14 @@ export async function generateRoadmapForUser(userId) {
     where: { userId },
     update: {
       targetRoleTitle,
-      gapAnalysis: JSON.stringify(gapAnalysisObj),
+      gapAnalysis: JSON.stringify(finalGapAnalysis),
       milestones: JSON.stringify(normalizedMilestones),
       recommendations: JSON.stringify(result.recommendations)
     },
     create: {
       userId,
       targetRoleTitle,
-      gapAnalysis: JSON.stringify(gapAnalysisObj),
+      gapAnalysis: JSON.stringify(finalGapAnalysis),
       milestones: JSON.stringify(normalizedMilestones),
       recommendations: JSON.stringify(result.recommendations)
     }
@@ -226,7 +231,7 @@ export async function generateRoadmapForUser(userId) {
   return {
     id: savedRoadmap.id,
     targetRoleTitle: savedRoadmap.targetRoleTitle,
-    gapAnalysis: gapAnalysisObj,
+    gapAnalysis: finalGapAnalysis,
     milestones: normalizedMilestones,
     recommendations: result.recommendations,
     updatedAt: savedRoadmap.updatedAt
@@ -384,26 +389,35 @@ function generateWithRuleEngine(roleTitle, userSkills, gapAnalysis) {
   };
 }
 
-async function generateWithLLM(roleTitle, userSkills, gapAnalysis) {
+async function generateWithLLM(roleTitle, userSkills, gapAnalysis, isCustomRole) {
   // Single-pass LLM invocation generating milestones AND recommendations
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 35000); // Increased timeout for deep research
 
+  let customRoleInstruction = '';
+  if (isCustomRole) {
+    customRoleInstruction = `\nCRITICAL INSTRUCTION FOR CUSTOM ROLE: The provided gap analysis contains generic fallback skills because "${roleTitle}" is a custom role.
+You MUST generate a NEW, highly accurate gapAnalysis object tailored specifically to "${roleTitle}". Evaluate the user's actual skills: ${JSON.stringify(userSkills.map(s => s.skillName))} against what a real ${roleTitle} needs, and output a detailed "gapAnalysis" object (missingSkills, levelGaps, matchedSkills) in your JSON response. DO NOT use the generic fallback skills provided.`;
+  }
+
   const prompt = `You are an elite Senior Technical Architect and Career Development Coach for SkillForge AI.
 Your task is to generate a highly accurate, deeply researched, and comprehensive learning roadmap for a candidate targeting the role: "${roleTitle}".
 
-Candidate Skills Matrix:
+Candidate Skills Matrix (Fallback Input):
 - Matched Skills: ${JSON.stringify(gapAnalysis.matchedSkills)}
 - Level Gaps: ${JSON.stringify(gapAnalysis.levelGaps)}
 - Missing Skills: ${JSON.stringify(gapAnalysis.missingSkills)}
+${customRoleInstruction}
 
 REQUIREMENTS:
 1. Deep Research: The roadmap MUST be highly specific to "${roleTitle}". Do not give generic advice. Tailor the milestones directly to the gaps.
 2. Real Links: For every topic and certification, provide ACTUAL, REAL, and highly respected URLs (e.g., official docs, Coursera, Udemy, AWS/Azure cert pages, MDN). DO NOT use generic links.
-3. Certifications: Generate 3-4 highly recognized industry certifications specifically relevant to "${roleTitle}".
+3. High-Quality Projects: Projects must NOT be generic ("Build a core tech app"). Give them catchy, professional names (e.g., "Real-time Distributed Chat Platform" or "E-commerce Microservices Backend"). Specify the EXACT tech stack they should use to build it, and highlight why it stands out on a resume.
+4. Certifications: Generate 3-4 highly recognized industry certifications specifically relevant to "${roleTitle}".
 
 Return ONLY valid JSON matching this exact structure:
 {
+  ${isCustomRole ? `"gapAnalysis": { "missingSkills": [{"name": "Skill Name", "targetProficiency": "Intermediate", "priority": "High"}], "levelGaps": [], "matchedSkills": [] },` : ''}
   "milestones": [
     {
       "phase": 1,
@@ -426,12 +440,12 @@ Return ONLY valid JSON matching this exact structure:
     "projects": [
       {
         "id": "proj-1",
-        "title": "Project Name",
-        "description": "Detailed project description",
+        "title": "Catchy, Professional Project Name",
+        "description": "Detailed project description including the specific tech stack and architecture",
         "rationale": "1-2 line rationale directly traceable to skill gap",
         "difficulty": "Intermediate",
         "estimatedHours": "20 hrs",
-        "targetSkills": ["Skill 1"]
+        "targetSkills": ["Specific Tech 1", "Specific Tech 2"]
       }
     ],
     "certifications": [
