@@ -38,10 +38,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (email, password) => {
+  const register = async (email, password, otpToken, otpCode) => {
     try {
       setError(null);
-      const data = await authAPI.register(email, password);
+      const data = await authAPI.register(email, password, otpToken, otpCode);
       setUser(data.user);
       return data;
     } catch (err) {

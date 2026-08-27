@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 import prisma from '../config/database.js';
 import { generateToken, generateRefreshToken, verifyRefreshToken, getCookieOptions, getRefreshCookieOptions } from '../utils/token.js';
 import { config } from '../config/env.js';
@@ -15,7 +16,7 @@ export const sendOTP = async (req, res) => {
     const normalizedEmail = email.toLowerCase().trim();
 
     // Generate random 6-digit OTP code
-    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpCode = crypto.randomInt(100000, 999999).toString();
 
     // Sign verification token (expires in 10 minutes)
     const otpToken = jwt.sign(

@@ -25,14 +25,21 @@ const Upload = () => {
     setError(null);
     if (!selectedFile) return false;
 
-    const validTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    if (!validTypes.includes(selectedFile.type) && !selectedFile.name.endsWith('.pdf') && !selectedFile.name.endsWith('.docx')) {
-      setError('Please upload a PDF or DOCX file.');
+    const validTypes = [
+      'application/pdf', 
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'image/png', 'image/jpeg', 'image/webp'
+    ];
+    const validExts = ['.pdf', '.docx', '.doc', '.png', '.jpg', '.jpeg', '.webp'];
+    const hasValidType = validTypes.includes(selectedFile.type);
+    const hasValidExt = validExts.some(ext => selectedFile.name.toLowerCase().endsWith(ext));
+    if (!hasValidType && !hasValidExt) {
+      setError('Please upload a PDF, DOCX, or image file (PNG, JPG, WEBP).');
       return false;
     }
 
-    if (selectedFile.size > 5 * 1024 * 1024) {
-      setError('File size must be less than 5MB.');
+    if (selectedFile.size > 8 * 1024 * 1024) {
+      setError('File size must be less than 8MB.');
       return false;
     }
 

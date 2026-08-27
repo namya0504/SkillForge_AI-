@@ -21,7 +21,15 @@ export const uploadResume = async (req, res) => {
     await saveFile(file.buffer, storageKey);
 
     // Determine mimeType
-    const mimeType = ext === 'docx' || ext === 'doc' ? 'docx' : 'pdf';
+    const imageExts = ['png', 'jpg', 'jpeg', 'webp'];
+    let mimeType;
+    if (ext === 'docx' || ext === 'doc') {
+      mimeType = 'docx';
+    } else if (imageExts.includes(ext)) {
+      mimeType = `image/${ext === 'jpg' ? 'jpeg' : ext}`;
+    } else {
+      mimeType = 'pdf';
+    }
 
     // Create resume record
     const resume = await prisma.resume.create({
